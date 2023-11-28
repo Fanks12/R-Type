@@ -1,0 +1,4 @@
+*.o
+*.vscode
+r-type_server
+r-type_client
