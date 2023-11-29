@@ -61,6 +61,8 @@ class Registry {
     protected:
     private:
         std::unordered_map<std::string, SparseArray<void *>> componentArrays;
+
+        size_t nextEntityIndex = 0;
 };
 
 #endif /* !REGISTRY_HPP_ */
