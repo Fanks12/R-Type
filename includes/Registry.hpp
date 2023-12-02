@@ -44,10 +44,10 @@ class Registry {
         void addComponent(SparseArray<T> component, std::string name);
 
         /**
-         * @brief Removes a component of type T from an entity with the specified ID.
-         * @param component The name of the component.
+         * @brief Removes a entity with the specified ID.
+         * @param entityIndex index of the entity to simulately remove.
          */
-        void removeComponent(std::string component);
+        void removeEntity(int entityIndex);
 
         /**
          * @brief Gets the component of type T from an entity with the specified ID.
@@ -62,7 +62,7 @@ class Registry {
     private:
         std::unordered_map<std::string, SparseArray<void *>> componentArrays;
 
-        size_t nextEntityIndex = 0;
+        size_t entityNumber = 0;
 };
 
 #endif /* !REGISTRY_HPP_ */
