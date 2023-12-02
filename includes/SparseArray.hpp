@@ -13,7 +13,16 @@ template <typename T>
 class SparseArray {
     public:
         SparseArray();
+        SparseArray(int entityNumber);
         ~SparseArray();
+
+        /**
+         * @brief Add a new index to handle a new entity
+         * @tparam T The type of the component's value.
+         * @param index The index of the entity targeted.
+         * @param component Value to apply.
+         */
+        void addEntity();
 
         /**
          * @brief Change the component value from an entity with the specified ID.
