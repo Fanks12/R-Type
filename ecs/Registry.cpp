@@ -38,11 +38,17 @@ void Registry::addComponent(SparseArray<T> component, std::string name)
 void Registry::removeEntity(int entityIndex)
 {
     for (auto component : componentArrays)
-        component.second.setValueComponent(entityIndex, NULL);
+        component.second.deleteEntity(entityIndex);
 }
 
 template <typename T>
 SparseArray<T>& Registry::getComponent(std::string component)
+{
+    return componentArrays[component];
+}
+
+template <typename T>
+SparseArray<T> const &Registry::getComponent(std::string component) const
 {
     return componentArrays[component];
 }

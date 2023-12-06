@@ -58,6 +58,15 @@ class Registry {
         template <typename T>
         SparseArray<T>& getComponent(std::string component);
 
+        /**
+         * @brief Gets the component of type T from an entity with the specified ID.
+         * @tparam T The type of the component's value.
+         * @param component The name of the component.
+         * @return Reference const to the component.
+         */
+        template <typename T>
+        SparseArray<T> const &getComponent(std::string component) const;
+
     protected:
     private:
         std::unordered_map<std::string, SparseArray<void *>> componentArrays;
