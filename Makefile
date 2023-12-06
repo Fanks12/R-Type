@@ -10,7 +10,7 @@ NAME	=	test
 
 OBJ	=	$(SRC:.cpp=.o)
 
-CPPFLAGS	=	-I./includes/
+CPPFLAGS	=	-I./includes/ -I./ecs/includes/
 
 CXXFLAGS = -Wall -Wextra
 
@@ -41,8 +41,7 @@ tests_run: unit_tests
 			gcovr
 
 clean:
-	rm -f ecs/*.o
-	rm -f ecs/*~
+	rm -f ecs/includes/*~
 	rm -f source/*.o
 	rm -f source/*~
 	rm -f includes/*~
