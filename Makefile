@@ -4,7 +4,7 @@
 ## rtype
 ##
 
-SRC	=	source/main.cpp \
+SRC	= source/main.cpp \
 
 NAME	=	test
 
@@ -41,8 +41,10 @@ tests_run: unit_tests
 			gcovr
 
 clean:
-	rm -f sources/*.o
-	rm -f sources/*~
+	rm -f ecs/*.o
+	rm -f ecs/*~
+	rm -f source/*.o
+	rm -f source/*~
 	rm -f includes/*~
 	rm -f tests/*.o
 
