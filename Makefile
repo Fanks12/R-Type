@@ -4,13 +4,14 @@
 ## rtype
 ##
 
-SRC	= source/main.cpp \
+SRC	=	source/main.cpp \
 
-NAME	=	test
+NAME	=	bootstrap
 
 OBJ	=	$(SRC:.cpp=.o)
 
-CPPFLAGS	=	-I./includes/ -I./ecs/includes/
+CPPFLAGS	=	-I./includes/ -I./ecs/includes/ \
+				-lsfml-graphics -lsfml-system -lsfml-window
 
 CXXFLAGS = -Wall -Wextra
 
