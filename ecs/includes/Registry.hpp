@@ -7,6 +7,7 @@
 
 #ifndef REGISTRY_HPP_
 #define REGISTRY_HPP_
+#include "SparseArray.hpp"
 #include <unordered_map>
 #include <string>
 
@@ -93,7 +94,7 @@ int Registry::createEntity()
 template <typename T>
 void Registry::setComponentToEntity(int entityId, std::string component, T defaultValue)
 {
-    componentArrays[component].setComponentValue(entityId, defaultValue)
+    componentArrays.at(component).setComponentValue(entityId, defaultValue);
 }
 
 template <typename T>
@@ -111,13 +112,13 @@ void Registry::removeEntity(int entityIndex)
 template <typename T>
 SparseArray<T>& Registry::getComponent(std::string component)
 {
-    return componentArrays[component];
+    return componentArrays.at(component);
 }
 
 template <typename T>
 SparseArray<T> const &Registry::getComponent(std::string component) const
 {
-    return componentArrays[component];
+    return componentArrays.at(component);
 }
 
 #endif /* !REGISTRY_HPP_ */
