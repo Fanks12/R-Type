@@ -4,13 +4,13 @@
 ## rtype
 ##
 
-SRC	=	source/main.cpp \
+SRC	= source/main.cpp \
 
 NAME	=	test
 
 OBJ	=	$(SRC:.cpp=.o)
 
-CPPFLAGS	=	-I./includes/
+CPPFLAGS	=	-I./includes/ -I./ecs/includes/
 
 CXXFLAGS = -Wall -Wextra
 
@@ -41,8 +41,9 @@ tests_run: unit_tests
 			gcovr
 
 clean:
-	rm -f sources/*.o
-	rm -f sources/*~
+	rm -f ecs/includes/*~
+	rm -f source/*.o
+	rm -f source/*~
 	rm -f includes/*~
 	rm -f tests/*.o
 
