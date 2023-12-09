@@ -1,0 +1,19 @@
+enum PackageType {
+    newPlayer,
+    playerReady,
+    playerKick,
+    playerDisconnected,
+    Position,
+    Move,
+    Shoot,
+    Hit,
+    Kill,
+    Life,
+    Respawn,
+    GameStart,
+    GameRestart,
+    GamePause,
+    GameResume,
+    GameExit,
+    GameOver
+};
