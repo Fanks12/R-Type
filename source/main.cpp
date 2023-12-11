@@ -12,14 +12,20 @@ int main()
 {
     std::string Speed = "Speed";
 
-    int index;
+    int fusée;
+    int voiture;
     int entNb = 0;
     Registry components;
-    components.addComponent(std::move(SparseArray<int>()), Speed);
+    components.addComponent(std::move(SparseArray<std::any>()), Speed);
 
-    index = components.createEntity();
-    components.setComponentToEntity(entNb, Speed, 5);
-    index++;
+    fusée = components.createEntity();
+    voiture = components.createEntity();
+    entNb++;
+    components.setComponentToEntity(fusée, Speed, 5);
+    components.setComponentToEntity(voiture, Speed, 2);
+    SparseArray<std::any> speedcompo = components.getComponent<std::any>(Speed);
+    std::cout << std::any_cast<int>(speedcompo[voiture]) << std::endl;
+    std::cout << std::any_cast<int>(components.getComponent<std::any>(Speed)[fusée]) << std::endl;
 
     /*try {
         SparseArray<std::string> Test(10);

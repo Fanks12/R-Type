@@ -8,6 +8,7 @@
 #ifndef SPARSEARRAY_HPP_
     #define SPARSEARRAY_HPP_
     #include <vector>
+    #include <iostream>
 
 template <typename T>
 class SparseArray {
@@ -16,8 +17,7 @@ class SparseArray {
         using iterator = typename std::vector<T>::iterator;
         using const_iterator = typename std::vector<T>::const_iterator;
 
-        SparseArray();
-        SparseArray(int entityNumber);
+        SparseArray(int entityNumber = 0);
         SparseArray(SparseArray const & copy); // copy constructor
         SparseArray(SparseArray && move) noexcept; // move constructor
         ~SparseArray();
@@ -85,11 +85,6 @@ class SparseArray {
     private:
         std::vector<T> _EntityList;
 };
-
-template <typename T>
-SparseArray<T>::SparseArray()
-{
-}
 
 template <typename T>
 SparseArray<T>::SparseArray(int entityNumber)

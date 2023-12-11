@@ -10,6 +10,7 @@
 #include "SparseArray.hpp"
 #include <unordered_map>
 #include <string>
+#include <any>
 
 template <typename T>
 class SparseArray;
@@ -57,7 +58,7 @@ class Registry {
          * @return Reference to the component.
          */
         template <typename T>
-        SparseArray<T>& getComponent(std::string component);
+        SparseArray<T> &getComponent(std::string component);
 
         /**
          * @brief Gets the component of type T from an entity with the specified ID.
@@ -70,7 +71,7 @@ class Registry {
 
     protected:
     private:
-        std::unordered_map<std::string, SparseArray<void *>> componentArrays;
+        std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
 
         size_t entityNumber = 0;
 };
@@ -85,8 +86,8 @@ Registry::~Registry()
 
 int Registry::createEntity()
 {
-    for (auto component : componentArrays)
-        component.second.addEntity();
+    for (auto& [key, value] : componentArrays)
+        value.addEntity();
     entityNumber++;
     return entityNumber - 1;
 }
@@ -110,7 +111,7 @@ void Registry::removeEntity(int entityIndex)
 }
 
 template <typename T>
-SparseArray<T>& Registry::getComponent(std::string component)
+SparseArray<T> &Registry::getComponent(std::string component)
 {
     return componentArrays.at(component);
 }
