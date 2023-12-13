@@ -11,31 +11,34 @@
     #include <SFML/Graphics.hpp>
     #include <vector>
 
-class Registry;
-
-class SystemDraw : System {
+class SystemDraw : public virtual System {
     public:
         SystemDraw(Registry &registries);
         ~SystemDraw() = default;
 
         int run();
+        void updateEntities();
     protected:
     private:
-        Registry _registries;
         sf::RenderWindow _window;
         sf::Event _event;
         std::vector<sf::Sprite> _cache;
 };
 
 SystemDraw::SystemDraw(Registry &registries) : System(registries), _window(sf::RenderWindow(sf::VideoMode(800, 600), "Bootstrap"))
-{
+{}
 
+void SystemDraw::updateEntities()
+{
+    
 }
 
 int SystemDraw::run()
 {
     if (!_window.isOpen())
         return 0;
+
+    updateEntities();
 
     while (_window.pollEvent(_event))
     {

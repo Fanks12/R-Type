@@ -8,18 +8,21 @@
 #ifndef SYSTEM_HPP_
     #define SYSTEM_HPP_
     #include "Registry.hpp"
+    #include "ISystem.hpp"
 
 class Registry;
 
-class System {
+class System : public ISystem {
     public:
         System(Registry &registries) : _registries(registries) {}
         ~System() = default;
 
-        int run() { return 1; }
+        virtual int run();
     protected:
     private:
         Registry _registries;
 };
+
+int System::run() { return 1; }
 
 #endif /* !SYSTEM_HPP_ */

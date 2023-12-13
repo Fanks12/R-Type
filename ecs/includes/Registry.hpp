@@ -8,12 +8,12 @@
 #ifndef REGISTRY_HPP_
 #define REGISTRY_HPP_
 #include "SparseArray.hpp"
-#include "System.hpp"
+#include "ISystem.hpp"
 #include <unordered_map>
 #include <string>
 #include <any>
 
-class System;
+class ISystem;
 
 class Registry {
     public:
@@ -53,7 +53,7 @@ class Registry {
          * @tparam T The type of the system's value.
          * @param system the system to add.
          */
-        void addSystem(System system);
+        void addSystem(ISystem *system);
 
         /**
          * @brief Run all systems.
@@ -81,7 +81,7 @@ class Registry {
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
-        std::vector<System> systemArrays;
+        std::vector<ISystem *> systemArrays;
         size_t entityNumber = 0;
 };
 
@@ -109,11 +109,11 @@ void Registry::setComponentToEntity(int entityId, std::string component, T defau
 
 void Registry::addComponent(std::string name)
 {
-    SparseArray<std::any> component;
+    SparseArray<std::any> component(entityNumber);
     componentArrays.emplace(name, component);
 }
 
-void Registry::addSystem(System system)
+void Registry::addSystem(ISystem *system)
 {
     systemArrays.push_back(system);
 }
@@ -124,7 +124,7 @@ void Registry::runSystem()
 
     while (end) {
         for (auto system : systemArrays)
-            end = system.run();
+            end = system->run();
     }
 }
 
