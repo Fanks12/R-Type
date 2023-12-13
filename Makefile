@@ -10,7 +10,7 @@ NAME	=	bootstrap
 
 OBJ	=	$(SRC:.cpp=.o)
 
-CPPFLAGS	=	-I./includes/ -I./ecs/includes/ \
+CPPFLAGS	=	-I./includes/ -I./ecs/includes/ -I./ecs/includes/system/ \
 				-lsfml-graphics -lsfml-system -lsfml-window
 
 CXXFLAGS = -Wall -Wextra

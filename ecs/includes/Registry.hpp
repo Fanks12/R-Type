@@ -8,12 +8,12 @@
 #ifndef REGISTRY_HPP_
 #define REGISTRY_HPP_
 #include "SparseArray.hpp"
+#include "System.hpp"
 #include <unordered_map>
 #include <string>
 #include <any>
 
-template <typename T>
-class SparseArray;
+class System;
 
 class Registry {
     public:
@@ -37,19 +37,28 @@ class Registry {
         void setComponentToEntity(int entityId, std::string component, T defaultValue);
 
         /**
-         * @brief Removes a component of type T from an entity with the specified ID.
-         * @tparam T The type of the component's value.
-         * @param component The component to add.
+         * @brief add a component with the specified name
          * @param name The name of the component.
          */
-        template <typename T>
-        void addComponent(SparseArray<T> component, std::string name);
+        void addComponent(std::string name);
 
         /**
          * @brief Removes a entity with the specified ID.
          * @param entityIndex index of the entity to simulately remove.
          */
         void removeEntity(int entityIndex);
+
+        /**
+         * @brief Add a system of type T to the array.
+         * @tparam T The type of the system's value.
+         * @param system the system to add.
+         */
+        void addSystem(System system);
+
+        /**
+         * @brief Run all systems.
+         */
+        void runSystem();
 
         /**
          * @brief Gets the component of type T from an entity with the specified ID.
@@ -72,7 +81,7 @@ class Registry {
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
-
+        std::vector<System> systemArrays;
         size_t entityNumber = 0;
 };
 
@@ -98,10 +107,25 @@ void Registry::setComponentToEntity(int entityId, std::string component, T defau
     componentArrays.at(component).setComponentValue(entityId, defaultValue);
 }
 
-template <typename T>
-void Registry::addComponent(SparseArray<T> component, std::string name)
+void Registry::addComponent(std::string name)
 {
+    SparseArray<std::any> component;
     componentArrays.emplace(name, component);
+}
+
+void Registry::addSystem(System system)
+{
+    systemArrays.push_back(system);
+}
+
+void Registry::runSystem()
+{
+    int end = 1;
+
+    while (end) {
+        for (auto system : systemArrays)
+            end = system.run();
+    }
 }
 
 void Registry::removeEntity(int entityIndex)

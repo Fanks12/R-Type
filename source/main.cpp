@@ -5,27 +5,35 @@
 ** main
 */
 
-#include "Registry.hpp"
 #include "main.hpp"
+#include "SystemDraw.hpp"
 
 int main()
 {
-    std::string Speed = "Speed";
-
-    int fusée;
-    int voiture;
-    int entNb = 0;
     Registry components;
-    components.addComponent(std::move(SparseArray<std::any>()), Speed);
+    int fusée = components.createEntity();
+    int voiture = components.createEntity();
 
-    fusée = components.createEntity();
-    voiture = components.createEntity();
-    entNb++;
-    components.setComponentToEntity(fusée, Speed, 5);
-    components.setComponentToEntity(voiture, Speed, 2);
-    SparseArray<std::any> speedcompo = components.getComponent<std::any>(Speed);
-    std::cout << std::any_cast<int>(speedcompo[voiture]) << std::endl;
-    std::cout << std::any_cast<int>(components.getComponent<std::any>(Speed)[fusée]) << std::endl;
+    components.addComponent("Speed");
+    components.setComponentToEntity(fusée, "Speed", 5);
+    components.setComponentToEntity(voiture, "Speed", 2);
+
+    // components.addComponent("Drawable");
+    // components.setComponentToEntity(fusée, "Drawable", {10, 10});
+    // components.setComponentToEntity(voiture, "Drawable", {10, 10});
+
+    // SparseArray<std::any> speedcompo = components.getComponent<std::any>("Speed");
+    // System grostruc;
+
+    // Load a sprite to display
+    // sf::RectangleShape square(sf::Vector2f(10, 10));
+
+    //zega.system;
+
+    // on init tout les system dans system
+    // quand on appel play ça met en marche tout les sys de base
+
+    // Start the game loop
 
     /*try {
         SparseArray<std::string> Test(10);
