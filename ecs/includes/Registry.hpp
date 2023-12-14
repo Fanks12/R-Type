@@ -78,6 +78,12 @@ class Registry {
         template <typename T>
         SparseArray<T> const &getComponent(std::string component) const;
 
+        /**
+         * @brief return entity number value
+         * @return The entityNulber value
+         */
+        size_t entityNumbers() const { return entityNumber; }
+
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
