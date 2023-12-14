@@ -19,8 +19,8 @@ class System : public ISystem {
 
         virtual int run();
     protected:
-    private:
         Registry _registries;
+    private:
 };
 
 int System::run() { return 1; }
