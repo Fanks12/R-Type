@@ -27,11 +27,11 @@ int main()
     components.setComponentToEntity(fusée, "Position", std::pair<int, int>(20, 20));
     components.setComponentToEntity(voiture, "Position", std::pair<int, int>(10, 10));
 
-    // components.addSystem(new SystemDraw(components));
-    // components.runSystem();
-
-    components.addSystem(new SystemMove(components));
+    components.addSystem(new SystemDraw(components));
     components.runSystem();
+
+    // components.addSystem(new SystemMove(components));
+    // components.runSystem();
 
     // Load a sprite to display
     // sf::RectangleShape square(sf::Vector2f(10, 10));
