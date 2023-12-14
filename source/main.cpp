@@ -7,6 +7,7 @@
 
 #include "main.hpp"
 #include "SystemDraw.hpp"
+#include "SystemMove.hpp"
 
 int main()
 {
@@ -28,6 +29,9 @@ int main()
 
     components.addSystem(new SystemDraw(components));
     components.runSystem();
+
+    // components.addSystem(new SystemMove(components));
+    // components.runSystem();
 
     // Load a sprite to display
     // sf::RectangleShape square(sf::Vector2f(10, 10));
