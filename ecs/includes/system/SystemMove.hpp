@@ -34,7 +34,7 @@ int SystemMove::run()
 {
     switch (_event.type)
         case sf::Event::KeyPressed:
-            for (int index = 0; index < _registries.componentArrays["Position"].size(); index++) {
+            for (int index = 0; index < _registries.componentArrays.size(); index++) {
                 if (SparseArray<bool>(_registries.componentArrays["Position"])[index] == true && SparseArray<bool>(_registries.componentArrays["Vitesse"])[index] == true) {
                     if (_event.key.code == sf::Keyboard::Up)
                         _registries.componentArrays["Position"][index].y -= _registries.componentArrays["Vitesse"][index];
