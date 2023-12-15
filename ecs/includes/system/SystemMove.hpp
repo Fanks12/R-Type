@@ -9,6 +9,7 @@
     #define SYSTEMMOVE_HPP_
     #include "System.hpp"
     #include "SparseArray.hpp"
+    #include "Registry.hpp"
     #include <SFML/Graphics.hpp>
     #include <vector>
     #include <string>
@@ -30,22 +31,27 @@ SystemMove::SystemMove(Registry &registries) : System(registries)
 {
 }
 
+void SystemMove::makeMove(sf::Event event)
+{
+    for (long unsigned int index = 0; index < std::any_cast<std::vector<int>>(_registries.getComponent("Speed")).size(); index++) {
+        std::pair<int, int> position = std::any_cast<std::pair<int, int>>(_registries.getComponent("Position"))[index];
+        if (_event.key.code == sf::Keyboard::Up)
+            position.second -= std::any_cast<int>(_registries.getComponent("Speed"))[index];
+        if (_event.key.code == sf::Keyboard::Down)
+            position.second += std::any_cast<int>(_registries.getComponent("Speed"))[index];
+        if (_event.key.code == sf::Keyboard::Left)
+            position.first -= std::any_cast<int>(_registries.getComponent("Speed"))[index];
+        if (_event.key.code == sf::Keyboard::Right)
+            position.first += std::any_cast<int>(_registries.getComponent("Speed"))[index];
+        _registries.setComponentToEntity(_registries.getEntityFromComponent("Position")[index], "Position", position);
+    }
+}
+
 int SystemMove::run()
 {
     switch (_event.type) {
         case sf::Event::KeyPressed:
-            for (long unsigned int index = 0; index < _registries.componentArrays.size(); index++) {
-                // if (_registries.componentArrays["Position"][index] != "" and _registries.componentArrays["Vitesse"][index] != "") {
-                //     if (_event.key.code == sf::Keyboard::Up)
-                //         _registries.componentArrays["Position"][index].y -= _registries.componentArrays["Vitesse"][index];
-                //     if (_event.key.code == sf::Keyboard::Down)
-                //         _registries.componentArrays["Position"][index].y += _registries.componentArrays["Vitesse"][index];
-                //     if (_event.key.code == sf::Keyboard::Left)
-                //         _registries.componentArrays["Position"][index].x -= _registries.componentArrays["Vitesse"][index];
-                //     if (_event.key.code == sf::Keyboard::Right)
-                //         _registries.componentArrays["Position"][index].x += _registries.componentArrays["Vitesse"][index];
-                // }
-            }
+                makeMove(_event);
         default:
             break;
     }

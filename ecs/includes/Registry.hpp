@@ -78,9 +78,9 @@ class Registry {
         template <typename T>
         SparseArray<T> const &getComponent(std::string component) const;
 
-        std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
     protected:
     private:
+        std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
         std::vector<ISystem *> systemArrays;
         size_t entityNumber = 0;
 };
