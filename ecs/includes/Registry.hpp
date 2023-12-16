@@ -84,7 +84,6 @@ class Registry {
          */
         size_t entityNumbers() const { return entityNumber; }
 
-        std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
