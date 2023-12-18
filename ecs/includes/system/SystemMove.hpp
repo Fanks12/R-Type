@@ -59,11 +59,9 @@ void SystemMove::makeMove()
 
 int SystemMove::run()
 {
-    while (_window->isOpen()) {
-        _event = sf::Event();
-        while (_window->pollEvent(_event)) {
-            makeMove();
-        }
+    _event = sf::Event();
+    while (_window->pollEvent(_event)) {
+        makeMove();
     }
     return 0;
 }

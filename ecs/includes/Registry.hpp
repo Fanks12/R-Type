@@ -83,13 +83,6 @@ class Registry {
          * @return The entityNulber value
          */
         size_t entityNumbers() const { return entityNumber; }
-
-        /**
-         * @brief return if the registry is running
-         * @return The _running value
-         */
-        bool isRunning() const { return _running; }
-
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
