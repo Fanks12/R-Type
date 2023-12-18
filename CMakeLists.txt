@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.10)
 project(rtype)
 
 #set cpp version
-set(CMAKE_CXX_STANDARD 11)
+set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #set requiered packages
@@ -11,16 +11,17 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 #set source files
 set(SOURCES
     source/main.cpp
-    source/event.cpp
 )
 
 #set include directories
 set(INCLUDE_DIRS
-    includes
+    ecs/includes
+    ecs/includes/system
 )
 
 #set link directories
 find_package(Threads REQUIRED)
+find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
 #set binary output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
@@ -29,3 +30,4 @@ add_executable(rtype ${SOURCES})
 target_include_directories(rtype PRIVATE ${INCLUDE_DIRS})
 
 target_link_libraries(rtype PRIVATE Threads::Threads)
+target_link_libraries(rtype PRIVATE sfml-graphics sfml-window sfml-system)

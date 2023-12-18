@@ -5,28 +5,30 @@
 ** main
 */
 
-#include "main.hpp"
-
+#include "SystemMove.hpp"
 #include <iostream>
-
-bool trigger()
-{
-    char userInput;
-    std::cout << "Enter a character: ";
-    std::cin >> userInput;
-
-    if (userInput == 'a') {
-        return true;
-    }
-    return false;
-}
 
 int main()
 {
-    systemevent test;
-    test.startEvent(trigger, []() {
-        std::cout << "decol lapin (oublie pas de mettre un coup de press aussi)" << std::endl;
-    });
-    std::cout << "end" << std::endl;
-    while (true);
+    Registry components;
+    int fusée = components.createEntity();
+    int voiture = components.createEntity();
+
+    sf::Window window;
+    window.create(sf::VideoMode(800, 600), "Bootstrap");
+
+    components.addComponent("Speed");
+    components.setComponentToEntity(fusée, "Speed", 5);
+    components.setComponentToEntity(voiture, "Speed", 2);
+
+    components.addComponent("Drawable");
+    components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(10, 10));
+    components.setComponentToEntity(voiture, "Drawable", std::pair<int, int>(10, 10));
+
+    components.addComponent("Position");
+    components.setComponentToEntity(fusée, "Position", std::pair<int, int>(20, 20));
+    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(10, 10));
+
+    components.addSystem(new SystemMove(components, &window));
+    components.runSystem();
 }
