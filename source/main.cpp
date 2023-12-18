@@ -6,7 +6,7 @@
 */
 
 #include "main.hpp"
-#include "SystemDraw.hpp"
+// #include "SystemDraw.hpp"
 #include "SystemMove.hpp"
 
 int main()
@@ -27,11 +27,18 @@ int main()
     components.setComponentToEntity(fusée, "Position", std::pair<int, int>(20, 20));
     components.setComponentToEntity(voiture, "Position", std::pair<int, int>(10, 10));
 
-    components.addSystem(new SystemDraw(components));
-    components.runSystem();
+    // components.addSystem(new SystemDraw(components));
+    // components.runSystem();
 
+    std::cout << "pop" << std::endl;
     components.addSystem(new SystemMove(components));
     components.runSystem();
+
+    //display position
+    while (1) {
+        std::cout << "fusée: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).second << std::endl;
+        std::cout << "voiture: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).second << std::endl;
+    }
 
     // Load a sprite to display
     // sf::RectangleShape square(sf::Vector2f(10, 10));

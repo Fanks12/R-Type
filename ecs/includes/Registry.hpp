@@ -84,19 +84,28 @@ class Registry {
          */
         size_t entityNumbers() const { return entityNumber; }
 
+        /**
+         * @brief return if the registry is running
+         * @return The _running value
+         */
+        bool isRunning() const { return _running; }
+
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
         std::vector<ISystem *> systemArrays;
         size_t entityNumber = 0;
+        bool _running = true;
 };
 
 Registry::Registry()
 {
+    _running = true;
 }
 
 Registry::~Registry()
 {
+    _running = false;
 }
 
 int Registry::createEntity()
