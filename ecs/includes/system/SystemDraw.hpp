@@ -29,7 +29,7 @@ class SystemDraw : public virtual System {
         std::vector<std::variant<std::string, sf::Sprite>> _cache;
 };
 
-SystemDraw::SystemDraw(Registry &registries) : System(registries), _window(sf::RenderWindow(sf::VideoMode(800, 600), "Bootstrap"))
+SystemDraw::SystemDraw(Registry &registries) : System(registries)
 {}
 
 void SystemDraw::updateCache()

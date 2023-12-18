@@ -18,7 +18,7 @@
 
 class SystemMove : public virtual System {
     public:
-        SystemMove(Registry &registries);
+        SystemMove(Registry &registries, sf::Window *window);
         ~SystemMove() = default;
 
         int run();
@@ -26,19 +26,21 @@ class SystemMove : public virtual System {
     protected:
     private:
         sf::Event _event;
+        sf::Window *_window;
 };
 
-SystemMove::SystemMove(Registry &registries) : System(registries)
+SystemMove::SystemMove(Registry &registries, sf::Window *window) : System(registries)
 {
+    _window = window;
 }
 
 void SystemMove::makeMove()
 {
-    while (_registries.isRunning()) {
-        if (_event.type == sf::Event::KeyPressed) {
+    switch (_event.type) {
+        case sf::Event::KeyPressed: 
             for (long unsigned int index = 0; index < _registries.entityNumbers(); index++) {
                 std::pair<int, int> position = std::any_cast<std::pair<int, int>>(_registries.getComponent<std::any>("Position")[index]);
-                if (_registries.getComponent<std::any>("Speed")[index].has_value() == false || _registries.getComponent<std::any>("Position")[index].has_value() == false)
+                if (_registries.getComponent<std::any>("Speed")[index].has_value() == false or _registries.getComponent<std::any>("Position")[index].has_value() == false)
                     return;
 
                 if (_event.key.code == sf::Keyboard::Up)
@@ -51,14 +53,18 @@ void SystemMove::makeMove()
                     position.first += std::any_cast<int>(_registries.getComponent<std::any>("Speed")[index]);
                 _registries.setComponentToEntity(index, "Position", position);
             }
-        }
+            break;
     }
 }
 
 int SystemMove::run()
 {
-    std::thread thread(&SystemMove::makeMove, this);
-    thread.detach();
+    while (_window->isOpen()) {
+        _event = sf::Event();
+        while (_window->pollEvent(_event)) {
+            makeMove();
+        }
+    }
     return 0;
 }
 
