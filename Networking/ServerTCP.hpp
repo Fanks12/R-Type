@@ -11,24 +11,33 @@
 #include <vector>
 #include <thread>
 #include <atomic>
+#include <unordered_map>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
 
+class ServerTCP {
+public:
+    ServerTCP(int portTCP);
+    ~ServerTCP();
 
-class ServerTCP  {
-    public:
-        ServerTCP(int portTCP);
-        ~ServerTCP();
+    void start();
+    void handleClient(std::shared_ptr<asio::ip::tcp::socket> clientSocket);
+    void stop();
 
-        void start();
-        void handleClient(std::shared_ptr<asio::ip::tcp::socket> clientSocket);
-        void stop();
-
-    private:
-        int port;
-        void initializeAcceptor();
-        void handleClient(asio::ip::tcp::socket clientSocket);
-        void run();
-        asio::io_context ioContext;
-        asio::ip::tcp::endpoint endpoint;
-        asio::ip::tcp::acceptor acceptor;
-        bool isRunning;
+private:
+    std::unordered_map<std::shared_ptr<asio::ip::tcp::socket>, int> clientUIDs;
+    int nextUID;
+    std::mutex uidMutex;
+    std::condition_variable clientCV;
+    std::queue<std::shared_ptr<asio::ip::tcp::socket>> clientQueue;
+    int port;
+    void initializeAcceptor();
+    void run();
+    void workerThread();
+    asio::io_context ioContext;
+    asio::ip::tcp::endpoint endpoint;
+    asio::ip::tcp::acceptor acceptor;
+    bool isRunning;
+    std::vector<std::thread> workerThreads;
 };
