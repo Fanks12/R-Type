@@ -6,8 +6,8 @@
 */
 
 #include "main.hpp"
-// #include "SystemDraw.hpp"
-#include "SystemMove.hpp"
+#include "SystemDraw.hpp"
+// #include "SystemMove.hpp"
 
 int main()
 {
@@ -15,8 +15,8 @@ int main()
     int fusée = components.createEntity();
     int voiture = components.createEntity();
 
-    sf::Window window;
-    window.create(sf::VideoMode(800, 600), "Bootstrap");
+    // sf::Window window;
+    // window.create(sf::VideoMode(800, 600), "Bootstrap");
 
     components.addComponent("Speed");
     components.setComponentToEntity(fusée, "Speed", 5);
@@ -30,10 +30,10 @@ int main()
     components.setComponentToEntity(fusée, "Position", std::pair<int, int>(20, 20));
     components.setComponentToEntity(voiture, "Position", std::pair<int, int>(10, 10));
 
-    // components.addSystem(new SystemDraw(components));
+    components.addSystem(new SystemDraw(components));
     // components.runSystem();
 
-    components.addSystem(new SystemMove(components, &window));
+    // components.addSystem(new SystemMove(components, &window));
     components.runSystem();
 
     //display position
