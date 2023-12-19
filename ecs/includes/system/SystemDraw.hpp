@@ -57,14 +57,12 @@ void SystemDraw::updatePosition()
     for (auto &entity : _cache) {
         if (!(entity.type() == typeid(std::string))) {
             index = std::any_cast<std::pair<int, int>>(posCompo[i]);
-            std::any_cast<sf::RectangleShape>(entity).setPosition(sf::Vector2f(index.first, index.second));
+            sf::RectangleShape object = std::any_cast<sf::RectangleShape>(entity);
+            object.setPosition(sf::Vector2f(index.first, index.second));
+            entity = object;
         }
         i++;
     }
-    // boucle sur cache
-    // si non vide / index = std::any_cast<std::pair<int, int>>(drawCompo[i])
-    // _cache[i].position = sf::Vector2f(index.first, index.second);
-
 }
 
 void SystemDraw::updateEntities()
