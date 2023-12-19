@@ -8,7 +8,6 @@
 #ifndef SYSTEMCONTROL_HPP_
     #define SYSTEMCONTROL_HPP_
     #include "System.hpp"
-    #include <SFML/Graphics.hpp>
     #include <conio.h>
 
 #define KEY_UP 72

@@ -8,7 +8,6 @@
 #ifndef SYSTEMSHOOT_HPP_
     #define SYSTEMSHOOT_HPP_
     #include "System.hpp"
-    #include <SFML/Graphics.hpp>
 
 class SystemShoot : public virtual System {
     public:
