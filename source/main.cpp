@@ -19,16 +19,20 @@ int main()
     // window.create(sf::VideoMode(800, 600), "Bootstrap");
 
     components.addComponent("Speed");
-    components.setComponentToEntity(fusée, "Speed", 5);
-    components.setComponentToEntity(voiture, "Speed", 2);
+    components.setComponentToEntity(fusée, "Speed", std::pair<int, int>(0, 0));
+    components.setComponentToEntity(voiture, "Speed", std::pair<int, int>(0, 0));
 
     components.addComponent("Drawable");
-    components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(10, 10));
-    components.setComponentToEntity(voiture, "Drawable", std::pair<int, int>(10, 10));
+    components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(100, 100));
+    components.setComponentToEntity(voiture, "Drawable", std::pair<int, int>(100, 100));
 
     components.addComponent("Position");
-    components.setComponentToEntity(fusée, "Position", std::pair<int, int>(20, 20));
-    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(10, 10));
+    components.setComponentToEntity(fusée, "Position", std::pair<int, int>(200, 200));
+    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(100, 100));
+
+    components.addComponent("Control");
+    components.setComponentToEntity(fusée, "Control", 1);
+    // components.setComponentToEntity(voiture, "Control", 2);
 
     components.addSystem(new SystemDraw(components));
     // components.runSystem();

@@ -29,8 +29,8 @@ class SystemDraw : public virtual System {
         std::vector<std::any> _cache;
 };
 
-SystemDraw::SystemDraw(Registry &registries) : System(registries), _window(sf::VideoMode(800, 600), "SFML window")
-{}
+SystemDraw::SystemDraw(Registry &registries) : System(registries),
+_window(sf::VideoMode(800, 600), "SFML window") {}
 
 void SystemDraw::updateCache()
 {
