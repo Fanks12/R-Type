@@ -76,6 +76,7 @@ void ServerTCP::handleClient(std::shared_ptr<asio::ip::tcp::socket> clientSocket
 {
     int uid = nextUID++;
     clientUIDs[clientSocket] = uid;
+    Handle_message handle_message;
 
     std::cout << "Client " << uid << " connected" << std::endl;
 
@@ -92,7 +93,9 @@ void ServerTCP::handleClient(std::shared_ptr<asio::ip::tcp::socket> clientSocket
                 break;
             }
             std::cout << "Received from Client " << uid << ": " << std::string(buffer.begin(), buffer.begin() + size_msg) << std::endl;
-            // Ici, on traitera le message avant de le renvoyer
+            std::string messageToSend = handle_message.
+            Protocole(std::string(buffer.begin(), buffer.begin() + size_msg), uid);
+            // std::cout << "Message to send: " << messageToSend << std::endl;
             asio::write(*clientSocket, asio::buffer(buffer.data(), size_msg));
         }
     } catch (const std::exception& e) {
