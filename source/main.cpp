@@ -7,6 +7,7 @@
 
 #include "SystemMove.hpp"
 #include <iostream>
+#include <unistd.h>
 
 int main()
 {
@@ -31,4 +32,11 @@ int main()
 
     components.addSystem(new SystemMove(components, &window));
     components.runSystem();
+
+    while (window.isOpen()) {
+    //     std::cout << "Position fusée: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).second << std::endl;
+    //     std::cout << "Position voiture: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).second << std::endl;
+    //     sleep(1);
+    }
+    
 }
