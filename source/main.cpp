@@ -19,8 +19,8 @@ int main()
     window.create(sf::VideoMode(800, 600), "Bootstrap");
 
     components.addComponent("Speed");
-    components.setComponentToEntity(fusée, "Speed", 5);
-    components.setComponentToEntity(voiture, "Speed", 2);
+    components.setComponentToEntity(fusée, "Speed", std::pair<int, int>(1, 1));
+    components.setComponentToEntity(voiture, "Speed", std::pair<int, int>(1, 1));
 
     components.addComponent("Drawable");
     components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(10, 10));
@@ -31,12 +31,9 @@ int main()
     components.setComponentToEntity(voiture, "Position", std::pair<int, int>(10, 10));
 
     components.addSystem(new SystemMove(components, &window));
-    components.runSystem();
 
     while (window.isOpen()) {
-    //     std::cout << "Position fusée: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).second << std::endl;
-    //     std::cout << "Position voiture: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).second << std::endl;
-    //     sleep(1);
+        components.runSystem();
+        sleep(1);
     }
-    
 }
