@@ -8,6 +8,9 @@
 #include "main.hpp"
 #include "SystemDraw.hpp"
 // #include "SystemMove.hpp"
+#include "SystemMove.hpp"
+#include <iostream>
+#include <unistd.h>
 
 int main()
 {
