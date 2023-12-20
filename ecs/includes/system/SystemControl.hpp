@@ -92,7 +92,7 @@ int SystemControl::run() {
             if (!(speedCompo[i].type() == typeid(std::string)) && inWindow(i, speed))
                 _registries->getComponent<std::any>("Speed")[i] = speed;
             if (!(shootCompo[i].type() == typeid(std::string)))
-                shootCompo[i] = is_shooting;
+                _registries->getComponent<std::any>("Shoot")[i] = is_shooting;
         }
     }
 
