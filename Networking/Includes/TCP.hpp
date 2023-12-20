@@ -22,6 +22,7 @@ class TCP {
         void start();
         void readMessages(asio::ip::tcp::socket& socket);
         void stop();
+        void writeMessages(std::string msg_send);
 
     protected:
     private:
