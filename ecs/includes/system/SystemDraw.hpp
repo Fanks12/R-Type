@@ -18,13 +18,13 @@ class SystemDraw : public virtual System {
         ~SystemDraw() = default;
 
         int run();
+        sf::RenderWindow _window;
     protected:
     private:
         void updateCache();
         void updatePosition();
         void updateEntities();
 
-        sf::RenderWindow _window;
         sf::Event _event;
         std::vector<std::any> _cache;
 };
@@ -35,9 +35,9 @@ _window(sf::VideoMode(800, 600), "SFML window") {}
 void SystemDraw::updateCache()
 {
     std::pair<int, int> index;
-    SparseArray<std::any> drawCompo = _registries.getComponent<std::any>("Drawable");
+    SparseArray<std::any> drawCompo = _registries->getComponent<std::any>("Drawable");
 
-    for (size_t i = 0; i < _registries.entityNumbers(); i++)
+    for (size_t i = 0; i < _registries->entityNumbers(); i++)
         if (drawCompo[i].type() == typeid(std::pair<int, int>)) {
             index = std::any_cast<std::pair<int, int>>(drawCompo[i]);
             if (i >= _cache.size())
@@ -51,7 +51,7 @@ void SystemDraw::updateCache()
 void SystemDraw::updatePosition()
 {
     std::pair<int, int> index;
-    SparseArray<std::any> posCompo = _registries.getComponent<std::any>("Position");
+    SparseArray<std::any> posCompo = _registries->getComponent<std::any>("Position");
     int i = 0;
 
     for (auto &entity : _cache) {
@@ -77,13 +77,6 @@ int SystemDraw::run()
         return 0;
 
     updateEntities();
-
-    while (_window.pollEvent(_event))
-    {
-        // Close window: exit
-        if (_event.type == sf::Event::Closed)
-            _window.close();
-    }
 
     // Clear screen
     _window.clear();

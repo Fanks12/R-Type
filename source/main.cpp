@@ -5,10 +5,11 @@
 ** main
 */
 
-#include "main.hpp"
+// #include "main.hpp"
 #include "SystemDraw.hpp"
-// #include "SystemMove.hpp"
 #include "SystemMove.hpp"
+#include "SystemControl.hpp"
+#include "SystemShoot.hpp"
 #include <iostream>
 #include <unistd.h>
 
@@ -18,12 +19,9 @@ int main()
     int fusée = components.createEntity();
     int voiture = components.createEntity();
 
-    // sf::Window window;
-    // window.create(sf::VideoMode(800, 600), "Bootstrap");
-
     components.addComponent("Speed");
     components.setComponentToEntity(fusée, "Speed", std::pair<int, int>(0, 0));
-    components.setComponentToEntity(voiture, "Speed", std::pair<int, int>(0, 0));
+    components.setComponentToEntity(voiture, "Speed", std::pair<int, int>(1, 0));
 
     components.addComponent("Drawable");
     components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(100, 100));
@@ -35,19 +33,23 @@ int main()
 
     components.addComponent("Control");
     components.setComponentToEntity(fusée, "Control", 1);
-    // components.setComponentToEntity(voiture, "Control", 2);
+    components.setComponentToEntity(voiture, "Control", 2);
 
-    components.addSystem(new SystemDraw(components));
-    // components.runSystem();
+    components.addComponent("Shoot");
 
-    // components.addSystem(new SystemMove(components, &window));
+    SystemDraw *Drawing = new SystemDraw(components);
+    components.addSystem(Drawing);
+    components.addSystem(new SystemMove(components));
+    components.addSystem(new SystemControl(components, Drawing->_window));
     components.runSystem();
 
     //display position
-    while (1) {
-        // std::cout << "fusée: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).second << std::endl;
-        // std::cout << "voiture: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).second << std::endl;
-    }
+    // std::cout << "fusée: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).first << std::endl;
+    // SparseArray<std::any> speedCompo = components.getComponent<std::any>("Position");
+    // std::pair<int, int> caca(1, 4);
+    // components.getComponent<std::any>("Position")[fusée] = caca;
+    // std::cout << "fusée: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).first << std::endl;
+    // std::cout << "voiture: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).first << " " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[voiture]).second << std::endl;
 
     // Load a sprite to display
     // sf::RectangleShape square(sf::Vector2f(10, 10));

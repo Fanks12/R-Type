@@ -19,55 +19,78 @@
 
 class SystemControl : public virtual System {
     public:
-        SystemControl(Registry &registries);
+        SystemControl(Registry &registries, sf::RenderWindow &window);
         ~SystemControl() = default;
 
         int run();
     protected:
     private:
+        bool inWindow(int id, std::pair<int, int> speed);
+
+        sf::RenderWindow *_window;
+        sf::Event _event;
 };
 
-SystemControl::SystemControl(Registry &registries) : System(registries) {}
+SystemControl::SystemControl(Registry &registries, sf::RenderWindow &window) : System(registries), _window(&window) {}
+
+bool SystemControl::inWindow(int id, std::pair<int, int> speed)
+{
+    std::pair<int, int> pos = std::any_cast<std::pair<int, int>>(_registries->getComponent<std::any>("Position")[id]);
+
+    if (pos.first + speed.first > 700)
+        return false;
+    if (pos.first + speed.first < 0)
+        return false;
+    if (pos.second + speed.second > 500)
+        return false;
+    if (pos.second + speed.second < 0)
+        return false;
+    return true;
+}
 
 int SystemControl::run() {
-    int key = _getch();
 
     int is_shooting = 0;
 
     std::pair<int, int> speed;
 
-    SparseArray<std::any> controlCompo = _registries.getComponent<std::any>("Control");
+    SparseArray<std::any> controlCompo = _registries->getComponent<std::any>("Control");
 
-    SparseArray<std::any> speedCompo = _registries.getComponent<std::any>("Speed");
+    SparseArray<std::any> speedCompo = _registries->getComponent<std::any>("Speed");
 
-    SparseArray<std::any> shootCompo = _registries.getComponent<std::any>("Shoot");
+    SparseArray<std::any> shootCompo = _registries->getComponent<std::any>("Shoot");
 
-    switch (key) {
-        case KEY_UP:
-            speed = std::pair<int, int>(0, 10);
-            break;
-        case KEY_DOWN:
-            speed = std::pair<int, int>(0, -10);
-            break;
-        case KEY_LEFT:
-            speed = std::pair<int, int>(-10, 0);
-            break;
-        case KEY_RIGHT:
-            speed = std::pair<int, int>(10, 0);
-            break;
-        case KEY_SPACE:
-            is_shooting = 1;
-            break;
-        case KEY_ESCAPE:
+    while (_window->pollEvent(_event)) {
+        if (_event.type == sf::Event::Closed)
             return 0;
-        default:
-            break;
+        if (_event.type == sf::Event::KeyPressed)
+            switch (_event.key.code) {
+                case sf::Keyboard::Up:
+                    speed = std::pair<int, int>(0, -10);
+                    break;
+                case sf::Keyboard::Down:
+                    speed = std::pair<int, int>(0, 10);
+                    break;
+                case sf::Keyboard::Left:
+                    speed = std::pair<int, int>(-10, 0);
+                    break;
+                case sf::Keyboard::Right:
+                    speed = std::pair<int, int>(10, 0);
+                    break;
+                case sf::Keyboard::Space:
+                    is_shooting = 1;
+                    break;
+                case sf::Keyboard::Escape:
+                    return 0;
+                default:
+                    break;
+            }
     }
 
-    for (size_t i = 0; i < _registries.entityNumbers(); i++) {
-        if (!(controlCompo[i].type() == typeid(std::string))) {
-            if (!(shootCompo[i].type() == typeid(std::string)))
-                speedCompo[i] = speed;
+    for (size_t i = 0; i < _registries->entityNumbers(); i++) {
+        if (!(controlCompo[i].type() == typeid(std::string)) && std::any_cast<int>(controlCompo[i]) == _registries->uuid) {
+            if (!(speedCompo[i].type() == typeid(std::string)) && inWindow(i, speed))
+                _registries->getComponent<std::any>("Speed")[i] = speed;
             if (!(shootCompo[i].type() == typeid(std::string)))
                 shootCompo[i] = is_shooting;
         }
