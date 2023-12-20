@@ -12,8 +12,6 @@
     #include <string>
     #include <any>
     #include <thread>
-    #include <mutex>
-    #include <iostream>
 
 class SystemMove : public virtual System {
     public:
@@ -28,16 +26,21 @@ class SystemMove : public virtual System {
 
 SystemMove::SystemMove(Registry &registries) : System(registries) {}
 
-void SystemMove::makeMove() {
-    for (size_t index = 0; index < _registries.entityNumbers(); index++) {
-        std::pair<int, int> position = std::any_cast<std::pair<int, int>>(_registries.getComponent<std::any>("Position")[index]);
-        if (_registries.getComponent<std::any>("Speed")[index].has_value() == false or _registries.getComponent<std::any>("Position")[index].has_value() == false)
-            return;
+void SystemMove::makeMove()
+{
 
-        position.first += std::any_cast<std::pair<int, int>>(_registries.getComponent<std::any>("Speed")[index]).first;
-        position.second += std::any_cast<std::pair<int, int>>(_registries.getComponent<std::any>("Speed")[index]).second;
-        _registries.setComponentToEntity(index, "Position", position);
-        std::cout << "Position : " << std::any_cast<std::pair<int, int>>(_registries.getComponent<std::any>("Position")[index]).first << " " << std::any_cast<std::pair<int, int>>(_registries.getComponent<std::any>("Position")[index]).second << std::endl;
+    std::pair<int, int> pos;
+    std::pair<int, int> speed;
+    SparseArray<std::any> speedCompo = _registries->getComponent<std::any>("Speed");
+    SparseArray<std::any> positionCompo = _registries->getComponent<std::any>("Position");
+
+    for (size_t i = 0; i < _registries->entityNumbers(); i++) {
+        if (!(speedCompo[i].type() == typeid(std::string))
+        && !(positionCompo[i].type() == typeid(std::string))) {
+            pos = std::any_cast<std::pair<int, int>>(positionCompo[i]);
+            speed = std::any_cast<std::pair<int, int>>(speedCompo[i]);
+            _registries->getComponent<std::any>("Position")[i] = std::pair<int, int>((pos.first + speed.first), (pos.second + speed.second));
+        }
     }
 }
 

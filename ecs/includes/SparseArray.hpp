@@ -90,7 +90,7 @@ template <typename T>
 SparseArray<T>::SparseArray(int entityNumber)
 {
     for (int i = 0; i < entityNumber; i++)
-        _EntityList.push_back(T());
+        _EntityList.push_back(std::string("vide"));
 }
 
 template <typename T>
@@ -115,13 +115,13 @@ SparseArray<T>::~SparseArray()
 template <typename T>
 void SparseArray<T>::addEntity()
 {
-    _EntityList.push_back(T());
+    _EntityList.push_back(std::string("vide"));
 }
 
 template <typename T>
 void SparseArray<T>::deleteEntity(int index)
 {
-    _EntityList.at(index) = T();
+    _EntityList.at(index) = std::string("vide");
 }
 
 template <typename T>

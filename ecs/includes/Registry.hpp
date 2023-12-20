@@ -12,6 +12,7 @@
 #include <unordered_map>
 #include <string>
 #include <any>
+#include <unistd.h>
 
 class ISystem;
 
@@ -83,6 +84,13 @@ class Registry {
          * @return The entityNulber value
          */
         size_t entityNumbers() const { return entityNumber; }
+
+        /**
+         * @brief return if the registry is running
+         * @return The _running value
+         */
+        bool isRunning() const { return _running; }
+        int uuid = 1;
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
@@ -131,6 +139,7 @@ void Registry::runSystem()
     int end = 1;
 
     while (end) {
+        usleep(3000);
         for (auto system : systemArrays)
             end = system->run();
     }
