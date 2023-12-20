@@ -7,7 +7,8 @@
 
 #include "ServerTCP.hpp"
 
-ServerTCP::ServerTCP(int portTCP) : isRunning(true), port(portTCP), ioContext(), endpoint(asio::ip::make_address("127.0.0.1"), 8282), acceptor(ioContext, endpoint) {
+ServerTCP::ServerTCP(int portTCP) : isRunning(true), port(portTCP), ioContext(), endpoint(asio::ip::make_address("127.0.0.1"), 8282), acceptor(ioContext, endpoint)
+{
 }
 
 ServerTCP::~ServerTCP()
@@ -42,8 +43,6 @@ void ServerTCP::run()
             acceptor.accept(*socket); {
                 std::lock_guard<std::mutex> lock(uidMutex);
                 clientQueue.push(socket);
-                // int uid = nextUID++;
-                // data.addClient(socket, uid);
             }
             clientCV.notify_one();
             std::cout << "Accepted a new client" << std::endl;
@@ -98,7 +97,6 @@ void ServerTCP::handleClient(std::shared_ptr<asio::ip::tcp::socket> clientSocket
             std::cout << "Received from Client " << uid << ": " << std::string(buffer.begin(), buffer.begin() + size_msg) << std::endl;
             std::string messageToSend = handle_message.
             Protocole(std::string(buffer.begin(), buffer.begin() + size_msg), uid);
-            // std::cout << "Message to send: " << messageToSend << std::endl;
             for (const auto& clientInfo : data.getClients()) {
                 std::cout << "Send to Client " << clientInfo.uid << ": " << messageToSend << std::endl;
                 asio::write(*(clientInfo.socket), asio::buffer(messageToSend));
