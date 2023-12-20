@@ -21,7 +21,7 @@ int main()
 
     components.addComponent("Speed");
     components.setComponentToEntity(fusée, "Speed", std::pair<int, int>(0, 0));
-    components.setComponentToEntity(voiture, "Speed", std::pair<int, int>(1, 0));
+    components.setComponentToEntity(voiture, "Speed", std::pair<int, int>(0, 0));
 
     components.addComponent("Drawable");
     components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(100, 100));
@@ -29,18 +29,20 @@ int main()
 
     components.addComponent("Position");
     components.setComponentToEntity(fusée, "Position", std::pair<int, int>(200, 200));
-    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(100, 100));
+    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(300, 300));
 
     components.addComponent("Control");
     components.setComponentToEntity(fusée, "Control", 1);
     components.setComponentToEntity(voiture, "Control", 2);
 
     components.addComponent("Shoot");
+    components.setComponentToEntity(fusée, "Shoot", 0);
 
     SystemDraw *Drawing = new SystemDraw(components);
     components.addSystem(Drawing);
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window));
+    components.addSystem(new SystemShoot(components));
     components.runSystem();
 
     //display position
