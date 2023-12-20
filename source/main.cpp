@@ -18,6 +18,7 @@ int main()
     Registry components;
     int fusée = components.createEntity();
     int voiture = components.createEntity();
+    int mob = components.createEntity();
 
     components.addComponent("Speed");
     components.setComponentToEntity(fusée, "Speed", std::pair<int, int>(0, 0));
@@ -26,10 +27,12 @@ int main()
     components.addComponent("Drawable");
     components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(100, 100));
     components.setComponentToEntity(voiture, "Drawable", std::pair<int, int>(100, 100));
+    components.setComponentToEntity(mob, "Drawable", std::pair<int, int>(50, 100));
 
     components.addComponent("Position");
-    components.setComponentToEntity(fusée, "Position", std::pair<int, int>(200, 200));
-    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(300, 300));
+    components.setComponentToEntity(fusée, "Position", std::pair<int, int>(100, 200));
+    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(100, 305));
+    components.setComponentToEntity(mob, "Position", std::pair<int, int>(600, 200));
 
     components.addComponent("Control");
     components.setComponentToEntity(fusée, "Control", 1);

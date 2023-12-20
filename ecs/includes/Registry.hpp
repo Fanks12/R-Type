@@ -140,8 +140,11 @@ void Registry::runSystem()
 
     while (end) {
         usleep(3000);
-        for (auto system : systemArrays)
+        for (auto system : systemArrays) {
             end = system->run();
+            if (!end)
+                break;
+        }
     }
 }
 
