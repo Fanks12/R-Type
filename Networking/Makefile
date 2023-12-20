@@ -1,8 +1,15 @@
+##
+## EPITECH PROJECT, 2023
+## Networking
+## File description:
+## Makefile
+##
+
 CPP = g++
-CPPFLAGS = -std=c++14 -g
+CPPFLAGS = -std=c++14 -g -I./Includes
 LDFLAGS = -lboost_program_options -pthread
 
-SRCS = main.cpp Handle_message.cpp Server.cpp ServerTCP.cpp ServerUDP.cpp
+SRCS = ./Server/main.cpp ./Server/Handle_message.cpp ./Server/Data.cpp ./Server/Server.cpp ./Server/TCP/ServerTCP.cpp ./Server/UDP/ServerUDP.cpp
 OBJS = $(SRCS:.cpp=.o)
 TARGET = server
 
