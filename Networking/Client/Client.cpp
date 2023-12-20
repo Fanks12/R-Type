@@ -20,6 +20,11 @@ void Client::TcpWrite(const std::string &msg)
     tcpClient_->writeMessages(msg);
 }
 
+std::string Client::getmessage()
+{
+    return tcpClient_->getmessage();
+}
+
 void Client::start()
 {
     try {

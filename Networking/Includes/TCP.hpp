@@ -23,10 +23,12 @@ class TCP {
         void readMessages(asio::ip::tcp::socket& socket);
         void stop();
         void writeMessages(std::string msg_send);
+        std::string getmessage();
 
     protected:
     private:
         int port;
+        std::string message_;
         std::string ip_server;
         asio::io_context ioContext;
         asio::ip::tcp::socket socket;
