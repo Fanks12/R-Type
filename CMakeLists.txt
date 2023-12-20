@@ -20,14 +20,16 @@ set(INCLUDE_DIRS
 )
 
 #set link directories
-find_package(Threads REQUIRED)
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
 #set binary output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-# execute_process(COMMAND sudo dnf makecache)
-# execute_process(COMMAND sudo dnf install asio-devel.x86_64)
+#install dependencies
+execute_process(COMMAND sudo dnf install SFML)
+execute_process(COMMAND sudo dnf install asio-devel.x86_64)
+
+find_package(Threads REQUIRED)
+find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
 
 add_executable(rtype ${SOURCES})
 target_include_directories(rtype PRIVATE ${INCLUDE_DIRS})
