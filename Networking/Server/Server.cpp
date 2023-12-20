@@ -7,14 +7,19 @@
 
 #include "Server.hpp"
 
-Server::Server(int tcpPort, int udpPort) : tcpPort_(tcpPort), udpPort_(udpPort) {
+Server::Server(int tcpPort, int udpPort) : tcpPort_(tcpPort), udpPort_(udpPort)
+{
     tcpServer_ = std::make_unique<ServerTCP>(tcpPort_);
     udpServer_ = std::make_unique<ServerUDP>(udpPort_);
 }
 
-Server::~Server() {}
+Server::~Server()
+{
 
-void Server::start() {
+}
+
+void Server::start()
+{
     std::thread tcpThread([this]() {
         tcpServer_->start();
     });

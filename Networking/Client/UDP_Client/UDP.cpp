@@ -7,15 +7,13 @@
 
 #include "UDP.hpp"
 
-using asio::ip::udp;
-
-UDP::UDP(int client_port): port(client_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), isRunning(true) {
+UDP::UDP(int client_port): port(client_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), isRunning(true)
+{
 
 }
 
 UDP::~UDP()
 {
-    stop();
 }
 
 void UDP::start()
@@ -39,15 +37,6 @@ void UDP::start()
 void UDP::stop()
 {
     ioContext.stop();
+    socket.shutdown(asio::ip::udp::socket::shutdown_both);
+    socket.close();
 }
-
-
-
-
-// int main() {
-//     int port = 8080;
-//     std::string server_ip = "127.0.0.1";
-
-//     udp_client(server_ip, port);
-//     return 0;
-// }

@@ -10,7 +10,7 @@ int main(int argc, char **argv)
         po::options_description desc("Options");
         desc.add_options()
             ("help", "Show help message")
-            ("tcp_port", po::value<int>()->default_value(8082), "Specify the TCP port number")
+            ("tcp_port", po::value<int>()->default_value(4242), "Specify the TCP port number")
             ("udp_port", po::value<int>()->default_value(8080), "Specify the UDP port number");
 
         po::variables_map vm;
