@@ -2,11 +2,11 @@
 
 # R-TYPE Project
 
+![R-TYPE](https://m.media-amazon.com/images/I/911DV9FiRTL.png)
 
 The goal of this project is to implement a multithreaded server and a graphical client for a well-known legacy video game
 called R-Type, using a game engine of your own design.
 
-![R-TYPE](https://m.media-amazon.com/images/I/911DV9FiRTL.png)
 # Table of contents
 
 1.[Libraries](#libraries)
