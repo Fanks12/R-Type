@@ -38,7 +38,6 @@ void ServerUDP::run() {
             std::cout << "UDP Received from " << endpoint.address().to_string()
                       << " = " << std::string(buffer.begin(), buffer.begin() + size_msg) << std::endl;
 
-            // Ici bilal, on traitera le message pour le renvoyer
             socket.send_to(asio::buffer(buffer.data(), size_msg), endpoint);
         }
     } catch (std::exception &e) {
