@@ -26,6 +26,7 @@ void TCP::readMessages(tcp::socket& socket)
             std::vector<char> receive_buffer(1024);
             size_t bytes_received = socket.read_some(asio::buffer(receive_buffer));
             std::cout << "Received: " << std::string(receive_buffer.data(), bytes_received) << std::endl;
+            message_ = std::string(receive_buffer.data(), bytes_received);
         }
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
@@ -39,6 +40,11 @@ void TCP::writeMessages(std::string msg_send)
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
+}
+
+std::string TCP::getmessage()
+{
+    return message_;
 }
 
 void TCP::start()

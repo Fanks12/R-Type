@@ -20,6 +20,7 @@ class Client {
         ~Client();
         void start();
         void TcpWrite(const std::string &msg);
+        std::string getmessage();
 
     protected:
     private:
