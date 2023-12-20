@@ -19,6 +19,7 @@ class Client {
         Client(const std::string& server_ip, int tcpPort, int udpPort);
         ~Client();
         void start();
+        void TcpWrite(const std::string &msg);
 
     protected:
     private:
