@@ -15,6 +15,11 @@ Client::~Client()
 {
 }
 
+void Client::TcpWrite(const std::string &msg)
+{
+    tcpClient_->writeMessages(msg);
+}
+
 void Client::start()
 {
     try {
