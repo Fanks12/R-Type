@@ -16,9 +16,8 @@
 class Client {
     public:
         Client() = default;
-        Client(int tcpPort, int udpPort);
+        Client(const std::string& server_ip, int tcpPort, int udpPort);
         ~Client();
-
         void start();
 
     protected:
@@ -27,4 +26,5 @@ class Client {
         std::shared_ptr<UDP> udpClient_;
         int tcpPort_;
         int udpPort_;
+        std::string server_ip_;
 };
