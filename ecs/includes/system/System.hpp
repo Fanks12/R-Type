@@ -14,12 +14,12 @@ class Registry;
 
 class System : public ISystem {
     public:
-        System(Registry &registries) : _registries(registries) {}
+        System(Registry &registries) : _registries(&registries) {}
         ~System() = default;
 
         virtual int run();
     protected:
-        Registry _registries;
+        Registry *_registries;
     private:
 };
 

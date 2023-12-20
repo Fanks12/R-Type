@@ -7,26 +7,31 @@
 
 #include "ServerUDP.hpp"
 
-ServerUDP::ServerUDP(int serv_port): port(serv_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), isRunning(true) {
+ServerUDP::ServerUDP(int serv_port): port(serv_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), isRunning(true)
+{
 
 }
 
-ServerUDP::~ServerUDP() {
+ServerUDP::~ServerUDP()
+{
     stop();
 }
 
-void ServerUDP::start() {
+void ServerUDP::start()
+{
     run();
     std::cout << "ServerUDP::start" << std::endl;
 }
 
-void ServerUDP::stop() {
+void ServerUDP::stop()
+{
     isRunning = false;
     ioContext.stop();
     socket.close();
 }
 
-void ServerUDP::run() {
+void ServerUDP::run()
+{
     std::cout << "ServerUDP::run" << std::endl;
     try {
         std::cout << "UDP Server listening on port " << port << std::endl;
