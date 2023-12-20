@@ -9,7 +9,7 @@ CPP = g++
 CPPFLAGS = -std=c++14 -g -I../Includes
 LDFLAGS = -lboost_program_options -pthread
 
-SRCS = ./Client.cpp ./TCP_Client/TCP.cpp ./UDP_Client/UDP.cpp
+SRCS = main.cpp ./Client.cpp ./TCP_Client/TCP.cpp ./UDP_Client/UDP.cpp
 OBJS = $(SRCS:.cpp=.o)
 TARGET = client
 

@@ -7,22 +7,29 @@
 
 #include "Client.hpp"
 
-Client::Client(int tcpPort, int udpPort) : tcpPort_(tcpPort), udpPort_(udpPort) {
-    tcpClient_ = std::make_unique<TCP>(tcpPort_);
-    udpClient_ = std::make_unique<UDP>(udpPort_);
+Client::Client(const std::string& server_ip, int tcpPort, int udpPort) : tcpPort_(tcpPort), udpPort_(udpPort), server_ip_(server_ip)
+{
 }
 
 Client::~Client()
 {
 }
 
-void Client::start() {
+void Client::start()
+{
+    try {
     std::thread tcpThread([this]() {
+        tcpClient_ = std::make_unique<TCP>(server_ip_, tcpPort_);
         tcpClient_->start();
     });
-    std::thread udpThread([this]() {
-        udpClient_->start();
-    });
+    // std::thread udpThread([this]() {
+        // udpClient_->start();
+    // });
     tcpThread.join();
-    udpThread.join();
+    // udpThread.join();
+    tcpClient_->stop();
+    // udpClient_->stop();
+    } catch (std::exception &e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
 }
