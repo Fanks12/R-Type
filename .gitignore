@@ -6,5 +6,4 @@ bootstrap
 build/*
 rtype
 test
-build/*
 .vscode
