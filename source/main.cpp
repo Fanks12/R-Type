@@ -12,13 +12,21 @@
 #include "SystemShoot.hpp"
 #include <iostream>
 #include <unistd.h>
+#include "Client.hpp"
+#include <thread>
 
 int main()
 {
     Registry components;
+    components.uuid = 1;
     int fusée = components.createEntity();
     int voiture = components.createEntity();
     int mob = components.createEntity();
+    Client *client = &components.client;
+
+    std::thread clientThread([client]() {
+        client->start();
+    });
 
     components.addComponent("Speed");
     components.setComponentToEntity(fusée, "Speed", std::pair<int, int>(0, 0));
@@ -35,8 +43,8 @@ int main()
     components.setComponentToEntity(mob, "Position", std::pair<int, int>(600, 200));
 
     components.addComponent("Control");
-    components.setComponentToEntity(fusée, "Control", 1);
-    components.setComponentToEntity(voiture, "Control", 2);
+    components.setComponentToEntity(fusée, "Control", 0);
+    components.setComponentToEntity(voiture, "Control", 1);
 
     components.addComponent("Shoot");
     components.setComponentToEntity(fusée, "Shoot", 0);
@@ -46,8 +54,11 @@ int main()
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window));
     components.addSystem(new SystemShoot(components));
-    components.runSystem();
-
+    std::thread sysThread([&components]() {
+        components.runSystem();
+    });
+    clientThread.join();
+    sysThread.join();
     //display position
     // std::cout << "fusée: " << std::any_cast<std::pair<int, int>>(components.getComponent<std::any>("Position")[fusée]).first << std::endl;
     // SparseArray<std::any> speedCompo = components.getComponent<std::any>("Position");
@@ -73,5 +84,6 @@ int main()
     } catch (const std::exception& e) {
         std::cerr << "Exception caught: " << e.what() << std::endl;
     }*/
+
     return 0;
 }

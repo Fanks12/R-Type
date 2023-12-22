@@ -59,6 +59,8 @@ int SystemControl::run() {
 
     SparseArray<std::any> shootCompo = _registries->getComponent<std::any>("Shoot");
 
+    std::string id = std::to_string(_registries->uuid);
+
     while (_window->pollEvent(_event)) {
         if (_event.type == sf::Event::Closed)
             return 0;
@@ -66,18 +68,23 @@ int SystemControl::run() {
             switch (_event.key.code) {
                 case sf::Keyboard::Up:
                     speed = std::pair<int, int>(0, -10);
+                    _registries->client.TcpWrite(id + " Up");
                     break;
                 case sf::Keyboard::Down:
                     speed = std::pair<int, int>(0, 10);
+                    _registries->client.TcpWrite(id + " Down");
                     break;
                 case sf::Keyboard::Left:
                     speed = std::pair<int, int>(-10, 0);
+                    _registries->client.TcpWrite(id + " Left");
                     break;
                 case sf::Keyboard::Right:
                     speed = std::pair<int, int>(10, 0);
+                    _registries->client.TcpWrite(id + " Right");
                     break;
                 case sf::Keyboard::Space:
                     is_shooting = 1;
+                    _registries->client.TcpWrite(id + " Shoot");
                     break;
                 case sf::Keyboard::Escape:
                     return 0;

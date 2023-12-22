@@ -13,6 +13,7 @@
 #include <string>
 #include <any>
 #include <unistd.h>
+#include "Client.hpp"
 
 class ISystem;
 
@@ -90,7 +91,8 @@ class Registry {
          * @return The _running value
          */
         bool isRunning() const { return _running; }
-        int uuid = 1;
+        int uuid;
+        Client client;
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
@@ -101,6 +103,11 @@ class Registry {
 
 Registry::Registry()
 {
+    int tcp_port = 4242;
+    int udp_port = 8080;
+    std::string server_ip = "10.68.250.102";
+
+    client = Client(server_ip, tcp_port, udp_port);
     _running = true;
 }
 
