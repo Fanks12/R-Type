@@ -17,28 +17,44 @@ class SystemHitbox : public virtual System {
         int run();
     protected:
     private:
+        bool posInBox(std::pair<int, int> point, std::pair<std::pair<int, int>, std::pair<int, int>> box);
         bool collision(std::pair<int, int> Receive, std::pair<int, int> Give);
         bool receive(std::pair<int, int> Receive);
 };
 
 SystemHitbox::SystemHitbox(Registry &registries) : System(registries) {}
 
-bool SystemHitbox::collision(std::pair<int, int> Receive, std::pair<int, int> Give)
+bool SystemHitbox::posInBox(std::pair<int, int> point,
+                        std::pair<std::pair<int, int>, std::pair<int, int>> box)
 {
-    // if receive touch give return true
+    if (point.first > box.first.first && point.first.first < box.second.first
+    && point.second > box.first.second && point.second < box.second.second)
+        return true;
+    return false;
 }
 
-bool SystemHitbox::receive(std::pair<int, int> Receive)
+bool SystemHitbox::collision(std::pair<std::pair<int, int>, std::pair<int, int>> receive,
+                            std::pair<std::pair<int, int>, std::pair<int, int>> give)
+{
+    if (posInBox(receive.first, give) || posInBox(receive.second, give)
+    || posInBox(give.first, receive) || posInBox(give.second, receive)
+    || posInBox(std::pair<int, int>(receive.first.first, receive.second.second), give)
+    || posInBox(std::pair<int, int>(receive.second.first, receive.first.second), give)
+    || posInBox(std::pair<int, int>(give.first.first, give.second.second), receive)
+    || posInBox(std::pair<int, int>(give.second.first, give.first.second), receive))
+        return true;
+    return false;
+}
+
+bool SystemHitbox::receive(std::pair<std::pair<int, int>, std::pair<int, int>> receive)
 {
     SparseArray<std::any> hitgCompo = _registries->getComponent<std::any>("HitboxG");
 
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++)
-        if (collision(hitrCompo[i]))
+        if (collision(receive, hitrCompo[i]) /*&& team1 != team2*/)
             return true;
     return false;
-    // if les coo de g sont dans receive et qu'ils ont pas la meme team ya collision
-    // active collision effect
 }
 
 int SystemHitbox::run() {
