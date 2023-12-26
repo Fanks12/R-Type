@@ -17,15 +17,14 @@ class SystemHitbox : public virtual System {
         int run();
     protected:
     private:
-        bool posInBox(std::pair<int, int> point, std::pair<std::pair<int, int>, std::pair<int, int>> box);
-        bool collision(std::pair<int, int> Receive, std::pair<int, int> Give);
-        bool receive(std::pair<int, int> Receive);
+        bool posInBox(Position point, Hitbox box);
+        bool collision(Hitbox Receive, Hitbox Give);
+        bool receive(Hitbox Receive);
 };
 
 SystemHitbox::SystemHitbox(Registry &registries) : System(registries) {}
 
-bool SystemHitbox::posInBox(std::pair<int, int> point,
-                        std::pair<std::pair<int, int>, std::pair<int, int>> box)
+bool SystemHitbox::posInBox(Position point, Hitbox box)
 {
     if (point.first > box.first.first && point.first.first < box.second.first
     && point.second > box.first.second && point.second < box.second.second)
@@ -33,20 +32,19 @@ bool SystemHitbox::posInBox(std::pair<int, int> point,
     return false;
 }
 
-bool SystemHitbox::collision(std::pair<std::pair<int, int>, std::pair<int, int>> receive,
-                            std::pair<std::pair<int, int>, std::pair<int, int>> give)
+bool SystemHitbox::collision(Hitbox receive, Hitbox give)
 {
     if (posInBox(receive.first, give) || posInBox(receive.second, give)
     || posInBox(give.first, receive) || posInBox(give.second, receive)
-    || posInBox(std::pair<int, int>(receive.first.first, receive.second.second), give)
-    || posInBox(std::pair<int, int>(receive.second.first, receive.first.second), give)
-    || posInBox(std::pair<int, int>(give.first.first, give.second.second), receive)
-    || posInBox(std::pair<int, int>(give.second.first, give.first.second), receive))
+    || posInBox(Position(receive.first.first, receive.second.second), give)
+    || posInBox(Position(receive.second.first, receive.first.second), give)
+    || posInBox(Position(give.first.first, give.second.second), receive)
+    || posInBox(Position(give.second.first, give.first.second), receive))
         return true;
     return false;
 }
 
-bool SystemHitbox::receive(std::pair<std::pair<int, int>, std::pair<int, int>> receive)
+bool SystemHitbox::receive(Hitbox receive)
 {
     SparseArray<std::any> hitgCompo = _registries->getComponent<std::any>("HitboxG");
 

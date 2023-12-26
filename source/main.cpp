@@ -21,8 +21,8 @@ int main()
     int mob = components.createEntity();
 
     components.addComponent("Speed");
-    components.setComponentToEntity(fusée, "Speed", std::pair<int, int>(0, 0));
-    components.setComponentToEntity(voiture, "Speed", std::pair<int, int>(0, 0));
+    components.setComponentToEntity(fusée, "Speed", Speed(0, 0));
+    components.setComponentToEntity(voiture, "Speed", Speed(0, 0));
 
     components.addComponent("Drawable");
     components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(100, 100));
@@ -30,16 +30,16 @@ int main()
     components.setComponentToEntity(mob, "Drawable", std::pair<int, int>(50, 100));
 
     components.addComponent("Position");
-    components.setComponentToEntity(fusée, "Position", std::pair<int, int>(100, 200));
-    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(100, 305));
-    components.setComponentToEntity(mob, "Position", std::pair<int, int>(600, 200));
+    components.setComponentToEntity(fusée, "Position", Position(100, 200));
+    components.setComponentToEntity(voiture, "Position", Position(100, 305));
+    components.setComponentToEntity(mob, "Position", Position(600, 200));
 
     components.addComponent("Control");
-    components.setComponentToEntity(fusée, "Control", 1);
-    components.setComponentToEntity(voiture, "Control", 2);
+    components.setComponentToEntity(fusée, "Control", Control(1));
+    components.setComponentToEntity(voiture, "Control", Control(2));
 
     components.addComponent("Shoot");
-    components.setComponentToEntity(fusée, "Shoot", 0);
+    components.setComponentToEntity(fusée, "Shoot", Shoot());
 
     SystemDraw *Drawing = new SystemDraw(components);
     components.addSystem(Drawing);
