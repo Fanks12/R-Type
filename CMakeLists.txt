@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.22)
 project(r-type_client)
 project(r-type_server)
 
@@ -6,10 +6,24 @@ project(r-type_server)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-#set requiered packages
-find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
+#find libs
 find_package(Threads REQUIRED)
-find_package(Boost REQUIRED COMPONENTS program_options)
+
+# fetch content
+include(FetchContent)
+FetchContent_Declare(
+    SFML
+    GIT_REPOSITORY https://github.com/SFML/SFML
+    GIT_TAG        2.5.1
+)
+FetchContent_MakeAvailable(SFML)
+
+FetchContent_Declare(
+    Boost
+    GIT_REPOSITORY https://github.com/boostorg/boost
+    GIT_TAG        boost-1.72.0
+)
+FetchContent_MakeAvailable(Boost)
 
 #set binary output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
