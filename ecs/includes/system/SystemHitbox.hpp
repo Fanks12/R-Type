@@ -64,6 +64,7 @@ int SystemHitbox::run() {
         if (receive(std::any_cast<Hitbox>(hitrCompo[i]))
     }
     // si une hitbox donnant touche une hitbox recevante d'une equipe differente call l'event hitbox
+    return 1;
 }
 
 #endif /* !SYSTEMHITBOX_HPP_ */

@@ -41,6 +41,13 @@ int main()
     components.addComponent("Shoot");
     components.setComponentToEntity(fusée, "Shoot", Shoot());
 
+    components.addComponent("HitboxR");
+    components.setComponentToEntity(fusée, "HitboxR", Hitbox(100, 200, 200, 300));
+    components.setComponentToEntity(mob, "HitboxR", Hitbox(600, 200, 650, 300));
+
+    components.addComponent("HitboxG");
+    components.setComponentToEntity(mob, "HitboxG", Hitbox(600, 200, 650, 300));
+
     SystemDraw *Drawing = new SystemDraw(components);
     components.addSystem(Drawing);
     components.addSystem(new SystemMove(components));

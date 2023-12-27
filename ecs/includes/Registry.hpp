@@ -8,6 +8,7 @@
 #ifndef REGISTRY_HPP_
 #define REGISTRY_HPP_
 #include "SparseArray.hpp"
+#include "EventHandler.hpp"
 #include "ISystem.hpp"
 #include <unordered_map>
 #include <string>
@@ -95,11 +96,12 @@ class Registry {
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
         std::vector<ISystem *> systemArrays;
+        EventHandler event;
         size_t entityNumber = 0;
         bool _running = true;
 };
 
-Registry::Registry()
+Registry::Registry() : event(this)
 {
     _running = true;
 }
@@ -140,6 +142,7 @@ void Registry::runSystem()
 
     while (end) {
         usleep(3000);
+        event.run();
         for (auto system : systemArrays) {
             end = system->run();
             if (!end)

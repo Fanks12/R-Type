@@ -29,10 +29,11 @@ void SystemShoot::setBullet(int type, Position pos)
     int bullet = _registries->createEntity();
     _registries->setComponentToEntity(bullet, "Drawable", std::pair<int, int>(20, 10));
     _registries->setComponentToEntity(bullet, "Position", Position(pos.x, pos.y));
+    _registries->setComponentToEntity(bullet, "HitboxG", Hitbox(pos.x, pos.y, pos.x + 20, pos.y + 10));
     if (type == 1)
-        _registries->setComponentToEntity(bullet, "Speed", Speed(2, 0));
+        _registries->setComponentToEntity(bullet, "Speed", Speed(2));
     if (type == 2)
-        _registries->setComponentToEntity(bullet, "Speed", Speed(-2, 0));
+        _registries->setComponentToEntity(bullet, "Speed", Speed(-2));
 }
 
 int SystemShoot::run()
