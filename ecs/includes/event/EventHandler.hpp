@@ -19,24 +19,24 @@ class EventHandler {
         EventHandler(Registry *registries);
         ~EventHandler() = default;
 
-        void addEvent();
+        void addEvent(Event event);
         int run();
     protected:
     private:
-        std::vector<Event> ActionsReactions;
+        std::vector<Event> actionsReactions;
         Registry *_registries;
 };
 
 EventHandler::EventHandler(Registry *registries) : _registries(registries) {}
 
-void EventHandler::addEvent()
+void EventHandler::addEvent(Event event)
 {
-    //action reaction j'ajoute
+    actionsReactions.push_back(event);
 }
 
 int EventHandler::run()
 {
-    for (const auto& pair : ActionsReactions)
+    for (const auto& pair : actionsReactions)
         if (pair.action)
             pair.reaction;
     return 1;
