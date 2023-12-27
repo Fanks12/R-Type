@@ -26,20 +26,20 @@ SystemHitbox::SystemHitbox(Registry &registries) : System(registries) {}
 
 bool SystemHitbox::posInBox(Position point, Hitbox box)
 {
-    if (point.first > box.first.first && point.first.first < box.second.first
-    && point.second > box.first.second && point.second < box.second.second)
+    if (point.x > box.topl.x && point.x < box.botr.x
+    && point.y > box.topl.y && point.y < box.botr.y)
         return true;
     return false;
 }
 
 bool SystemHitbox::collision(Hitbox receive, Hitbox give)
 {
-    if (posInBox(receive.first, give) || posInBox(receive.second, give)
-    || posInBox(give.first, receive) || posInBox(give.second, receive)
-    || posInBox(Position(receive.first.first, receive.second.second), give)
-    || posInBox(Position(receive.second.first, receive.first.second), give)
-    || posInBox(Position(give.first.first, give.second.second), receive)
-    || posInBox(Position(give.second.first, give.first.second), receive))
+    if (posInBox(receive.topl, give) || posInBox(receive.botr, give)
+    || posInBox(give.topl, receive) || posInBox(give.botr, receive)
+    || posInBox(Position(receive.topl.x, receive.botr.y), give)
+    || posInBox(Position(receive.botr.x, receive.topl.y), give)
+    || posInBox(Position(give.topl.x, give.botr.y), receive)
+    || posInBox(Position(give.botr.x, give.topl.y), receive))
         return true;
     return false;
 }
@@ -50,7 +50,7 @@ bool SystemHitbox::receive(Hitbox receive)
 
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++)
-        if (collision(receive, hitrCompo[i]) /*&& team1 != team2*/)
+        if (collision(receive, std::any_cast<Hitbox>(hitrCompo[i])) /*&& team1 != team2*/)
             return true;
     return false;
 }
@@ -61,7 +61,7 @@ int SystemHitbox::run() {
 
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++) {
-        if (receive(hitrCompo[i]))
+        if (receive(std::any_cast<Hitbox>(hitrCompo[i]))
     }
     // si une hitbox donnant touche une hitbox recevante d'une equipe differente call l'event hitbox
 }
