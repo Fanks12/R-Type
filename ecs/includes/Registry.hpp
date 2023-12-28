@@ -92,6 +92,8 @@ class Registry {
          */
         bool isRunning() const { return _running; }
         int uuid = 1;
+
+        void addEvent(Event newEvent) { event.addEvent(newEvent); }
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;

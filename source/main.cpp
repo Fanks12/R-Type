@@ -13,12 +13,32 @@
 #include <iostream>
 #include <unistd.h>
 
+bool trig(Registry *r, int id)
+{
+    SparseArray<std::any> shootCompo = r->getComponent<std::any>("Shoot");
+
+    if (std::any_cast<Shoot>(shootCompo[id]).shoot == 1)
+        return true;
+    return false;
+}
+
+void eff(int id)
+{
+    std::cout << id << " a tirer" << std::endl;
+}
+
 int main()
 {
     Registry components;
     int fusée = components.createEntity();
     int voiture = components.createEntity();
     int mob = components.createEntity();
+
+    // Event test;
+    // test.setAction(trig, &components, fusée);
+    // test.setReaction(eff, fusée);
+
+    components.addEvent(Event(Event::convertFunct(trig, &components, fusée), Event::convertFunct(eff, fusée)));
 
     components.addComponent("Speed");
     components.setComponentToEntity(fusée, "Speed", Speed(0, 0));
@@ -39,7 +59,7 @@ int main()
     components.setComponentToEntity(voiture, "Control", Control(2));
 
     components.addComponent("Shoot");
-    components.setComponentToEntity(fusée, "Shoot", Shoot());
+    components.setComponentToEntity(fusée, "Shoot", Shoot(1));
 
     components.addComponent("HitboxR");
     components.setComponentToEntity(fusée, "HitboxR", Hitbox(100, 200, 200, 300));

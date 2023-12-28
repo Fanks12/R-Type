@@ -11,8 +11,26 @@
 
 class Event {
     public:
-        Event(std::function<bool()> trigger, std::function<bool()> effect);
+        Event() {};
+        Event(std::function<bool()> trigger, std::function<void()> effect);
         ~Event() = default;
+
+        void run() { if (action()) { reaction(); } }
+
+        template<typename Func, typename... Args>
+        void setAction(Func&& fonction, Args&&... args) {
+            action = [fonction, args...]() { return fonction(args...); };
+        }
+
+        template<typename Func, typename... Args>
+        void setReaction(Func&& fonction, Args&&... args) {
+            reaction = [fonction, args...]() { return fonction(args...); };
+        }
+
+        template<typename Func, typename... Args>
+        static auto convertFunct(Func&& fonction, Args&&... args) {
+            return [fonction, args...]() { return fonction(args...); };
+        }
 
         std::function<bool()> action;
         std::function<void()> reaction;
@@ -20,6 +38,6 @@ class Event {
     private:
 };
 
-Event::Event(std::function<bool()> trigger, std::function<bool()> effect) : action(trigger), reaction(effect) {}
+Event::Event(std::function<bool()> trigger, std::function<void()> effect) : action(trigger), reaction(effect) {}
 
 #endif /* !EVENT_HPP_ */

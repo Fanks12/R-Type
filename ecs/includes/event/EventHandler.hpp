@@ -36,9 +36,8 @@ void EventHandler::addEvent(Event event)
 
 int EventHandler::run()
 {
-    for (const auto& pair : actionsReactions)
-        if (pair.action)
-            pair.reaction;
+    for (auto& event : actionsReactions)
+        event.run();
     return 1;
 }
 
