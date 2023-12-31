@@ -28,9 +28,17 @@ class Event {
         }
 
         template<typename Func, typename... Args>
-        static auto convertFunct(Func&& fonction, Args&&... args) {
+        static auto initFunct(Func&& fonction, Args&&... args) {
             return [fonction, args...]() { return fonction(args...); };
         }
+
+        // from here create static functions
+
+        // action
+        static std::function<bool()> everyXSecond();
+
+        // reaction
+        static std::function<void()> IdLoseXHp(int id, int x);
 
         std::function<bool()> action;
         std::function<void()> reaction;
