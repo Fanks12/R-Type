@@ -50,15 +50,15 @@ void SystemDraw::updateCache()
 
 void SystemDraw::updatePosition()
 {
-    std::pair<int, int> index;
+    Position pos;
     SparseArray<std::any> posCompo = _registries->getComponent<std::any>("Position");
     int i = 0;
 
     for (auto &entity : _cache) {
         if (!(entity.type() == typeid(std::string))) {
-            index = std::any_cast<std::pair<int, int>>(posCompo[i]);
+            pos = std::any_cast<Position>(posCompo[i]);
             sf::RectangleShape object = std::any_cast<sf::RectangleShape>(entity);
-            object.setPosition(sf::Vector2f(index.first, index.second));
+            object.setPosition(sf::Vector2f(pos.x, pos.y));
             entity = object;
         }
         i++;

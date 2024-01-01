@@ -17,22 +17,23 @@ class SystemShoot : public virtual System {
         int run();
     protected:
     private:
-        void setBullet(int type, std::pair<int, int> pos);
+        void setBullet(int type, Position pos);
 };
 
 SystemShoot::SystemShoot(Registry &registries) : System(registries) {}
 
-void SystemShoot::setBullet(int type, std::pair<int, int> pos)
+void SystemShoot::setBullet(int type, Position pos)
 {
     if (type == 0)
         return;
     int bullet = _registries->createEntity();
     _registries->setComponentToEntity(bullet, "Drawable", std::pair<int, int>(20, 10));
-    _registries->setComponentToEntity(bullet, "Position", std::pair<int, int>(pos.first, pos.second));
+    _registries->setComponentToEntity(bullet, "Position", Position(pos.x, pos.y));
+    _registries->setComponentToEntity(bullet, "HitboxG", Hitbox(pos.x, pos.y, pos.x + 20, pos.y + 10));
     if (type == 1)
-        _registries->setComponentToEntity(bullet, "Speed", std::pair<int, int>(2, 0));
+        _registries->setComponentToEntity(bullet, "Speed", Speed(2));
     if (type == 2)
-        _registries->setComponentToEntity(bullet, "Speed", std::pair<int, int>(-2, 0));
+        _registries->setComponentToEntity(bullet, "Speed", Speed(-2));
 }
 
 int SystemShoot::run()
@@ -43,7 +44,7 @@ int SystemShoot::run()
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++) {
         if (!(shootCompo[i].type() == typeid(std::string)) && !(posCompo[i].type() == typeid(std::string)))
-            setBullet(std::any_cast<int>(shootCompo[i]), std::any_cast<std::pair<int, int>>(posCompo[i]));
+            setBullet(std::any_cast<Shoot>(shootCompo[i]).shoot, std::any_cast<Position>(posCompo[i]));
     }
     return 1;
 }

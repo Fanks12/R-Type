@@ -9,6 +9,7 @@
     #define SYSTEM_HPP_
     #include "Registry.hpp"
     #include "ISystem.hpp"
+    #include "Component.hpp"
 
 class Registry;
 

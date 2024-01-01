@@ -13,6 +13,20 @@
 #include <iostream>
 #include <unistd.h>
 
+bool trig(Registry *r, int id)
+{
+    SparseArray<std::any> shootCompo = r->getComponent<std::any>("Shoot");
+
+    if (std::any_cast<Shoot>(shootCompo[id]).shoot == 1)
+        return true;
+    return false;
+}
+
+void eff(int id)
+{
+    std::cout << id << " a tirer" << std::endl;
+}
+
 int main()
 {
     Registry components;
@@ -20,9 +34,16 @@ int main()
     int voiture = components.createEntity();
     int mob = components.createEntity();
 
+    // Event test;
+    // test.setAction(trig, &components, fusée);
+    // test.setReaction(eff, fusée);
+
+    components.addEvent(EventContener(EventContener::initFunct(trig, &components, fusée),
+                                        EventContener::initFunct(eff, fusée)));
+
     components.addComponent("Speed");
-    components.setComponentToEntity(fusée, "Speed", std::pair<int, int>(0, 0));
-    components.setComponentToEntity(voiture, "Speed", std::pair<int, int>(0, 0));
+    components.setComponentToEntity(fusée, "Speed", Speed(0, 0));
+    components.setComponentToEntity(voiture, "Speed", Speed(0, 0));
 
     components.addComponent("Drawable");
     components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(100, 100));
@@ -30,16 +51,23 @@ int main()
     components.setComponentToEntity(mob, "Drawable", std::pair<int, int>(50, 100));
 
     components.addComponent("Position");
-    components.setComponentToEntity(fusée, "Position", std::pair<int, int>(100, 200));
-    components.setComponentToEntity(voiture, "Position", std::pair<int, int>(100, 305));
-    components.setComponentToEntity(mob, "Position", std::pair<int, int>(600, 200));
+    components.setComponentToEntity(fusée, "Position", Position(100, 200));
+    components.setComponentToEntity(voiture, "Position", Position(100, 305));
+    components.setComponentToEntity(mob, "Position", Position(600, 200));
 
     components.addComponent("Control");
-    components.setComponentToEntity(fusée, "Control", 1);
-    components.setComponentToEntity(voiture, "Control", 2);
+    components.setComponentToEntity(fusée, "Control", Control(1));
+    components.setComponentToEntity(voiture, "Control", Control(2));
 
     components.addComponent("Shoot");
-    components.setComponentToEntity(fusée, "Shoot", 0);
+    components.setComponentToEntity(fusée, "Shoot", Shoot(1));
+
+    components.addComponent("HitboxR");
+    components.setComponentToEntity(fusée, "HitboxR", Hitbox(100, 200, 200, 300));
+    components.setComponentToEntity(mob, "HitboxR", Hitbox(600, 200, 650, 300));
+
+    components.addComponent("HitboxG");
+    components.setComponentToEntity(mob, "HitboxG", Hitbox(600, 200, 650, 300));
 
     SystemDraw *Drawing = new SystemDraw(components);
     components.addSystem(Drawing);

@@ -17,6 +17,8 @@ set(SOURCES
 set(INCLUDE_DIRS
     ecs/includes
     ecs/includes/system
+    ecs/includes/components
+    ecs/includes/event
 )
 
 #set link directories
