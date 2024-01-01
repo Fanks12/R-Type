@@ -38,7 +38,8 @@ int main()
     // test.setAction(trig, &components, fusée);
     // test.setReaction(eff, fusée);
 
-    components.addEvent(Event(Event::initFunct(trig, &components, fusée), Event::initFunct(eff, fusée)));
+    components.addEvent(EventContener(EventContener::initFunct(trig, &components, fusée),
+                                        EventContener::initFunct(eff, fusée)));
 
     components.addComponent("Speed");
     components.setComponentToEntity(fusée, "Speed", Speed(0, 0));

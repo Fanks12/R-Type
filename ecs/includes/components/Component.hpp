@@ -8,7 +8,7 @@
 #ifndef COMPONENT_HPP_
     #define COMPONENT_HPP_
     #include "Control.hpp"
-    #include "Event.hpp"
+    #include "EventContener.hpp"
     #include "Health.hpp"
     #include "Hitbox.hpp"
     #include "Position.hpp"

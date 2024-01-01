@@ -8,7 +8,7 @@
 #ifndef REGISTRY_HPP_
 #define REGISTRY_HPP_
 #include "SparseArray.hpp"
-#include "EventHandler.hpp"
+#include "Event.hpp"
 #include "ISystem.hpp"
 #include <unordered_map>
 #include <string>
@@ -93,12 +93,12 @@ class Registry {
         bool isRunning() const { return _running; }
         int uuid = 1;
 
-        void addEvent(Event newEvent) { event.addEvent(newEvent); }
+        void addEvent(EventContener newEvent) { event.addEvent(newEvent); }
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
         std::vector<ISystem *> systemArrays;
-        EventHandler event;
+        Event event;
         size_t entityNumber = 0;
         bool _running = true;
 };
