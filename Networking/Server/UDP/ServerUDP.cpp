@@ -7,14 +7,13 @@
 
 #include "ServerUDP.hpp"
 
-ServerUDP::ServerUDP(int serv_port): port(serv_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), isRunning(true)
+ServerUDP::ServerUDP(int serv_port) : port(serv_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), isRunning(true)
 {
-
+    endpoint = asio::ip::udp::endpoint(asio::ip::udp::v4(), port);
 }
 
 ServerUDP::~ServerUDP()
 {
-    stop();
 }
 
 void ServerUDP::start()

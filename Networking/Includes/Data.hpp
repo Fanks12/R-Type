@@ -13,16 +13,16 @@
 #include <asio.hpp>
 
 class Data {
-public:
-    Data() = default;
-    ~Data() = default;
-    struct ClientInfo {
-        int uid;
-        std::shared_ptr<asio::ip::tcp::socket> socket;
-    };
-    void addClient(std::shared_ptr<asio::ip::tcp::socket> socket, int uid);
-    const std::list<ClientInfo>& getClients() const;
+    public:
+        Data() = default;
+        ~Data() = default;
+        struct ClientInfo {
+            int uid;
+            std::shared_ptr<asio::ip::tcp::socket> socket;
+        };
+        void addClient(std::shared_ptr<asio::ip::tcp::socket> socket, int uid);
+        const std::list<ClientInfo>& getClients() const;
 
-private:
-    std::list<ClientInfo> clients;
+    private:
+        std::list<ClientInfo> clients;
 };

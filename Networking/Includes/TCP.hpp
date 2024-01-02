@@ -27,6 +27,7 @@ class TCP {
 
     protected:
     private:
+        std::thread reader_thread;
         int port;
         std::string message_;
         std::string ip_server;

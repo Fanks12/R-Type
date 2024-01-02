@@ -19,11 +19,14 @@ class Client {
         Client(const std::string& server_ip, int tcpPort, int udpPort);
         ~Client();
         void start();
-        void TcpWrite(const std::string &msg);
-        std::string getmessage();
+        void WriteMessageTCP(const std::string &msg);
+        void WriteMessageUDP(const std::string &msg);
+        std::string getmessageTCP();
+        std::string getmessageUDP();
 
     protected:
     private:
+        bool BeforGame_;
         std::shared_ptr<TCP> tcpClient_;
         std::shared_ptr<UDP> udpClient_;
         int tcpPort_;
