@@ -7,13 +7,13 @@
 
 #include "ServerTCP.hpp"
 
+
 ServerTCP::ServerTCP(int portTCP) : isRunning(true), port(portTCP), ioContext(), endpoint(asio::ip::make_address("127.0.0.1"), 8282), acceptor(ioContext, endpoint)
 {
 }
 
 ServerTCP::~ServerTCP()
 {
-    stop();
 }
 
 void ServerTCP::initializeAcceptor()
@@ -25,8 +25,8 @@ void ServerTCP::initializeAcceptor()
 void ServerTCP::start()
 {
     initializeAcceptor();
-    run();
     std::cout << "ServerTCP::start" << std::endl;
+    run();
 }
 
 void ServerTCP::run()
@@ -81,19 +81,29 @@ void ServerTCP::handleClient(std::shared_ptr<asio::ip::tcp::socket> clientSocket
     Handle_message handle_message;
 
     std::cout << "Client " << uid << " connected" << std::endl;
+    asio::write(*clientSocket, asio::buffer(std::to_string(uid)));
 
     try {
         while (isRunning) {
             std::vector<char> buffer(1024);
             size_t size_msg = clientSocket->read_some(asio::buffer(buffer));
-            if (size_msg == 0) {
+            if (size_msg == 0 || strcmp(std::string(buffer.begin(), buffer.begin() + size_msg).c_str(), "quit") == 0) {
                 std::cout << "Client " << uid << " disconnected" << std::endl;
                 break;
             }
-            // if (buffer[0] == 'a') {
-            //     std::cout << "Client " << uid << " disconnected" << std::endl;
-            //     break;
-            // }
+            if (strcmp(std::string(buffer.begin(), buffer.begin() + size_msg).c_str(), "Ready") == 0) {
+                {
+                    std::lock_guard<std::mutex> lock(readyClientsMutex);
+                    readyClients.insert(clientSocket);
+                }
+                if (areAllClientsReady()) {
+                    std::cout << "All clients are ready" << std::endl;
+                    for (const auto& clientInfo : data.getClients()) {
+                        std::cout << "Send to Client " << clientInfo.uid << ": " << "Start" << std::endl;
+                        asio::write(*(clientInfo.socket), asio::buffer("Start"));
+                    }
+                }
+            }
             std::cout << "Received from Client " << uid << ": " << std::string(buffer.begin(), buffer.begin() + size_msg) << std::endl;
             std::string messageToSend = handle_message.
             Protocole(std::string(buffer.begin(), buffer.begin() + size_msg), uid);
@@ -106,6 +116,11 @@ void ServerTCP::handleClient(std::shared_ptr<asio::ip::tcp::socket> clientSocket
         std::cerr << "Client " << uid << " disconnected" << std::endl;
     }
     clientUIDs.erase(clientSocket);
+}
+
+bool ServerTCP::areAllClientsReady() const
+{
+    return readyClients.size() == data.getClients().size();
 }
 
 void ServerTCP::stop()
