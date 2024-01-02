@@ -15,17 +15,21 @@ Server::Server(int tcpPort, int udpPort) : tcpPort_(tcpPort), udpPort_(udpPort)
 
 Server::~Server()
 {
-
+    tcpServer_->stop();
+    udpServer_->stop();
 }
 
 void Server::start()
 {
+    std::cout << "Server TCP started" << std::endl;
     std::thread tcpThread([this]() {
         tcpServer_->start();
     });
+    std::cout << "Server UDP started" << std::endl;
     std::thread udpThread([this]() {
         udpServer_->start();
     });
     tcpThread.join();
     udpThread.join();
+    std::cout << "Server UDP stoped" << std::endl;
 }
