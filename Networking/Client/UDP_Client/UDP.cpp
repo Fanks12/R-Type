@@ -7,29 +7,39 @@
 
 #include "UDP.hpp"
 
-using asio::ip::udp;
-
-UDP::UDP(int client_port): port(client_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), port)), isRunning(true) {
-
+UDP::UDP(const std::string& server_ip, int client_port) : port(client_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), 0)), isRunning(true), endpoint_server(asio::ip::address::from_string(server_ip), port)
+{
 }
 
 UDP::~UDP()
 {
-    stop();
+}
+
+void UDP::writeMessages(std::string message_)
+{
+    try {
+        std::getline(std::cin, message_);
+        socket.send_to(asio::buffer(message_), endpoint_server);
+    } catch (std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+}
+
+std::string UDP::getmessage()
+{
+    return message_;
 }
 
 void UDP::start()
 {
     try {
-        std::cout << "Enter a message for the serv:\n";
+        std::cout << "UDP Client started on port " << port << std::endl;
         while (true) {
-            std::string msg_send;
-            std::getline(std::cin, msg_send);
-            socket.send_to(asio::buffer(msg_send), endpoint_server);
+            writeMessages(message_);
             std::vector<char> receive_buffer(1024);
             size_t bytes_received = socket.receive_from(asio::buffer(receive_buffer), endpoint_client);
             receive_buffer[bytes_received] = '\0';
-            std::cout << "Received from " << endpoint_client.address().to_string() << " = " << receive_buffer.data() << std::endl;
+            std::cout << "Received from the Server" << " = " << receive_buffer.data() << std::endl;
         }
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
@@ -39,15 +49,6 @@ void UDP::start()
 void UDP::stop()
 {
     ioContext.stop();
+    socket.shutdown(asio::ip::udp::socket::shutdown_both);
+    socket.close();
 }
-
-
-
-
-// int main() {
-//     int port = 8080;
-//     std::string server_ip = "127.0.0.1";
-
-//     udp_client(server_ip, port);
-//     return 0;
-// }
