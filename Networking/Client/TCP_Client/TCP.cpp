@@ -6,7 +6,6 @@
 */
 
 #include "TCP.hpp"
-// #include "SystemServer.hpp"
 
 using asio::ip::tcp;
 
@@ -25,8 +24,8 @@ void TCP::readMessages(tcp::socket& socket)
         while (true) {
             std::vector<char> receive_buffer(1024);
             size_t bytes_received = socket.read_some(asio::buffer(receive_buffer));
-            std::cout << "Received: " << std::string(receive_buffer.data(), bytes_received) << std::endl;
             message_ = std::string(receive_buffer.data(), bytes_received);
+            std::cout << "Received: " << message_ << std::endl;
         }
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
@@ -49,7 +48,6 @@ std::string TCP::getmessage()
 
 void TCP::start()
 {
-    // SystemServer system_server;
     std::cout << "TCP Client started on port " << port << std::endl;
     try {
         tcp::resolver resolver(ioContext);
@@ -61,7 +59,6 @@ void TCP::start()
             std::string msg_send;
             std::getline(std::cin, msg_send);
 
-            // msg_send = system_server.run();
             writeMessages(msg_send);
         }
         reader_thread.join();
