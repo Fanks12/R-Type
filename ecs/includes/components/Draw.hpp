@@ -11,7 +11,7 @@
 
 class Draw {
     public:
-        Draw(std::string _path, int x, int y, int frame) : path(_path), dim(x, y), frames(frame) {}
+        Draw(std::string _path, int x, int y, int frame = 1) : path(_path), dim(x, y), frames(frame) {}
         ~Draw() = default;
 
         std::string path;

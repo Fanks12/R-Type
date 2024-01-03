@@ -19,7 +19,7 @@ int main()
     // menu
     // init une entity qui va faire le background
     int background = components.createEntity();
-    components.setComponentToEntity(background, "Drawable", /*sprite, size*/);
+    components.setComponentToEntity(background, "Drawable", Draw("", 0, 0, ));
     components.setComponentToEntity(background, "Position", Position());
     // init des boutons play multi quit
     int play = components.createEntity();

@@ -27,7 +27,7 @@ void SystemShoot::setBullet(int type, Position pos)
     if (type == 0)
         return;
     int bullet = _registries->createEntity();
-    _registries->setComponentToEntity(bullet, "Drawable", Draw("", 0, 0, 20, 10));
+    _registries->setComponentToEntity(bullet, "Drawable", Draw("", 20, 10));
     _registries->setComponentToEntity(bullet, "Position", Position(pos.x, pos.y));
     _registries->setComponentToEntity(bullet, "HitboxG", Hitbox(pos.x, pos.y, pos.x + 20, pos.y + 10));
     if (type == 1)
