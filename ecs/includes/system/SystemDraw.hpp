@@ -12,6 +12,22 @@
     #include <vector>
     #include <variant>
 
+class Object {
+    Object(std::string path, int x, int y, int w, int h, int nbframes = 1) : rect(x, y, w, h), frames(nbframes)
+    {
+        texture.loadFromFile(path);
+        sprite.setTexture(texture);
+        sprite.setTextureRect(rect);
+
+    };
+    ~Object() = default;
+
+    sf::Sprite sprite;
+    sf::Texture texture;
+    sf::IntRect rect;
+    int frames;
+}
+
 class SystemDraw : public virtual System {
     public:
         SystemDraw(Registry &registries);
@@ -34,14 +50,14 @@ _window(sf::VideoMode(800, 600), "SFML window") {}
 
 void SystemDraw::updateCache()
 {
-    std::pair<int, int> index;
+    Draw index;
     SparseArray<std::any> drawCompo = _registries->getComponent<std::any>("Drawable");
 
     for (size_t i = 0; i < _registries->entityNumbers(); i++)
-        if (drawCompo[i].type() == typeid(std::pair<int, int>)) {
-            index = std::any_cast<std::pair<int, int>>(drawCompo[i]);
+        if (drawCompo[i].type() != typeid(std::string)) {
+            index = std::any_cast<Draw>(drawCompo[i]);
             if (i >= _cache.size())
-                _cache.push_back(sf::RectangleShape(sf::Vector2f(index.first, index.second)));
+                _cache.push_back(Object(index.path, 0, 0, index.dim.first, index.dim.second, index.frames));
             else if (_cache.at(i).type() == typeid(std::string))
                 _cache.at(i) = index;
         } else
@@ -57,8 +73,8 @@ void SystemDraw::updatePosition()
     for (auto &entity : _cache) {
         if (!(entity.type() == typeid(std::string))) {
             pos = std::any_cast<Position>(posCompo[i]);
-            sf::RectangleShape object = std::any_cast<sf::RectangleShape>(entity);
-            object.setPosition(sf::Vector2f(pos.x, pos.y));
+            Object object = std::any_cast<Object>(entity);
+            object.sprite.setPosition(sf::Vector2f(pos.x, pos.y));
             entity = object;
         }
         i++;
@@ -84,8 +100,8 @@ int SystemDraw::run()
     // Draw the sprite
     for (auto &entity : _cache)
         if (!(entity.type() == typeid(std::string))) {
-            sf::RectangleShape index = std::any_cast<sf::RectangleShape>(entity);
-            _window.draw(index);
+            Object index = std::any_cast<Object>(entity);
+            _window.draw(index.sprite);
         }
 
     // Update the window
