@@ -34,9 +34,16 @@ int main()
     int voiture = components.createEntity();
     int mob = components.createEntity();
 
-    // Event test;
+    // Soit:
+    // EventContener test;
     // test.setAction(trig, &components, fusée);
     // test.setReaction(eff, fusée);
+
+    // Soit:
+    // EventContener test(EventContener::initFunct(trig, &components, fusée), EventContener::initFunct(eff, fusée))
+
+    // puis add event pour l'ajouté
+    // components.addEvent(test);
 
     components.addEvent(EventContener(EventContener::initFunct(trig, &components, fusée),
                                         EventContener::initFunct(eff, fusée)));
