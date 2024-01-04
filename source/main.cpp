@@ -46,9 +46,9 @@ int main()
     components.setComponentToEntity(voiture, "Speed", Speed(0, 0));
 
     components.addComponent("Drawable");
-    components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(100, 100));
-    components.setComponentToEntity(voiture, "Drawable", std::pair<int, int>(100, 100));
-    components.setComponentToEntity(mob, "Drawable", std::pair<int, int>(50, 100));
+    components.setComponentToEntity(fusée, "Drawable", Draw("", 100, 100));
+    components.setComponentToEntity(voiture, "Drawable", Draw("", 100, 100));
+    components.setComponentToEntity(mob, "Drawable", Draw("", 50, 100));
 
     components.addComponent("Position");
     components.setComponentToEntity(fusée, "Position", Position(100, 200));

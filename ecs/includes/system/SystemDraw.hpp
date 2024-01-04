@@ -13,20 +13,21 @@
     #include <variant>
 
 class Object {
-    Object(std::string path, int x, int y, int w, int h, int nbframes = 1) : rect(x, y, w, h), frames(nbframes)
-    {
-        texture.loadFromFile(path);
-        sprite.setTexture(texture);
-        sprite.setTextureRect(rect);
+    public:
+        Object(std::string path, int x, int y, int w, int h, int nbframes = 1) : rect(x, y, w, h), frames(nbframes)
+        {
+            texture.loadFromFile(path);
+            sprite.setTexture(texture);
+            sprite.setTextureRect(rect);
 
-    };
-    ~Object() = default;
+        };
+        ~Object() = default;
 
-    sf::Sprite sprite;
-    sf::Texture texture;
-    sf::IntRect rect;
-    int frames;
-}
+        sf::Sprite sprite;
+        sf::Texture texture;
+        sf::IntRect rect;
+        int frames;
+};
 
 class SystemDraw : public virtual System {
     public:
