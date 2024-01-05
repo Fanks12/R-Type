@@ -8,6 +8,7 @@
 #ifndef COMPONENT_HPP_
     #define COMPONENT_HPP_
     #include "Control.hpp"
+    #include "Damage.hpp"
     #include "Draw.hpp"
     #include "EventContener.hpp"
     #include "Health.hpp"

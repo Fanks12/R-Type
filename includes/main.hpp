@@ -6,7 +6,8 @@
 */
 
 #ifndef MAIN_HPP_
-#define MAIN_HPP_
-#include <iostream>
-
+    #define MAIN_HPP_
+    #include "SystemCall.hpp"
+    #include <iostream>
+    #include <unistd.h>
 #endif /* !MAIN_HPP_ */
