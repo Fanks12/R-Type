@@ -5,13 +5,7 @@
 ** main
 */
 
-// #include "main.hpp"
-#include "SystemDraw.hpp"
-#include "SystemMove.hpp"
-#include "SystemControl.hpp"
-#include "SystemShoot.hpp"
-#include <iostream>
-#include <unistd.h>
+#include "main.hpp"
 
 bool trig(Registry *r, int id)
 {
