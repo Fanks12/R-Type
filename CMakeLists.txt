@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #set source files
 set(SOURCES
-    source/main.cpp
+    source/pong.cpp
 )
 
 #set include directories
@@ -26,9 +26,9 @@ set(INCLUDE_DIRS
 #set binary output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
-#install dependencies
-execute_process(COMMAND sudo dnf install SFML)
-execute_process(COMMAND sudo dnf install asio-devel.x86_64)
+# #install dependencies
+# execute_process(COMMAND sudo dnf install SFML)
+# execute_process(COMMAND sudo dnf install asio-devel.x86_64)
 
 find_package(Threads REQUIRED)
 find_package(SFML 2.5 COMPONENTS graphics window system REQUIRED)
