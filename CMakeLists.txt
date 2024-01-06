@@ -19,6 +19,7 @@ set(INCLUDE_DIRS
     ecs/includes/system
     ecs/includes/components
     ecs/includes/event
+    includes
 )
 
 #set link directories
