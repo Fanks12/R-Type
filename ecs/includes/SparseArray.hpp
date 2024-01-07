@@ -81,6 +81,8 @@ class SparseArray {
          */
         bool hasComponent(int index);
 
+        void cleanArray();
+
     protected:
     private:
         std::vector<T> _EntityList;
@@ -107,6 +109,12 @@ SparseArray<T>::SparseArray(SparseArray && move) noexcept
 
 template <typename T>
 SparseArray<T>::~SparseArray()
+{
+    cleanArray();
+}
+
+template <typename T>
+void SparseArray<T>::cleanArray()
 {
     while (!_EntityList.empty())
         _EntityList.pop_back();

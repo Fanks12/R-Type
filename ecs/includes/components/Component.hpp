@@ -10,7 +10,6 @@
     #include "Control.hpp"
     #include "Damage.hpp"
     #include "Draw.hpp"
-    #include "EventContener.hpp"
     #include "Health.hpp"
     #include "Hitbox.hpp"
     #include "Position.hpp"

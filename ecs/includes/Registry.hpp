@@ -7,15 +7,17 @@
 
 #ifndef REGISTRY_HPP_
 #define REGISTRY_HPP_
-#include "SparseArray.hpp"
-#include "Event.hpp"
-#include "ISystem.hpp"
-#include <unordered_map>
-#include <string>
-#include <any>
-#include <unistd.h>
+    #include "SparseArray.hpp"
+    #include "Event.hpp"
+    #include "ISystem.hpp"
+    #include <unordered_map>
+    #include <string>
+    #include <any>
+    #include <unistd.h>
 
 class ISystem;
+
+class Event;
 
 class Registry {
     public:
@@ -86,6 +88,8 @@ class Registry {
          */
         size_t entityNumbers() const { return entityNumber; }
 
+        void cleanCompo();
+
         /**
          * @brief return if the registry is running
          * @return The _running value
@@ -103,7 +107,7 @@ class Registry {
         bool _running = true;
 };
 
-Registry::Registry() : event(this)
+Registry::Registry()
 {
     _running = true;
 }
@@ -157,6 +161,12 @@ void Registry::removeEntity(int entityIndex)
 {
     for (auto component : componentArrays)
         component.second.deleteEntity(entityIndex);
+}
+
+void Registry::cleanCompo()
+{
+    for (auto& [key, value] : componentArrays)
+        value.cleanArray();
 }
 
 template <typename T>

@@ -7,6 +7,7 @@
 
 #ifndef SYSTEMCALL_HPP_
     #define SYSTEMCALL_HPP_
+    #include "Action.hpp"
     #include "SystemDraw.hpp"
     #include "SystemMove.hpp"
     #include "SystemControl.hpp"

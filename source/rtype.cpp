@@ -50,6 +50,7 @@ int main()
     components.setComponentToEntity(player, "Control", Control(1));
     components.setComponentToEntity(player, "Shoot", Shoot(1));
 
+    // event
     // if hp play < 100 fait la moula puis remet les pv a 100
 
     SystemDraw *Drawing = new SystemDraw(components);
@@ -61,7 +62,13 @@ int main()
     components.runSystem();
     // si multi init les joueur qui s'ajoutent
 
-    // les boutons du menu disparraissent
+    // dans le fonction event
+    components.removeEntity(play);
+    components.removeEntity(join);
+    components.removeEntity(quit);
+    // Event : si joueur meurt on relance
+    // Event : toutes les 1-4 sec envoie un ennemie
+    // Event : compteur de point arrive a 30 = Ennemi special
     // les regles de jeu se mettent en place
     // tout les 1 - 4 sec (en fonction du nombre de joueur) un ennemy aleatoire apparait
     // un compteur de kill interne prend en consideration l'avancé de la quete spacial
