@@ -10,7 +10,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 #set source files
 set(SOURCES
-    source/pong.cpp
+    source/rtype.cpp
 )
 
 #set include directories

@@ -7,6 +7,7 @@
 
 #ifndef COMPONENT_HPP_
     #define COMPONENT_HPP_
+    #include "Clock.hpp"
     #include "Control.hpp"
     #include "Damage.hpp"
     #include "Draw.hpp"

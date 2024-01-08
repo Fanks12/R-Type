@@ -16,6 +16,7 @@ class Event {
         ~Event() = default;
 
         void addEvent(EventContener event);
+        void popBack();
         int run();
     protected:
     private:
@@ -25,6 +26,11 @@ class Event {
 void Event::addEvent(EventContener event)
 {
     actionsReactions.push_back(event);
+}
+
+void Event::popBack()
+{
+    actionsReactions.pop_back();
 }
 
 int Event::run()

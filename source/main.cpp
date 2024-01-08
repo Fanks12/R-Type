@@ -16,9 +16,10 @@ bool trig(Registry *r, int id)
     return false;
 }
 
-void eff(int id)
+int eff(int id)
 {
     std::cout << id << " a tirer" << std::endl;
+    return 1;
 }
 
 int main()

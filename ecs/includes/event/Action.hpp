@@ -18,30 +18,60 @@ class Action {
         // from here create static functions
 
         // action
-        std::function<bool()> everyXSecond();
-        bool idDead(Registry *registries, int id);
+        static bool everyXSecond(Clock clock, int x);
+        static bool idDead(Registry *registries, int id);
+        static bool score(Registry *registries, int score);
 
         // reaction
-        std::function<void()> IdLoseXHp(int id, int x);
-        void restart(Registry *registries, std::function<int()> start);
+        static int IdLoseXHp(Registry *registries, int id, int x);
+        static int restart(Registry *registries, std::function<int()> start);
     protected:
     private:
 };
+
+bool Action::everyXSecond(Clock clock, int x)
+{
+    clock.stop();
+    if (clock.elapsedTime() >= x) {
+        clock.start();
+        return true;
+    }
+    return false;
+}
+
+bool Action::score(Registry *registries, int score)
+{
+    if (10 == score)
+        return true;
+    return false;
+}
 
 bool Action::idDead(Registry *registries, int id)
 {
     SparseArray<std::any> healthCompo = registries->getComponent<std::any>("Health");
 
     if (healthCompo[id].type() != typeid(std::string)
-        && std::any_cast<Health>(healthCompo[id]).health == 0)
+        && std::any_cast<Health>(healthCompo[id]).health <= 0)
         return true;
     return false;
 }
 
-void Action::restart(Registry *registries, std::function<int()> start)
+int Action::IdLoseXHp(Registry *registries, int id, int x)
+{
+    SparseArray<std::any> healthCompo = registries->getComponent<std::any>("Health");
+    Health hp = std::any_cast<Health>(healthCompo[id]);
+    hp.health -= x;
+
+    if (!(healthCompo[id].type() == typeid(std::string)))
+        registries->setComponentToEntity(id, "Health", hp);
+    return 1;
+}
+
+int Action::restart(Registry *registries, std::function<int()> start)
 {
     registries->cleanCompo();
     start();
+    return 1;
 }
 
 #endif /* !ACTION_HPP_ */

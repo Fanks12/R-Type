@@ -94,28 +94,25 @@ class Registry {
          * @brief return if the registry is running
          * @return The _running value
          */
-        bool isRunning() const { return _running; }
+        bool isRunning() const { return run; }
         int uuid = 1;
 
         void addEvent(EventContener newEvent) { event.addEvent(newEvent); }
+
+        void popBackEvent() { event.popBack(); }
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
         std::vector<ISystem *> systemArrays;
         Event event;
         size_t entityNumber = 0;
-        bool _running = true;
+        int run = 1;
+        int score = 0;
 };
 
-Registry::Registry()
-{
-    _running = true;
-}
+Registry::Registry() {}
 
-Registry::~Registry()
-{
-    _running = false;
-}
+Registry::~Registry() {}
 
 int Registry::createEntity()
 {
@@ -144,14 +141,12 @@ void Registry::addSystem(ISystem *system)
 
 void Registry::runSystem()
 {
-    int end = 1;
-
-    while (end) {
+    while (run) {
         usleep(3000);
-        event.run();
+        run = event.run();
         for (auto system : systemArrays) {
-            end = system->run();
-            if (!end)
+            run = system->run();
+            if (!run)
                 break;
         }
     }

@@ -12,10 +12,15 @@
 class EventContener {
     public:
         EventContener() {};
-        EventContener(std::function<bool()> trigger, std::function<void()> effect);
+        EventContener(std::function<bool()> trigger, std::function<int()> effect);
         ~EventContener() = default;
 
-        void run() { if (action()) { reaction(); } }
+        int run()
+        {
+            if (action())
+                return reaction();
+            return 1;
+        }
 
         template<typename Func, typename... Args>
         void setAction(Func&& fonction, Args&&... args) {
@@ -33,11 +38,11 @@ class EventContener {
         }
 
         std::function<bool()> action;
-        std::function<void()> reaction;
+        std::function<int()> reaction;
     protected:
     private:
 };
 
-EventContener::EventContener(std::function<bool()> trigger, std::function<void()> effect) : action(trigger), reaction(effect) {}
+EventContener::EventContener(std::function<bool()> trigger, std::function<int()> effect) : action(trigger), reaction(effect) {}
 
 #endif /* !EVENTCONTENER_HPP_ */
