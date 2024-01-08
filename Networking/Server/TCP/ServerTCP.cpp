@@ -31,16 +31,16 @@ void ServerTCP::start()
 
 void ServerTCP::run()
 {
-    std::cout << "ServerTCP::run" << std::endl;
-
-    for (int i = 0; i < 4; ++i) {
-        workerThreads.emplace_back(&ServerTCP::workerThread, this);
-    }
     try {
+        for (int i = 0; i < 4; ++i) {
+            workerThreads.emplace_back(&ServerTCP::workerThread, this);
+        }
+
         std::cout << "Listens on the port " << port << std::endl;
         while (isRunning) {
             std::shared_ptr<asio::ip::tcp::socket> socket = std::make_shared<asio::ip::tcp::socket>(ioContext);
-            acceptor.accept(*socket); {
+            acceptor.accept(*socket);
+            {
                 std::lock_guard<std::mutex> lock(uidMutex);
                 clientQueue.push(socket);
             }
@@ -50,7 +50,8 @@ void ServerTCP::run()
     } catch (std::exception &e) {
         std::cerr << "Exception in ServerTCP::run: " << e.what() << std::endl;
     }
-    for (auto& thread : workerThreads) {
+
+    for (auto &thread : workerThreads) {
         if (thread.joinable()) {
             thread.join();
         }
@@ -81,39 +82,21 @@ void ServerTCP::handleClient(std::shared_ptr<asio::ip::tcp::socket> clientSocket
     Handle_message handle_message;
 
     std::cout << "Client " << uid << " connected" << std::endl;
-    asio::write(*clientSocket, asio::buffer(std::to_string(uid)));
+    Packet uidPacket;
+    uidPacket.Magic_number = 42;
+    clientSocket->write_some(asio::buffer(&uidPacket, sizeof(Packet)));
 
     try {
         while (isRunning) {
-            std::vector<char> buffer(1024);
-            size_t size_msg = clientSocket->read_some(asio::buffer(buffer));
-            if (size_msg == 0 || strcmp(std::string(buffer.begin(), buffer.begin() + size_msg).c_str(), "quit") == 0) {
-                std::cout << "Client " << uid << " disconnected" << std::endl;
-                break;
-            }
-            if (strcmp(std::string(buffer.begin(), buffer.begin() + size_msg).c_str(), "Ready") == 0) {
-                {
-                    std::lock_guard<std::mutex> lock(readyClientsMutex);
-                    readyClients.insert(clientSocket);
-                }
-                if (areAllClientsReady()) {
-                    std::cout << "All clients are ready" << std::endl;
-                    for (const auto& clientInfo : data.getClients()) {
-                        std::cout << "Send to Client " << clientInfo.uid << ": " << "Start" << std::endl;
-                        asio::write(*(clientInfo.socket), asio::buffer("Start"));
-                    }
-                }
-            }
-            std::cout << "Received from Client " << uid << ": " << std::string(buffer.begin(), buffer.begin() + size_msg) << std::endl;
-            std::string messageToSend = handle_message.
-            Protocole(std::string(buffer.begin(), buffer.begin() + size_msg), uid);
-            for (const auto& clientInfo : data.getClients()) {
-                std::cout << "Send to Client " << clientInfo.uid << ": " << messageToSend << std::endl;
-                asio::write(*(clientInfo.socket), asio::buffer(messageToSend));
+            Packet receivedPacket;
+            size_t bytes_received = clientSocket->read_some(asio::buffer(&receivedPacket, sizeof(Packet)));
+
+            if (bytes_received == sizeof(Packet)) {
+                std::cout << "Received Magic_number from Client " << uid << ": " << receivedPacket.Magic_number << std::endl;
             }
         }
-    } catch (const std::exception& e) {
-        std::cerr << "Client " << uid << " disconnected" << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << "Client " << uid << " disconnected: " << e.what() << std::endl;
     }
     clientUIDs.erase(clientSocket);
 }
