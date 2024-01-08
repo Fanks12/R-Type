@@ -6,8 +6,10 @@
 */
 
 #pragma once
+
 #include "Handle_message.hpp"
 #include "Data.hpp"
+#include "Packet.hpp"
 #include <asio.hpp>
 #include <iostream>
 #include <vector>
@@ -48,3 +50,4 @@ class ServerTCP {
         std::vector<std::thread> workerThreads;
         Data data;
 };
+
