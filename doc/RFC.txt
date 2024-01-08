@@ -1,0 +1,45 @@
+Authors:
+
+-Bilal NHARI
+-Nelly NGUYEN
+-Fares BOUGHELILBA
+-Adrian LALARDIE
+-Nathan WARIN
+
+Date: January 2024
+
+Title: R-Type Protocols
+
+Status: Informational
+
+Created on: January 4, 2024
+
+Status of this memo:
+
+    This document serves as the official documentation for the R-Type UDP Protocols,
+    a key component of the third-year project undertaken at EPITECH.
+    The R-Type project aims to develop a multiplayer game,
+    and this documentation outlines the architecture and protocols involved.
+
+Table of Contents
+
+    1. Introduction
+    2. R-Type architecture
+    3. Protocol
+        1. Packets
+        2. Player Events
+        3. Packet Type
+
+
+1   .Introduction
+
+    The primary objective of the R-Type project is to create a multiplayer game supporting up to four players.
+
+2.  R-Type architecture
+
+    The R-Type architecture adopts a client-server model.
+    Clients establish an initial connection with the server using the
+    defined protocol and subsequently spawn within the game environment.
+
+
+                            R-Type Protocols Documentation
