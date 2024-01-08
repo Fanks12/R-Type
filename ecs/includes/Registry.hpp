@@ -8,10 +8,12 @@
 #ifndef REGISTRY_HPP_
 #define REGISTRY_HPP_
 #include "SparseArray.hpp"
+#include "Event.hpp"
 #include "ISystem.hpp"
 #include <unordered_map>
 #include <string>
 #include <any>
+#include <unistd.h>
 
 class ISystem;
 
@@ -83,15 +85,25 @@ class Registry {
          * @return The entityNulber value
          */
         size_t entityNumbers() const { return entityNumber; }
+
+        /**
+         * @brief return if the registry is running
+         * @return The _running value
+         */
+        bool isRunning() const { return _running; }
+        int uuid = 1;
+
+        void addEvent(EventContener newEvent) { event.addEvent(newEvent); }
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
         std::vector<ISystem *> systemArrays;
+        Event event;
         size_t entityNumber = 0;
         bool _running = true;
 };
 
-Registry::Registry()
+Registry::Registry() : event(this)
 {
     _running = true;
 }
@@ -131,8 +143,13 @@ void Registry::runSystem()
     int end = 1;
 
     while (end) {
-        for (auto system : systemArrays)
+        usleep(3000);
+        event.run();
+        for (auto system : systemArrays) {
             end = system->run();
+            if (!end)
+                break;
+        }
     }
 }
 
