@@ -11,7 +11,7 @@
 
 class Hitbox {
     public:
-        Hitbox(int x = 0, int y = 0) : topl(0, 0), botr(x, y) {};
+        Hitbox(int x = 0, int y = 0) : dim(x, y) { pos(0, 0); };
         ~Hitbox() = default;
 
         void pos(int x, int y) {
