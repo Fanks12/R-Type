@@ -53,7 +53,6 @@ _window(sf::VideoMode(800, 600), "SFML window") {}
 
 void SystemDraw::addInCache(int it, Draw value)
 {
-
     if (it >= _cache.size())
         _cache.push_back(Object(value.path, 0, 0, value.dim.first, value.dim.second, value.frames));
     else if (_cache.at(it).type() == typeid(std::string))
@@ -78,7 +77,7 @@ void SystemDraw::updateCache()
             index = std::any_cast<Draw>(drawCompo[i]);
             addInCache(i, index);
         } else
-            addInCache(i, "vide");
+            addInCache(i, std::string("vide"));
 }
 
 void SystemDraw::updatePosition()

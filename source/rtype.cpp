@@ -48,6 +48,7 @@ int playHit(Registry *components, int player, int play, int join, int quit)
     components->removeEntity(play);
     components->removeEntity(join);
     components->removeEntity(quit);
+    components->addSystem(new SystemHealth(*components));
     // rtype(components, player);
     return 1;
 }
@@ -118,7 +119,6 @@ void initCore(Registry &components)
 
     SystemDraw *Drawing = new SystemDraw(components);
     components.addSystem(Drawing);
-    components.addSystem(new SystemHealth(components));
     components.addSystem(new SystemHitbox(components));
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window));

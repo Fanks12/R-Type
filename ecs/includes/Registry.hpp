@@ -154,14 +154,14 @@ void Registry::runSystem()
 
 void Registry::removeEntity(int entityIndex)
 {
-    for (auto component : componentArrays)
+    for (auto& component : componentArrays)
         component.second.deleteEntity(entityIndex);
 }
 
 void Registry::cleanCompo()
 {
-    for (auto& [key, value] : componentArrays)
-        value.cleanArray();
+    for (auto& component : componentArrays)
+        component.second.cleanArray();
 }
 
 template <typename T>
