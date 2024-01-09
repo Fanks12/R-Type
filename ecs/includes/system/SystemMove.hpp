@@ -23,6 +23,7 @@ class SystemMove : public virtual System {
     protected:
     private:
         void makeMove();
+        void hitMove();
 };
 
 SystemMove::SystemMove(Registry &registries) : System(registries) {}
@@ -32,11 +33,8 @@ void SystemMove::makeMove()
 
     Position pos;
     Speed speed;
-    Hitbox hit;
     SparseArray<std::any> speedCompo = _registries->getComponent<std::any>("Speed");
     SparseArray<std::any> positionCompo = _registries->getComponent<std::any>("Position");
-    SparseArray<std::any> hitgCompo = _registries->getComponent<std::any>("HitboxG");
-    SparseArray<std::any> hitrCompo = _registries->getComponent<std::any>("HitboxR");
 
     for (size_t i = 0; i < _registries->entityNumbers(); i++) {
         if (!(speedCompo[i].type() == typeid(std::string))
@@ -44,15 +42,30 @@ void SystemMove::makeMove()
             pos = std::any_cast<Position>(positionCompo[i]);
             speed = std::any_cast<Speed>(speedCompo[i]);
             _registries->getComponent<std::any>("Position")[i] = Position((pos.x + speed.x), (pos.y + speed.y));
-            if (!(hitgCompo[i].type() == typeid(std::string))) {
-                hit = std::any_cast<Hitbox>(hitgCompo[i]);
-                _registries->getComponent<std::any>("HitboxG")[i] = Hitbox((pos.x + speed.x),
-                    (pos.y + speed.y), (hit.botr.x + speed.x), (hit.botr.y + speed.y));
-            }
-            if (!(hitrCompo[i].type() == typeid(std::string))) {
+        }
+    }
+}
+
+void SystemMove::hitMove()
+{
+    SparseArray<std::any> positionCompo = _registries->getComponent<std::any>("Position");
+    SparseArray<std::any> hitgCompo = _registries->getComponent<std::any>("HitboxG");
+    SparseArray<std::any> hitrCompo = _registries->getComponent<std::any>("HitboxR");
+    Position pos;
+    Hitbox hit;
+
+    for (size_t i = 0; i < _registries->entityNumbers(); i++) {
+        if (positionCompo[i].type() != typeid(std::string)) {
+            pos = std::any_cast<Position>(positionCompo[i]);
+            if (hitrCompo[i].type() != typeid(std::string)) {
                 hit = std::any_cast<Hitbox>(hitrCompo[i]);
-                _registries->getComponent<std::any>("HitboxR")[i] = Hitbox((pos.x + speed.x),
-                    (pos.y + speed.y), (hit.botr.x + speed.x), (hit.botr.y + speed.y));
+                hit.pos(pos.x, pos.y);
+                _registries->setComponentToEntity(i, "HitboxR", hit);
+            }
+            if (hitgCompo[i].type() != typeid(std::string)) {
+                hit = std::any_cast<Hitbox>(hitgCompo[i]);
+                hit.pos(pos.x, pos.y);
+                _registries->setComponentToEntity(i, "HitboxG", hit);
             }
         }
     }
@@ -61,6 +74,7 @@ void SystemMove::makeMove()
 int SystemMove::run()
 {
     makeMove();
+    hitMove();
     return 1;
 }
 

@@ -49,24 +49,28 @@ int playHit(Registry *components, int player, int play, int join, int quit)
 int menu(Registry *components)
 {
     // menu
+    // int background = components->createEntity();
+    // components->setComponentToEntity(background, "Drawable", Draw("asset/space.png", 800, 600));
+    // components->setComponentToEntity(background, "Position", Position());
+
     int play = components->createEntity();
-    components->setComponentToEntity(play, "Drawable", Draw("", 100, 100));
+    components->setComponentToEntity(play, "Drawable", Draw("asset/space.png", 100, 100));
     components->setComponentToEntity(play, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(play, "Position", Position(600, 100));
 
     int join = components->createEntity();
-    components->setComponentToEntity(join, "Drawable", Draw("", 100, 100));
+    components->setComponentToEntity(join, "Drawable", Draw("asset/space.png", 100, 100));
     components->setComponentToEntity(join, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(join, "Position", Position(600, 220));
 
     int quit = components->createEntity();
-    components->setComponentToEntity(quit, "Drawable", Draw("", 100, 100));
+    components->setComponentToEntity(quit, "Drawable", Draw("asset/space.png", 100, 100));
     components->setComponentToEntity(quit, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(quit, "Position", Position(600, 340));
     // init des event qui regissent chaque bouton
     // init le joueur de base que l'on controle
     int player = components->createEntity();
-    components->setComponentToEntity(player, "Drawable", Draw("", 100, 50));
+    components->setComponentToEntity(player, "Drawable", Draw("asset/space.png", 100, 50));
     components->setComponentToEntity(player, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(player, "Position", Position(50, 50));
     components->setComponentToEntity(player, "Speed", Speed());

@@ -11,11 +11,18 @@
 
 class Hitbox {
     public:
-        Hitbox(int abs1 = 0, int ord1 = 0, int abs2 = 0, int ord2 = 0) : topl(abs1, ord1), botr(abs2, ord2) {};
+        Hitbox(int x = 0, int y = 0) : topl(0, 0), botr(x, y) {};
         ~Hitbox() = default;
 
+        void pos(int x, int y) {
+            topl.x = x;
+            topl.y = y;
+            botr.x = x + dim.x;
+            botr.y = y + dim.y;
+        }
         Position topl;
         Position botr;
+        Position dim;
 };
 
 #endif /* !HITBOX_HPP_ */

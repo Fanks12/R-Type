@@ -48,20 +48,23 @@ int SystemHitbox::receive(Hitbox receive)
 {
     SparseArray<std::any> hitgCompo = _registries->getComponent<std::any>("HitboxG");
     SparseArray<std::any> damageCompo = _registries->getComponent<std::any>("Damage");
+    SparseArray<std::any> healthCompo = _registries->getComponent<std::any>("Health");
 
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++)
         if (hitgCompo[i].type() != typeid(std::string)
          && damageCompo[i].type() != typeid(std::string)
-         && collision(receive, std::any_cast<Hitbox>(hitgCompo[i])) /*&& team1 != team2*/)
+         && collision(receive, std::any_cast<Hitbox>(hitgCompo[i])) /*&& team1 != team2*/) {
+            if (healthCompo[i].type() != typeid(std::string))
+                _registries->setComponentToEntity(i, "Damage", Health(std::any_cast<Health>(healthCompo[i]).health - 1));
             return std::any_cast<Damage>(damageCompo[i]).damage;
+        }
     return 0;
 }
 
 
 int SystemHitbox::run()
 {
-
     SparseArray<std::any> hitrCompo = _registries->getComponent<std::any>("HitboxR");
     SparseArray<std::any> healthCompo = _registries->getComponent<std::any>("Health");
     int damage = 0;
@@ -69,7 +72,7 @@ int SystemHitbox::run()
     for (size_t i = 0; i < loop; i++)
         if (hitrCompo[i].type() != typeid(std::string) &&
         (damage = receive(std::any_cast<Hitbox>(hitrCompo[i]))))
-            _registries->getComponent<std::any>("Health")[i] = Health(std::any_cast<Health>(healthCompo[i]).health - damage);
+            _registries->setComponentToEntity(i, "Health", Health(std::any_cast<Health>(healthCompo[i]).health - damage));
     return 1;
 }
 

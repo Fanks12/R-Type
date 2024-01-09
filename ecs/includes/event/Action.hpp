@@ -59,11 +59,12 @@ bool Action::idDead(Registry *registries, int id)
 int Action::IdLoseXHp(Registry *registries, int id, int x)
 {
     SparseArray<std::any> healthCompo = registries->getComponent<std::any>("Health");
+
+    if (healthCompo[id].type() == typeid(std::string))
+        return 1;
     Health hp = std::any_cast<Health>(healthCompo[id]);
     hp.health -= x;
-
-    if (!(healthCompo[id].type() == typeid(std::string)))
-        registries->setComponentToEntity(id, "Health", hp);
+    registries->setComponentToEntity(id, "Health", hp);
     return 1;
 }
 

@@ -25,16 +25,19 @@ int main()
     components.setComponentToEntity(play, "Drawable", Draw("", 100, 100));
     components.setComponentToEntity(play, "HitboxR", Hitbox(100, 100));
     components.setComponentToEntity(play, "Position", Position(600, 100));
+    components.setComponentToEntity(play, "Health", Health(1));
 
     int join = components.createEntity();
     components.setComponentToEntity(join, "Drawable", Draw("", 100, 100));
     components.setComponentToEntity(join, "HitboxR", Hitbox(100, 100));
     components.setComponentToEntity(join, "Position", Position(600, 220));
+    components.setComponentToEntity(join, "Health", Health(1));
 
     int quit = components.createEntity();
     components.setComponentToEntity(quit, "Drawable", Draw("", 100, 100));
     components.setComponentToEntity(quit, "HitboxR", Hitbox(100, 100));
     components.setComponentToEntity(quit, "Position", Position(600, 340));
+    components.setComponentToEntity(quit, "Health", Health(1));
 
     int player = components.createEntity();
     components.setComponentToEntity(player, "Drawable", Draw("", 23, 170));
