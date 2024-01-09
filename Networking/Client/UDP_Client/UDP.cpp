@@ -15,19 +15,32 @@ UDP::~UDP()
 {
 }
 
-void UDP::writeMessages(std::string message_)
+void UDP::writePacket(const Packet& packet)
 {
     try {
-        std::getline(std::cin, message_);
-        socket.send_to(asio::buffer(message_), endpoint_server);
+        socket.send_to(asio::buffer(&packet, sizeof(Packet)), endpoint_server);
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 }
 
-std::string UDP::getmessage()
+void UDP::readPacket()
 {
-    return message_;
+    try {
+        std::vector<char> receive_buffer(sizeof(Packet));
+        size_t bytes_received = socket.receive_from(asio::buffer(receive_buffer), endpoint_client);
+        if (bytes_received == sizeof(Packet)) {
+            std::memcpy(&receivedPacket, receive_buffer.data(), sizeof(Packet));
+        }
+        std::cout << "Received from the Server Magic_number = " << receivedPacket.Magic_number << std::endl;
+    } catch (std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
+    }
+}
+
+Packet UDP::getReceivedPacket()
+{
+    return receivedPacket;
 }
 
 void UDP::start()
@@ -35,16 +48,17 @@ void UDP::start()
     try {
         std::cout << "UDP Client started on port " << port << std::endl;
         while (true) {
-            writeMessages(message_);
-            std::vector<char> receive_buffer(1024);
-            size_t bytes_received = socket.receive_from(asio::buffer(receive_buffer), endpoint_client);
-            receive_buffer[bytes_received] = '\0';
-            std::cout << "Received from the Server" << " = " << receive_buffer.data() << std::endl;
+            Packet outgoingPacket;
+            outgoingPacket.Magic_number = 42;
+
+            writePacket(outgoingPacket);
+            readPacket();
         }
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 }
+
 
 void UDP::stop()
 {
