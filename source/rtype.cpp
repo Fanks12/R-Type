@@ -16,6 +16,12 @@ int spawnEnnemy(Registry *registries, int type)
     return 1;
 }
 
+int eff(int id)
+{
+    std::cout << id << " a touche" << std::endl;
+    return 1;
+}
+
 void rtype(Registry *components, int player)
 {
     // Event : si joueur meurt on relance
@@ -42,7 +48,7 @@ int playHit(Registry *components, int player, int play, int join, int quit)
     components->removeEntity(play);
     components->removeEntity(join);
     components->removeEntity(quit);
-    rtype(components, player);
+    // rtype(components, player);
     return 1;
 }
 
@@ -62,6 +68,7 @@ int menu(Registry *components)
     components->setComponentToEntity(play, "Drawable", Draw("asset/space.png", 100, 100));
     components->setComponentToEntity(play, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(play, "Position", Position(600, 100));
+    components->setComponentToEntity(play, "Health", Health(1));
 
     int join = components->createEntity();
     components->setComponentToEntity(join, "Drawable", Draw("asset/space.png", 100, 100));
@@ -72,15 +79,17 @@ int menu(Registry *components)
     components->setComponentToEntity(quit, "Drawable", Draw("asset/space.png", 100, 100));
     components->setComponentToEntity(quit, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(quit, "Position", Position(600, 340));
+    components->setComponentToEntity(quit, "Health", Health(-1));
     // init des event qui regissent chaque bouton
     // init le joueur de base que l'on controle
     int player = components->createEntity();
     components->setComponentToEntity(player, "Drawable", Draw("asset/space.png", 100, 50));
-    components->setComponentToEntity(player, "HitboxR", Hitbox(100, 100));
+    components->setComponentToEntity(player, "HitboxR", Hitbox(100, 50));
     components->setComponentToEntity(player, "Position", Position(50, 50));
     components->setComponentToEntity(player, "Speed", Speed());
     components->setComponentToEntity(player, "Control", Control(1));
     components->setComponentToEntity(player, "Shoot", Shoot(1));
+    components->setComponentToEntity(player, "Team", Team(1));
 
 
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, play),
@@ -105,9 +114,11 @@ void initCore(Registry &components)
     components.addComponent("Shoot");
     components.addComponent("Damage");
     components.addComponent("Health");
+    components.addComponent("Team");
 
     SystemDraw *Drawing = new SystemDraw(components);
     components.addSystem(Drawing);
+    components.addSystem(new SystemHealth(components));
     components.addSystem(new SystemHitbox(components));
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window));

@@ -58,7 +58,7 @@ int SystemHitbox::receive(Hitbox receive, int team1)
         if (hitgCompo[i].type() != typeid(std::string)
          && damageCompo[i].type() != typeid(std::string)
          && collision(receive, std::any_cast<Hitbox>(hitgCompo[i]))
-         && team1 > 0 && team2 > 0 && team1 != team2) {
+         && (team1 == 0 || team2 == 0 || team1 != team2)) {
             if (healthCompo[i].type() != typeid(std::string))
                 _registries->setComponentToEntity(i, "Health", Health(std::any_cast<Health>(healthCompo[i]).health - 1));
             return std::any_cast<Damage>(damageCompo[i]).damage;
@@ -76,8 +76,9 @@ int SystemHitbox::run()
     int damage = 0;
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++)
-        if (hitrCompo[i].type() != typeid(std::string) &&
-        (damage = receive(std::any_cast<Hitbox>(hitrCompo[i]),
+        if (hitrCompo[i].type() != typeid(std::string)
+        && healthCompo[i].type() != typeid(std::string)
+        && (damage = receive(std::any_cast<Hitbox>(hitrCompo[i]),
          (teamCompo[i].type() != typeid(std::string) ? std::any_cast<Team>(teamCompo[i]).team : 0))))
             _registries->setComponentToEntity(i, "Health", Health(std::any_cast<Health>(healthCompo[i]).health - damage));
     return 1;

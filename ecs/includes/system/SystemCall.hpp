@@ -13,4 +13,5 @@
     #include "SystemControl.hpp"
     #include "SystemShoot.hpp"
     #include "SystemHitbox.hpp"
+    #include "SystemHealth.hpp"
 #endif /* !SYSTEMCALL_HPP_ */
