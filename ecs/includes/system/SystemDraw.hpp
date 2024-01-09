@@ -72,7 +72,7 @@ void SystemDraw::updatePosition()
     int i = 0;
 
     for (auto &entity : _cache) {
-        if (!(entity.type() == typeid(std::string))) {
+        if (entity.type() != typeid(std::string)) {
             pos = std::any_cast<Position>(posCompo[i]);
             Object object = std::any_cast<Object>(entity);
             object.sprite.setPosition(sf::Vector2f(pos.x, pos.y));
@@ -100,7 +100,7 @@ int SystemDraw::run()
 
     // Draw the sprite
     for (auto &entity : _cache)
-        if (!(entity.type() == typeid(std::string))) {
+        if (entity.type() != typeid(std::string)) {
             Object index = std::any_cast<Object>(entity);
             _window.draw(index.sprite);
         }

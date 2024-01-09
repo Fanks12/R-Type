@@ -48,6 +48,11 @@ int playHit(Registry *components, int player, int play, int join, int quit)
 
 int menu(Registry *components)
 {
+    // crash on collide
+    // soit dans sysHit
+    // soit remove entity
+    // soit dans un event
+
     // menu
     // int background = components->createEntity();
     // components->setComponentToEntity(background, "Drawable", Draw("asset/space.png", 800, 600));
@@ -76,6 +81,7 @@ int menu(Registry *components)
     components->setComponentToEntity(player, "Speed", Speed());
     components->setComponentToEntity(player, "Control", Control(1));
     components->setComponentToEntity(player, "Shoot", Shoot(1));
+
 
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, play),
                                     EventContener::initFunct(playHit, components, player, play, join, quit)));

@@ -16,4 +16,5 @@
     #include "Position.hpp"
     #include "Shoot.hpp"
     #include "Speed.hpp"
+    #include "Team.hpp"
 #endif /* !COMPONENT_HPP_ */
