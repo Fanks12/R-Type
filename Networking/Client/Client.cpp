@@ -18,45 +18,44 @@ Client::~Client()
     udpClient_->stop();
 }
 
-void Client::WriteMessageTCP(const std::string &msg)
+void Client::WritePacketTCP(const Packet& packet)
 {
-    tcpClient_->writeMessages(msg);
+    tcpClient_->writePacket(packet);
 }
 
-void Client::WriteMessageUDP(const std::string &msg)
+void Client::WritePacketUDP(const Packet& packet)
 {
-    udpClient_->writeMessages(msg);
+    udpClient_->writePacket(packet);
 }
 
-std::string Client::getmessageTCP()
+Packet Client::readPacketTCP()
 {
-    return tcpClient_->getmessage();
+    return tcpClient_->getReceivedPacket();
 }
 
-std::string Client::getmessageUDP()
+Packet Client::readPacketUDP()
 {
-    return udpClient_->getmessage();
+    return udpClient_->getReceivedPacket();
 }
-
 
 void Client::start()
 {
     try {
-        std::cout << "Client TCP started" << std::endl;
-        std::thread tcpThread([this]() {
-            tcpClient_ = std::make_unique<TCP>(server_ip_, tcpPort_);
-            tcpClient_->start();
-        });
+        // std::cout << "Client TCP started" << std::endl;
+        // std::thread tcpThread([this]() {
+        //     tcpClient_ = std::make_unique<TCP>(server_ip_, tcpPort_);
+        //     tcpClient_->start();
+        // });
         std::cout << "Client UDP started" << std::endl;
         std::thread udpThread([this]() {
             udpClient_ = std::make_unique<UDP>(server_ip_, udpPort_);
             udpClient_->start();
         });
-        tcpThread.join();
-        std::cout << "Client TCP stoped" << std::endl;
+        // tcpThread.join();
+        // std::cout << "Client TCP stopped" << std::endl;
         udpThread.join();
-        std::cout << "Client UDP stoped" << std::endl;
-        } catch (std::exception &e) {
-            std::cerr << "Exception: " << e.what() << std::endl;
+        std::cout << "Client UDP stopped" << std::endl;
+    } catch (std::exception& e) {
+        std::cerr << "Exception: " << e.what() << std::endl;
     }
 }
