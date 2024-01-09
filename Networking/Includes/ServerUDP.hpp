@@ -11,21 +11,22 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-
+#include "Packet.hpp"
 
 class ServerUDP {
-    public:
-        ServerUDP(int port);
-        ~ServerUDP();
+public:
+    ServerUDP(int port);
+    ~ServerUDP();
 
-        void start();
-        void stop();
+    void start();
+    void stop();
 
-    private:
-        int port;
-        asio::io_context ioContext;
-        asio::ip::udp::socket socket;
-        asio::ip::udp::endpoint endpoint;
-        bool isRunning;
-        void run();
+private:
+    int port;
+    asio::io_context ioContext;
+    asio::ip::udp::socket socket;
+    asio::ip::udp::endpoint endpoint;
+    bool isRunning;
+    void run();
+    void handlePacket(const Packet& packet);
 };
