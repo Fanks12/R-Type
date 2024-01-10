@@ -46,8 +46,10 @@ int SystemShoot::run()
 
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++) {
-        if (!(shootCompo[i].type() == typeid(std::string)) && !(posCompo[i].type() == typeid(std::string)))
+        if (!(shootCompo[i].type() == typeid(std::string)) && !(posCompo[i].type() == typeid(std::string))) {
             setBullet(std::any_cast<Shoot>(shootCompo[i]).shoot, std::any_cast<Position>(posCompo[i]));
+            _registries->setComponentToEntity(i, "Shoot", Shoot());
+        }
     }
     return 1;
 }

@@ -9,10 +9,21 @@
 
 int menu(Registry *components);
 
-int spawnEnnemy(Registry *registries, int type)
+int spawnEnnemy(Registry *components, int type)
 {
     // if (type == 1)
-    // if (type == 2)
+    if (type == 2) {
+        int mob = components->createEntity();
+        components->setComponentToEntity(mob, "Drawable", Draw("asset/space.png", 100, 100));
+        components->setComponentToEntity(mob, "HitboxR", Hitbox(100, 100));
+        components->setComponentToEntity(mob, "Position", Position(800, 110));
+        components->setComponentToEntity(mob, "Health", Health(1));
+        components->setComponentToEntity(mob, "Speed", Speed(-1));
+        components->setComponentToEntity(mob, "Team", Team(2));
+        Clock *timeMob = new Clock();
+        components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 2),
+                                EventContener::initFunct(Action::idShoot, components, mob, 2)));
+    }
     return 1;
 }
 
@@ -27,20 +38,21 @@ void rtype(Registry *components, int player)
     // Event : si joueur meurt on relance
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, player),
                                     EventContener::initFunct(Action::restart, components, EventContener::initFunct(menu, components))));
-    // Event : compteur de point arrive a 30 = Ennemi special
+    // // Event : compteur de point arrive a 30 = Ennemi special
     components->addEvent(EventContener(EventContener::initFunct(Action::score, components, (30 * NBPLAYER)),
                                     EventContener::initFunct(spawnEnnemy, components, 1)));
     // Event : toutes les 1-4 sec reduit par le temp de jeu envoie un ennemie de plus en plus fort
-    components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, Clock(), (-NBPLAYER + 5)),
+    Clock *spawn = new Clock();
+    components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, spawn, 4),
                                     EventContener::initFunct(spawnEnnemy, components, 2)));
 
     // quand compteur complete les joueurs entre en phase finale
     // 5 etoiles GTA ya le boss qui spawn et c'est la derka partout
 }
 
-int quitHit()
+int quitHit(int i)
 {
-    return 0;
+    return i;
 }
 
 int playHit(Registry *components, int player, int play, int join, int quit)
@@ -49,7 +61,8 @@ int playHit(Registry *components, int player, int play, int join, int quit)
     components->removeEntity(join);
     components->removeEntity(quit);
     components->addSystem(new SystemHealth(*components));
-    // rtype(components, player);
+
+    rtype(components, player);
     return 1;
 }
 
@@ -80,7 +93,7 @@ int menu(Registry *components)
     components->setComponentToEntity(quit, "Drawable", Draw("asset/space.png", 100, 100));
     components->setComponentToEntity(quit, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(quit, "Position", Position(600, 340));
-    components->setComponentToEntity(quit, "Health", Health(-1));
+    components->setComponentToEntity(quit, "Health", Health(1));
     // init des event qui regissent chaque bouton
     // init le joueur de base que l'on controle
     int player = components->createEntity();
@@ -94,9 +107,13 @@ int menu(Registry *components)
 
 
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, play),
-                                    EventContener::initFunct(playHit, components, player, play, join, quit)));
+                                    EventContener::initFunct(playHit, components, player, play, join, quit)))
+                                    ;
 
-    components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, quit), quitHit));
+    components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, quit), EventContener::initFunct(quitHit, 0)));
+
+    // Clock spawn;
+    // components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, &spawn, 1), EventContener::initFunct(eff, 2)));
     // event
     // if hp play < 100 fait la moula puis remet les pv a 100
     components->runSystem();

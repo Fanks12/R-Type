@@ -35,8 +35,13 @@ void Event::popBack()
 
 int Event::run()
 {
-    for (auto& event : actionsReactions)
-        event.run();
+    int res = 1;
+    size_t size = actionsReactions.size();
+    for (size_t i = 0; i < size; i++) {
+        res = actionsReactions.at(i).run();
+        if (!res)
+            return 0;
+    }
     return 1;
 }
 

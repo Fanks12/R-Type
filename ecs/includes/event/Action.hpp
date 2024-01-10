@@ -18,22 +18,23 @@ class Action {
         // from here create static functions
 
         // action
-        static bool everyXSecond(Clock clock, int x);
+        static bool everyXSecond(Clock *clock, int x);
         static bool idDead(Registry *registries, int id);
         static bool score(Registry *registries, int score);
 
         // reaction
+        static int idShoot(Registry *registries, int id, int type);
         static int IdLoseXHp(Registry *registries, int id, int x);
         static int restart(Registry *registries, std::function<int()> start);
     protected:
     private:
 };
 
-bool Action::everyXSecond(Clock clock, int x)
+bool Action::everyXSecond(Clock *clock, int x)
 {
-    clock.stop();
-    if (clock.elapsedTime() >= x) {
-        clock.start();
+    clock->stop();
+    if (clock->elapsedTime() >= x) {
+        clock->start();
         return true;
     }
     return false;
@@ -54,6 +55,12 @@ bool Action::idDead(Registry *registries, int id)
         && std::any_cast<Health>(healthCompo[id]).health <= 0)
         return true;
     return false;
+}
+
+int Action::idShoot(Registry *registries, int id, int type)
+{
+    registries->setComponentToEntity(id, "Shoot", Shoot(2));
+    return 1;
 }
 
 int Action::IdLoseXHp(Registry *registries, int id, int x)

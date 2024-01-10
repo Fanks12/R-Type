@@ -145,9 +145,9 @@ void Registry::runSystem()
         usleep(3000);
         run = event.run();
         for (auto system : systemArrays) {
-            run = system->run();
             if (!run)
                 break;
+            run = system->run();
         }
     }
 }
