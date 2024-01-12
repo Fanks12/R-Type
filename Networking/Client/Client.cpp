@@ -18,25 +18,26 @@ Client::~Client()
     udpClient_->stop();
 }
 
-void Client::WritePacketTCP(const Packet& packet)
+void Client::WriteMessageTCP(const std::string &msg)
 {
-    tcpClient_->writePacket(packet);
+    tcpClient_->writeMessages(msg);
 }
 
-void Client::WritePacketUDP(const Packet& packet)
+void Client::WriteMessageUDP(const std::string &msg)
 {
-    udpClient_->writePacket(packet);
+    udpClient_->writeMessages(msg);
 }
 
-Packet Client::readPacketTCP()
+std::string Client::getmessageTCP()
 {
-    return tcpClient_->getReceivedPacket();
+    return tcpClient_->getmessage();
 }
 
-Packet Client::readPacketUDP()
+std::string Client::getmessageUDP()
 {
-    return udpClient_->getReceivedPacket();
+    return udpClient_->getmessage();
 }
+
 
 void Client::start()
 {
@@ -52,10 +53,10 @@ void Client::start()
             udpClient_->start();
         });
         // tcpThread.join();
-        // std::cout << "Client TCP stopped" << std::endl;
+        // std::cout << "Client TCP stoped" << std::endl;
         udpThread.join();
-        std::cout << "Client UDP stopped" << std::endl;
-    } catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        std::cout << "Client UDP stoped" << std::endl;
+        } catch (std::exception &e) {
+            std::cerr << "Exception: " << e.what() << std::endl;
     }
 }

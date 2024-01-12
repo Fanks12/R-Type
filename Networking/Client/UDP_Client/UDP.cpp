@@ -15,50 +15,58 @@ UDP::~UDP()
 {
 }
 
-void UDP::writePacket(const Packet& packet)
-{
+std::string xorEncryptDecrypt(const std::string& input, char key) {
+    std::string output = input;
+    for (char &c : output) {
+        c ^= key;
+    }
+    return output;
+}
+
+void UDP::writeMessages(const std::string& message) {
     try {
-        socket.send_to(asio::buffer(&packet, sizeof(Packet)), endpoint_server);
+        char key = 0x69;
+        std::string encryptedMessage = xorEncryptDecrypt(message, key);
+        socket.send_to(asio::buffer(encryptedMessage), endpoint_server);
     } catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        std::cerr << "Exception in writeMessages: " << e.what() << std::endl;
     }
 }
 
-void UDP::readPacket()
+std::string UDP::getmessage()
 {
-    try {
-        std::vector<char> receive_buffer(sizeof(Packet));
-        size_t bytes_received = socket.receive_from(asio::buffer(receive_buffer), endpoint_client);
-        if (bytes_received == sizeof(Packet)) {
-            std::memcpy(&receivedPacket, receive_buffer.data(), sizeof(Packet));
-        }
-        std::cout << "Received from the Server Magic_number = " << receivedPacket.Magic_number << std::endl;
-    } catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-    }
+    return message_;
 }
 
-Packet UDP::getReceivedPacket()
-{
-    return receivedPacket;
-}
-
-void UDP::start()
-{
+void UDP::receiveMessages() {
     try {
-        std::cout << "UDP Client started on port " << port << std::endl;
-        while (true) {
-            Packet outgoingPacket;
-            outgoingPacket.Magic_number = 42;
-
-            writePacket(outgoingPacket);
-            readPacket();
+        std::vector<char> receive_buffer(1024);
+        while (isRunning) {
+            asio::ip::udp::endpoint sender_endpoint;
+            size_t bytes_received = socket.receive_from(asio::buffer(receive_buffer), sender_endpoint);
+            if (bytes_received > 0) {
+                char key = 0x69;
+                std::string received_data(receive_buffer.data(), bytes_received);
+                std::string decryptedMessage = xorEncryptDecrypt(received_data, key);
+                std::cout << "Received from the Server UDP = " << decryptedMessage << std::endl;
+            }
         }
     } catch (std::exception& e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
+        std::cerr << "Exception in receiveMessages: " << e.what() << std::endl;
     }
 }
 
+
+void UDP::start() {
+    std::cout << "UDP Client started on port " << port << std::endl;
+    std::thread receive_thread(&UDP::receiveMessages, this);
+    std::string message;
+    while (isRunning && std::getline(std::cin, message)) {
+        writeMessages(message);
+    }
+    stop();
+    receive_thread.join();
+}
 
 void UDP::stop()
 {

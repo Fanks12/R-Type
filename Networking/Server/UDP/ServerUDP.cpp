@@ -105,6 +105,17 @@ void ServerUDP::sendToAllClients(const std::string& message, int clientId) {
     }
 }
 
+void ServerUDP::sendToAllClients(const std::string& message) {
+    char magic_number = 0x69;
+    std::string fullmessage;
+    for (const auto& client_pair : clients) {
+        const ClientInfo& client = client_pair.second;
+        fullmessage = "Server send: " + message;
+        std::string encryptedMessage = xorEncryptDecrypt(fullmessage, magic_number);
+        socket.send_to(asio::buffer(encryptedMessage), client.endpoint);
+    }
+}
+
 std::string ServerUDP::getClientList() const {
     std::string clientList;
     for (const auto& client_pair : clients) {

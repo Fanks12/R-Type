@@ -9,7 +9,7 @@
 
 using asio::ip::tcp;
 
-TCP::TCP(const std::string& server_ip, int client_port) : port(client_port), ioContext(), socket(ioContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 0)), ip_server(server_ip)
+TCP::TCP(const std::string& server_ip, int client_port): port(client_port), ioContext(), socket(ioContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 0)), ip_server(server_ip)
 {
 }
 
@@ -18,33 +18,32 @@ TCP::~TCP()
     stop();
 }
 
-void TCP::readPacket(tcp::socket& socket)
+void TCP::readMessages(tcp::socket& socket)
 {
     try {
         while (true) {
-            size_t bytes_received = socket.read_some(asio::buffer(&receivedPacket, sizeof(Packet)));
-
-            if (bytes_received == sizeof(Packet)) {
-                std::cout << "Received Magic_number: " << receivedPacket.Magic_number << std::endl;
-            }
+            std::vector<char> receive_buffer(1024);
+            size_t bytes_received = socket.read_some(asio::buffer(receive_buffer));
+            message_ = std::string(receive_buffer.data(), bytes_received);
+            std::cout << "Received: " << message_ << std::endl;
         }
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 }
 
-void TCP::writePacket(const Packet& packet)
+void TCP::writeMessages(std::string msg_send)
 {
     try {
-        asio::write(socket, asio::buffer(&packet, sizeof(Packet)));
+        asio::write(socket, asio::buffer(msg_send));
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 }
 
-Packet TCP::getReceivedPacket()
+std::string TCP::getmessage()
 {
-    return receivedPacket;
+    return message_;
 }
 
 void TCP::start()
@@ -54,16 +53,13 @@ void TCP::start()
         tcp::resolver resolver(ioContext);
         tcp::resolver::results_type endpoints = resolver.resolve(ip_server, std::to_string(port));
         asio::connect(socket, endpoints);
-        std::thread reader_thread(&TCP::readPacket, this, std::ref(socket));
+        std::thread reader_thread(&TCP::readMessages, this, std::ref(socket));
 
         while (true) {
-            Packet outgoingPacket;
-            outgoingPacket.Magic_number = 42;
-
-            writePacket(outgoingPacket);
-            readPacket(socket);
+            std::string msg_send;
+            std::getline(std::cin, msg_send);
+            writeMessages(msg_send);
         }
-
         reader_thread.join();
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;

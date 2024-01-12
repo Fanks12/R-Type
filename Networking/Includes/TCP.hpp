@@ -13,8 +13,6 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
-#include "Packet.hpp"
-
 
 class TCP {
     public:
@@ -22,16 +20,16 @@ class TCP {
         TCP(const std::string& server_ip, int client_port);
         ~TCP();
         void start();
-        void readPacket(asio::ip::tcp::socket& socket);
-        void writePacket(const Packet& packet);
-        Packet getReceivedPacket();
+        void readMessages(asio::ip::tcp::socket& socket);
         void stop();
+        void writeMessages(std::string msg_send);
+        std::string getmessage();
 
     protected:
     private:
         std::thread reader_thread;
         int port;
-        Packet receivedPacket;
+        std::string message_;
         std::string ip_server;
         asio::io_context ioContext;
         asio::ip::tcp::socket socket;

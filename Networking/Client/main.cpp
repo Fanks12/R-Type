@@ -2,7 +2,8 @@
 #include <iostream>
 #include <string>
 
-void printHelp() {
+void printHelp()
+{
     std::cout << "Usage: ./client --ip <server_ip> --uport <udp_port>" << std::endl;
     std::cout << "Options:" << std::endl;
     std::cout << "  --ip <server_ip>    Specify the server IP address" << std::endl;
@@ -10,7 +11,8 @@ void printHelp() {
     std::cout << "  -h, --help          Show help message" << std::endl;
 }
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     try {
         int tcp_port = 4242;
         int udp_port = 8080;
@@ -34,5 +36,6 @@ int main(int argc, char **argv) {
         std::cerr << "Exception: " << e.what() << std::endl;
         return 1;
     }
+
     return 0;
 }

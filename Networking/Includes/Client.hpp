@@ -19,10 +19,10 @@ class Client {
         Client(const std::string& server_ip, int tcpPort, int udpPort);
         ~Client();
         void start();
-        void WritePacketTCP(const Packet& packet);
-        void WritePacketUDP(const Packet& packet);
-        Packet readPacketTCP();
-        Packet readPacketUDP();
+        void WriteMessageTCP(const std::string &msg);
+        void WriteMessageUDP(const std::string &msg);
+        std::string getmessageTCP();
+        std::string getmessageUDP();
 
     protected:
     private:

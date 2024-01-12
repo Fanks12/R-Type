@@ -19,9 +19,9 @@ Server::~Server()
     udpServer_->stop();
 }
 
-void Server::SendToAllClientsUDP(const std::string &msg, int ClientID)
+void Server::SendToAllClientsUDP(const std::string &msg)
 {
-    udpServer_->sendToAllClients(msg, ClientID);
+    udpServer_->sendToAllClients(msg);
 }
 
 void Server::SendToClientUDP(const std::string &msg, int ClientID)

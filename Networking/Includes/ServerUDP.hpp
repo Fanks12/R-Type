@@ -20,6 +20,7 @@ public:
     void start();
     void stop();
     void sendToAllClients(const std::string& message, int clientId);
+    void sendToAllClients(const std::string& message);
     void sendToClient(const std::string& message, int clientId);
 private:
     struct ClientInfo {

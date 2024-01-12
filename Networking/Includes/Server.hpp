@@ -16,7 +16,7 @@ class Server {
         Server() = default;
         Server(int tcpPort, int udpPort);
         ~Server();
-        void SendToAllClientsUDP(const std::string &msg, int ClientID);
+        void SendToAllClientsUDP(const std::string &msg);
         void SendToClientUDP(const std::string &msg, int ClientID);
         void start();
 
