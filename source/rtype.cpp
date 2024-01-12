@@ -121,7 +121,7 @@ int menu(Registry *components)
     // -> choisir un lobby
     // -> activé le systeme d'echange de données
 
-    components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, quit), quitHit)));
+    components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, quit), quitHit));
 
     components->runSystem();
     // si multi init les joueur qui s'ajoutent
