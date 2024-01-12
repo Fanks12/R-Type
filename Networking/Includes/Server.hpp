@@ -11,13 +11,13 @@
 #include <thread>
 #include <memory>
 
-
 class Server {
     public:
         Server() = default;
         Server(int tcpPort, int udpPort);
         ~Server();
-
+        void SendToAllClientsUDP(const std::string &msg, int ClientID);
+        void SendToClientUDP(const std::string &msg, int ClientID);
         void start();
 
     private:
