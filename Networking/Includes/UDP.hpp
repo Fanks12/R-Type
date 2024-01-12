@@ -14,7 +14,7 @@
 #include <mutex>
 #include <condition_variable>
 #include <queue>
-#include "Packet.hpp"
+
 
 class UDP {
     public:
@@ -24,13 +24,12 @@ class UDP {
 
         void stop();
         void start();
-        void writePacket(const Packet& packet);
-        void readPacket();
-        Packet getReceivedPacket();
+        void writeMessages(const std::string& message);
+        std::string getmessage();
+        void receiveMessages();
 
     protected:
     private:
-        Packet receivedPacket;
         int port;
         std::string message_;
         asio::io_context ioContext;
