@@ -11,19 +11,27 @@
 #include <iostream>
 #include <vector>
 #include <thread>
+#include <mutex>
+#include <condition_variable>
+#include <queue>
+
 
 class UDP {
     public:
         UDP() = default;
-        UDP(int port);
+        UDP(const std::string& server_ip, int port);
         ~UDP();
 
         void stop();
         void start();
+        void writeMessages(const std::string& message);
+        std::string getmessage();
+        void receiveMessages();
 
     protected:
     private:
         int port;
+        std::string message_;
         asio::io_context ioContext;
         asio::ip::udp::socket socket;
         asio::ip::udp::endpoint endpoint_server;
