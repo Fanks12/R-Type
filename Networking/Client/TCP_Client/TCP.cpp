@@ -6,11 +6,10 @@
 */
 
 #include "TCP.hpp"
-// #include "SystemServer.hpp"
 
 using asio::ip::tcp;
 
-TCP::TCP(const std::string& server_ip, int client_port): port(client_port), ioContext(), socket(ioContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 0)), ip_server(server_ip)
+TCP::TCP(const std::string& server_ip, int client_port) : port(client_port), ioContext(), socket(ioContext, asio::ip::tcp::endpoint(asio::ip::tcp::v4(), 0)), ip_server(server_ip)
 {
 }
 
@@ -19,51 +18,52 @@ TCP::~TCP()
     stop();
 }
 
-void TCP::readMessages(tcp::socket& socket)
+void TCP::readPacket(tcp::socket& socket)
 {
     try {
         while (true) {
-            std::vector<char> receive_buffer(1024);
-            size_t bytes_received = socket.read_some(asio::buffer(receive_buffer));
-            std::cout << "Received: " << std::string(receive_buffer.data(), bytes_received) << std::endl;
-            message_ = std::string(receive_buffer.data(), bytes_received);
+            size_t bytes_received = socket.read_some(asio::buffer(&receivedPacket, sizeof(Packet)));
+
+            if (bytes_received == sizeof(Packet)) {
+                std::cout << "Received Magic_number: " << receivedPacket.Magic_number << std::endl;
+            }
         }
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 }
 
-void TCP::writeMessages(std::string msg_send)
+void TCP::writePacket(const Packet& packet)
 {
     try {
-        asio::write(socket, asio::buffer(msg_send));
+        asio::write(socket, asio::buffer(&packet, sizeof(Packet)));
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;
     }
 }
 
-std::string TCP::getmessage()
+Packet TCP::getReceivedPacket()
 {
-    return message_;
+    return receivedPacket;
 }
 
 void TCP::start()
 {
-    // SystemServer system_server;
     std::cout << "TCP Client started on port " << port << std::endl;
     try {
         tcp::resolver resolver(ioContext);
         tcp::resolver::results_type endpoints = resolver.resolve(ip_server, std::to_string(port));
         asio::connect(socket, endpoints);
-        std::thread reader_thread(&TCP::readMessages, this, std::ref(socket));
+        std::thread reader_thread(&TCP::readPacket, this, std::ref(socket));
 
         while (true) {
-            std::string msg_send;
-            std::getline(std::cin, msg_send);
+            Packet outgoingPacket;
+            outgoingPacket.Magic_number = 42;
 
-            // msg_send = system_server.run();
-            writeMessages(msg_send);
+            writePacket(outgoingPacket);
+            readPacket(socket);
         }
+
         reader_thread.join();
     } catch (std::exception& e) {
         std::cerr << "Exception: " << e.what() << std::endl;

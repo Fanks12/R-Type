@@ -1,29 +1,36 @@
 #include "Server.hpp"
 #include <iostream>
-#include <boost/program_options.hpp>
+#include <string>
 
-namespace po = boost::program_options;
+void printHelp()
+{
+    std::cout << "Usage: ./server --uport <udp_port> --tport <tcp_port>" << std::endl;
+    std::cout << "Options:" << std::endl;
+    std::cout << "  --uport <udp_port>  Specify the UDP port number" << std::endl;
+    std::cout << "  --tport <tcp_port>  Specify the TCP port number" << std::endl;
+    std::cout << "  -h, --help          Show help message" << std::endl;
+}
 
 int main(int argc, char **argv)
 {
     try {
-        po::options_description desc("Options");
-        desc.add_options()
-            ("help", "Show help message")
-            ("tcp_port", po::value<int>()->default_value(4242), "Specify the TCP port number")
-            ("udp_port", po::value<int>()->default_value(8080), "Specify the UDP port number");
+        int tcpPort = 4242;
+        int udpPort = 8080;
 
-        po::variables_map vm;
-        po::store(po::parse_command_line(argc, argv, desc), vm);
-        po::notify(vm);
-
-        if (vm.count("help")) {
-            std::cout << desc << std::endl;
-            return 0;
+        for (int i = 1; i < argc; i += 2) {
+            std::string arg(argv[i]);
+            if (arg == "--uport") {
+                udpPort = std::stoi(argv[i + 1]);
+            } else if (arg == "--tport") {
+                tcpPort = std::stoi(argv[i + 1]);
+            } else if (arg == "-h" || arg == "--help") {
+                printHelp();
+                return 0;
+            } else {
+                std::cerr << "Unknown option: " << arg << std::endl;
+                return 1;
+            }
         }
-
-        int tcpPort = vm["tcp_port"].as<int>();
-        int udpPort = vm["udp_port"].as<int>();
 
         Server server(tcpPort, udpPort);
         server.start();

@@ -11,7 +11,7 @@
 #include <iostream>
 #include <vector>
 #include <thread>
-
+#include "Packet.hpp"
 
 class ServerUDP {
 public:
@@ -28,4 +28,5 @@ private:
     asio::ip::udp::endpoint endpoint;
     bool isRunning;
     void run();
+    void handlePacket(const Packet& packet);
 };
