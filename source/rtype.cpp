@@ -11,12 +11,24 @@ int menu(Registry *components);
 
 int spawnEnnemy(Registry *components, int type)
 {
-    // if (type == 1)
+    if (type == 1) {
+        int mob = components->createEntity();
+        components->setComponentToEntity(mob, "Drawable", Draw("asset/space.png", 250, 100));
+        components->setComponentToEntity(mob, "HitboxR", Hitbox(250, 100));
+        components->setComponentToEntity(mob, "Position", Position(WINDOW_WIDTH, WINDOW_HEIGHT / 2 - 100));
+        components->setComponentToEntity(mob, "Health", Health(110));
+        components->setComponentToEntity(mob, "Speed", Speed(-1));
+        components->setComponentToEntity(mob, "Team", Team(2));
+        // Clock *timeMob = new Clock();
+        // components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 2),
+        //                         EventContener::initFunct(Action::idShoot, components, mob, 2)));
+        // ça shoot partout
+    }
     if (type == 2) {
         int mob = components->createEntity();
         components->setComponentToEntity(mob, "Drawable", Draw("asset/space.png", 100, 100));
         components->setComponentToEntity(mob, "HitboxR", Hitbox(100, 100));
-        components->setComponentToEntity(mob, "Position", Position(800, 110));
+        components->setComponentToEntity(mob, "Position", Position(WINDOW_WIDTH, 105/*random entre 105 et WINDOW_HEIGHT - 105*/));
         components->setComponentToEntity(mob, "Health", Health(1));
         components->setComponentToEntity(mob, "Speed", Speed(-1));
         components->setComponentToEntity(mob, "Team", Team(2));
@@ -50,9 +62,9 @@ void rtype(Registry *components, int player)
     // 5 etoiles GTA ya le boss qui spawn et c'est la derka partout
 }
 
-int quitHit(int i)
+int quitHit()
 {
-    return i;
+    return 0;
 }
 
 int playHit(Registry *components, int player, int play, int join, int quit)
@@ -68,11 +80,6 @@ int playHit(Registry *components, int player, int play, int join, int quit)
 
 int menu(Registry *components)
 {
-    // crash on collide
-    // soit dans sysHit
-    // soit remove entity
-    // soit dans un event
-
     // menu
     // int background = components->createEntity();
     // components->setComponentToEntity(background, "Drawable", Draw("asset/space.png", 800, 600));
@@ -107,15 +114,15 @@ int menu(Registry *components)
 
 
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, play),
-                                    EventContener::initFunct(playHit, components, player, play, join, quit)))
-                                    ;
+                                    EventContener::initFunct(playHit, components, player, play, join, quit)));
 
-    components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, quit), EventContener::initFunct(quitHit, 0)));
+    // event sur online button
+    // -> on te donne un uuid
+    // -> choisir un lobby
+    // -> activé le systeme d'echange de données
 
-    // Clock spawn;
-    // components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, &spawn, 1), EventContener::initFunct(eff, 2)));
-    // event
-    // if hp play < 100 fait la moula puis remet les pv a 100
+    components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, quit), quitHit)));
+
     components->runSystem();
     // si multi init les joueur qui s'ajoutent
     return 0;

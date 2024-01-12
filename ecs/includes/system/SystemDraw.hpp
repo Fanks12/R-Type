@@ -11,6 +11,8 @@
     #include <SFML/Graphics.hpp>
     #include <vector>
     #include <variant>
+    #define WINDOW_WIDTH 800
+    #define WINDOW_HEIGHT 600
 
 class Object {
     public:
@@ -49,7 +51,7 @@ class SystemDraw : public virtual System {
 };
 
 SystemDraw::SystemDraw(Registry &registries) : System(registries),
-_window(sf::VideoMode(800, 600), "SFML window") {}
+_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window") {}
 
 void SystemDraw::addInCache(int it, Draw value)
 {
