@@ -7,11 +7,14 @@
 
 #ifndef COMPONENT_HPP_
     #define COMPONENT_HPP_
+    #include "Clock.hpp"
     #include "Control.hpp"
-    #include "EventContener.hpp"
+    #include "Damage.hpp"
+    #include "Draw.hpp"
     #include "Health.hpp"
     #include "Hitbox.hpp"
     #include "Position.hpp"
     #include "Shoot.hpp"
     #include "Speed.hpp"
+    #include "Team.hpp"
 #endif /* !COMPONENT_HPP_ */

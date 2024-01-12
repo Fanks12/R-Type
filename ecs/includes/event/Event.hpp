@@ -7,45 +7,41 @@
 
 #ifndef EVENT_HPP_
     #define EVENT_HPP_
-    #include "Registry.hpp"
-    #include "ISystem.hpp"
-    #include "Component.hpp"
-
-class Registry;
+    #include "EventContener.hpp"
 
 class Event {
 
     public:
-        Event(Registry *registries);
+        Event() {};
         ~Event() = default;
 
         void addEvent(EventContener event);
+        void popBack();
         int run();
-
-        // from here create static functions
-
-        // action
-        static std::function<bool()> everyXSecond();
-
-        // reaction
-        static std::function<void()> IdLoseXHp(int id, int x);
     protected:
     private:
         std::vector<EventContener> actionsReactions;
-        Registry *_registries;
 };
-
-Event::Event(Registry *registries) : _registries(registries) {}
 
 void Event::addEvent(EventContener event)
 {
     actionsReactions.push_back(event);
 }
 
+void Event::popBack()
+{
+    actionsReactions.pop_back();
+}
+
 int Event::run()
 {
-    for (auto& event : actionsReactions)
-        event.run();
+    int res = 1;
+    size_t size = actionsReactions.size();
+    for (size_t i = 0; i < size; i++) {
+        res = actionsReactions.at(i).run();
+        if (!res)
+            return 0;
+    }
     return 1;
 }
 

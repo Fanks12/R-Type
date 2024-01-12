@@ -6,7 +6,9 @@
 */
 
 #ifndef MAIN_HPP_
-#define MAIN_HPP_
-#include <iostream>
-
+    #define MAIN_HPP_
+    #include "SystemCall.hpp"
+    #include <iostream>
+    #include <unistd.h>
+    #define NBPLAYER  1
 #endif /* !MAIN_HPP_ */

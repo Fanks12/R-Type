@@ -12,6 +12,23 @@
     #include <vector>
     #include <variant>
 
+class Object {
+    public:
+        Object(std::string path, int x, int y, int w, int h, int nbframes = 1) : rect(x, y, w, h), frames(nbframes)
+        {
+            texture.loadFromFile(path);
+            sprite.setTexture(texture);
+            sprite.setTextureRect(rect);
+
+        };
+        ~Object() = default;
+
+        sf::Sprite sprite;
+        sf::Texture texture;
+        sf::IntRect rect;
+        int frames;
+};
+
 class SystemDraw : public virtual System {
     public:
         SystemDraw(Registry &registries);
@@ -24,6 +41,8 @@ class SystemDraw : public virtual System {
         void updateCache();
         void updatePosition();
         void updateEntities();
+        void addInCache(int it, Draw value);
+        void addInCache(int it, std::string value);
 
         sf::Event _event;
         std::vector<std::any> _cache;
@@ -32,20 +51,33 @@ class SystemDraw : public virtual System {
 SystemDraw::SystemDraw(Registry &registries) : System(registries),
 _window(sf::VideoMode(800, 600), "SFML window") {}
 
+void SystemDraw::addInCache(int it, Draw value)
+{
+    if (it >= _cache.size())
+        _cache.push_back(Object(value.path, 0, 0, value.dim.first, value.dim.second, value.frames));
+    else if (_cache.at(it).type() == typeid(std::string))
+        _cache.at(it) = Object(value.path, 0, 0, value.dim.first, value.dim.second, value.frames);
+}
+
+void SystemDraw::addInCache(int it, std::string value)
+{
+    if (it >= _cache.size())
+        _cache.push_back(value);
+    else if (_cache.at(it).type() != typeid(std::string))
+        _cache.at(it) = value;
+}
+
 void SystemDraw::updateCache()
 {
-    std::pair<int, int> index;
+    Draw index;
     SparseArray<std::any> drawCompo = _registries->getComponent<std::any>("Drawable");
 
     for (size_t i = 0; i < _registries->entityNumbers(); i++)
-        if (drawCompo[i].type() == typeid(std::pair<int, int>)) {
-            index = std::any_cast<std::pair<int, int>>(drawCompo[i]);
-            if (i >= _cache.size())
-                _cache.push_back(sf::RectangleShape(sf::Vector2f(index.first, index.second)));
-            else if (_cache.at(i).type() == typeid(std::string))
-                _cache.at(i) = index;
+        if (drawCompo[i].type() != typeid(std::string)) {
+            index = std::any_cast<Draw>(drawCompo[i]);
+            addInCache(i, index);
         } else
-            _cache.at(i) = "vide";
+            addInCache(i, std::string("vide"));
 }
 
 void SystemDraw::updatePosition()
@@ -55,10 +87,11 @@ void SystemDraw::updatePosition()
     int i = 0;
 
     for (auto &entity : _cache) {
-        if (!(entity.type() == typeid(std::string))) {
+        if (posCompo[i].type() != typeid(std::string)
+           && entity.type() != typeid(std::string)) {
             pos = std::any_cast<Position>(posCompo[i]);
-            sf::RectangleShape object = std::any_cast<sf::RectangleShape>(entity);
-            object.setPosition(sf::Vector2f(pos.x, pos.y));
+            Object object = std::any_cast<Object>(entity);
+            object.sprite.setPosition(sf::Vector2f(pos.x, pos.y));
             entity = object;
         }
         i++;
@@ -83,9 +116,9 @@ int SystemDraw::run()
 
     // Draw the sprite
     for (auto &entity : _cache)
-        if (!(entity.type() == typeid(std::string))) {
-            sf::RectangleShape index = std::any_cast<sf::RectangleShape>(entity);
-            _window.draw(index);
+        if (entity.type() != typeid(std::string)) {
+            Object index = std::any_cast<Object>(entity);
+            _window.draw(index.sprite);
         }
 
     // Update the window

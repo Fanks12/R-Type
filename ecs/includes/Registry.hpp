@@ -7,15 +7,17 @@
 
 #ifndef REGISTRY_HPP_
 #define REGISTRY_HPP_
-#include "SparseArray.hpp"
-#include "Event.hpp"
-#include "ISystem.hpp"
-#include <unordered_map>
-#include <string>
-#include <any>
-#include <unistd.h>
+    #include "SparseArray.hpp"
+    #include "Event.hpp"
+    #include "ISystem.hpp"
+    #include <unordered_map>
+    #include <string>
+    #include <any>
+    #include <unistd.h>
 
 class ISystem;
+
+class Event;
 
 class Registry {
     public:
@@ -86,32 +88,31 @@ class Registry {
          */
         size_t entityNumbers() const { return entityNumber; }
 
+        void cleanCompo();
+
         /**
          * @brief return if the registry is running
          * @return The _running value
          */
-        bool isRunning() const { return _running; }
+        bool isRunning() const { return run; }
         int uuid = 1;
 
         void addEvent(EventContener newEvent) { event.addEvent(newEvent); }
+
+        void popBackEvent() { event.popBack(); }
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
         std::vector<ISystem *> systemArrays;
         Event event;
         size_t entityNumber = 0;
-        bool _running = true;
+        int run = 1;
+        int score = 0;
 };
 
-Registry::Registry() : event(this)
-{
-    _running = true;
-}
+Registry::Registry() {}
 
-Registry::~Registry()
-{
-    _running = false;
-}
+Registry::~Registry() {}
 
 int Registry::createEntity()
 {
@@ -140,23 +141,27 @@ void Registry::addSystem(ISystem *system)
 
 void Registry::runSystem()
 {
-    int end = 1;
-
-    while (end) {
+    while (run) {
         usleep(3000);
-        event.run();
+        run = event.run();
         for (auto system : systemArrays) {
-            end = system->run();
-            if (!end)
+            if (!run)
                 break;
+            run = system->run();
         }
     }
 }
 
 void Registry::removeEntity(int entityIndex)
 {
-    for (auto component : componentArrays)
+    for (auto& component : componentArrays)
         component.second.deleteEntity(entityIndex);
+}
+
+void Registry::cleanCompo()
+{
+    for (auto& component : componentArrays)
+        component.second.cleanArray();
 }
 
 template <typename T>

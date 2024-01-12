@@ -5,13 +5,7 @@
 ** main
 */
 
-// #include "main.hpp"
-#include "SystemDraw.hpp"
-#include "SystemMove.hpp"
-#include "SystemControl.hpp"
-#include "SystemShoot.hpp"
-#include <iostream>
-#include <unistd.h>
+#include "main.hpp"
 
 bool trig(Registry *r, int id)
 {
@@ -22,9 +16,10 @@ bool trig(Registry *r, int id)
     return false;
 }
 
-void eff(int id)
+int eff(int id)
 {
     std::cout << id << " a tirer" << std::endl;
+    return 1;
 }
 
 int main()
@@ -34,9 +29,16 @@ int main()
     int voiture = components.createEntity();
     int mob = components.createEntity();
 
-    // Event test;
+    // Soit:
+    // EventContener test;
     // test.setAction(trig, &components, fusée);
     // test.setReaction(eff, fusée);
+
+    // Soit:
+    // EventContener test(EventContener::initFunct(trig, &components, fusée), EventContener::initFunct(eff, fusée))
+
+    // puis add event pour l'ajouté
+    // components.addEvent(test);
 
     components.addEvent(EventContener(EventContener::initFunct(trig, &components, fusée),
                                         EventContener::initFunct(eff, fusée)));
@@ -46,9 +48,9 @@ int main()
     components.setComponentToEntity(voiture, "Speed", Speed(0, 0));
 
     components.addComponent("Drawable");
-    components.setComponentToEntity(fusée, "Drawable", std::pair<int, int>(100, 100));
-    components.setComponentToEntity(voiture, "Drawable", std::pair<int, int>(100, 100));
-    components.setComponentToEntity(mob, "Drawable", std::pair<int, int>(50, 100));
+    components.setComponentToEntity(fusée, "Drawable", Draw("", 100, 100));
+    components.setComponentToEntity(voiture, "Drawable", Draw("", 100, 100));
+    components.setComponentToEntity(mob, "Drawable", Draw("", 50, 100));
 
     components.addComponent("Position");
     components.setComponentToEntity(fusée, "Position", Position(100, 200));

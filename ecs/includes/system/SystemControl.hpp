@@ -34,15 +34,12 @@ SystemControl::SystemControl(Registry &registries, sf::RenderWindow &window) : S
 
 bool SystemControl::inWindow(int id, Speed speed)
 {
-    Position pos = std::any_cast<Position>(_registries->getComponent<std::any>("Position")[id]);
+    Position pos;
+    if (_registries->getComponent<std::any>("Position")[id].type() != typeid(std::string))
+        pos = std::any_cast<Position>(_registries->getComponent<std::any>("Position")[id]);
 
-    if (pos.x + speed.x > 700)
-        return false;
-    if (pos.x + speed.x < 0)
-        return false;
-    if (pos.y + speed.y > 500)
-        return false;
-    if (pos.y + speed.y < 0)
+    if (pos.x + speed.x > 700 || pos.x + speed.x < 0 || pos.y + speed.y > 600
+       || pos.y + speed.y < 0)
         return false;
     return true;
 }
