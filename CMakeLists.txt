@@ -29,13 +29,14 @@ FetchContent_MakeAvailable(Boost)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 add_executable(r-type_client
-source/main.cpp
+source/rtype.cpp
 )
 target_include_directories(r-type_client PRIVATE
 ecs/includes
 ecs/includes/system
 ecs/includes/components
 ecs/includes/event
+includes
 )
 
 add_executable(r-type_server
