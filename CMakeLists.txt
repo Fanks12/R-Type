@@ -18,13 +18,6 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(SFML)
 
-FetchContent_Declare(
-    Boost
-    GIT_REPOSITORY https://github.com/boostorg/boost
-    GIT_TAG        boost-1.72.0
-)
-FetchContent_MakeAvailable(Boost)
-
 #set binary output directory
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
@@ -53,4 +46,3 @@ Networking/Includes
 
 target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system)
 target_link_libraries(r-type_server PRIVATE Threads::Threads)
-target_link_libraries(r-type_server PRIVATE -lboost_program_options)
