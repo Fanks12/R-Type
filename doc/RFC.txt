@@ -1,14 +1,14 @@
+Title: R-Type Protocols
+
 Authors:
 
--Bilal NHARI
--Nelly NGUYEN
--Fares BOUGHELILBA
--Adrian LALARDIE
--Nathan WARIN
+Bilal NHARI
+Nelly NGUYEN
+Fares BOUGHELILBA
+Adrian LALARDIE
+Nathan WARIN
 
 Date: January 2024
-
-Title: R-Type Protocols
 
 Status: Informational
 
@@ -16,30 +16,71 @@ Created on: January 4, 2024
 
 Status of this memo:
 
-    This document serves as the official documentation for the R-Type UDP Protocols,
-    a key component of the third-year project undertaken at EPITECH.
-    The R-Type project aims to develop a multiplayer game,
-    and this documentation outlines the architecture and protocols involved.
+
+    The UDP R-TYPE Protocols, a third-year project originating from EPITECH, are officially detailed in this memo.
+    In accordance with BCP 78 and BCP 79, the document's content adheres to specific provisions.
+    This Internet-Draft, submitted in full conformance, is subject to restrictions against modifications,
+    with the exception of publishing it as an RFC or translating it into languages other than English.
+    Furthermore, this document may integrate material from IETF Documents or IETF Contributions published
+    or publicly available before November 10, 2008. It's noteworthy that some copyright holders may not have
+    granted the IETF Trust the right to authorize modifications outside the IETF Standards Process.
+    Consequently, alterations to this document beyond the IETF Standards Process and the creation of
+    derivative works are limited, except for the purpose of formatting it for RFC publication or
+    translating it into languages other than English.
+    Derivative works and modifications are strictly controlled, only permissible for publishing as an
+    RFC or translation into non-English languages. Internet-Drafts function as working documents within
+    the Internet Engineering Task Force (IETF), its areas, and working groups. While other groups may distribute
+    Internet-Drafts as working documents, it's important to acknowledge their temporary nature, with a maximum
+    validity period of six months. Internet-Drafts may be updated, replaced, or obsoleted by other documents
+    at any time. Using Internet-Drafts as reference material or citing them is deemed inappropriate, except when
+    acknowledging them as "work in progress."
+
+
+    The list of current Internet-Drafts can be accessed at http://www.ietf.org/ietf/1idabstracts.txt, and the list of Internet-Draft Shadow Directories can be accessed at http://
+    www.ietf.org/shadow.html. This Internet-Draft is set to expire in June 2017.
+
+    Copyright Notice
+
+    Copyright (c) 2016 IETF Trust and the individuals identified as the document authors. All rights reserved.
 
 Table of Contents
 
     1. Introduction
-    2. R-Type architecture
-    3. Protocol
+    2. Conventions used in this document
+    3. R-Type architecture
+    4. Protocol
         1. Packets
         2. Player Events
         3. Packet Type
 
 
-1   .Introduction
+1   Introduction
 
     The primary objective of the R-Type project is to create a multiplayer game supporting up to four players.
 
-2.  R-Type architecture
+2. Conventions used in this document
+
+    The key words : "MUST," "MUST NOT," "REQUIRED," "SHALL," "SHALL NOT," "SHOULD," "SHOULD NOT,"
+    "RECOMMENDED," "MAY," and "OPTIONAL" within this document are to be understood as defined in
+    RFC 2119 [RFC2119].
+
+    Throughout this document, these terms will convey their specified meanings
+    exclusively when presented in ALL CAPS. Instances where these terms are written in lowercase
+    should not be construed as carrying the significance outlined in RFC 2119.
+
+3.  R-Type architecture
 
     The R-Type architecture adopts a client-server model.
     Clients establish an initial connection with the server using the
     defined protocol and subsequently spawn within the game environment.
 
+4. Protocol
 
-                            R-Type Protocols Documentation
+    1. Packets
+
+    When a player is activly engaged in the game, communication between the client and server
+    occurs through the R-TYPE UDP Protocol. This protocol facilitates the transimission of updates
+    related to game entities via UDP.
+
+
+R-Type Protocols Documentation
