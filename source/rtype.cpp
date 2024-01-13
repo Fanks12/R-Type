@@ -110,6 +110,7 @@ int menu(Registry *components)
     components->setComponentToEntity(player, "Speed", Speed());
     components->setComponentToEntity(player, "Control", Control(components->uuid));
     components->setComponentToEntity(player, "Shoot", Shoot(1));
+    components->setComponentToEntity(player, "Health", Health(50));
     components->setComponentToEntity(player, "Team", Team(1));
 
 

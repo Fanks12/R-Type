@@ -46,6 +46,7 @@ int SystemConnect::run()
     // le joueur reçoit position et score du server
     // toutes les entités qui ont string en position = removeEntity(id);
     // mis a jour
+    return 1;
 }
 
 #endif /* !SYSTEMCONNNECT_HPP_ */
