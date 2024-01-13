@@ -109,10 +109,19 @@ int menu(Registry *components)
     components->setComponentToEntity(player, "Position", Position(50, 50));
     components->setComponentToEntity(player, "Speed", Speed());
     components->setComponentToEntity(player, "Control", Control(components->uuid));
-    components->setComponentToEntity(player, "Shoot", Shoot(1));
+    components->setComponentToEntity(player, "Shoot", Shoot());
     components->setComponentToEntity(player, "Health", Health(50));
     components->setComponentToEntity(player, "Team", Team(1));
 
+    int player2 = components->createEntity();
+    components->setComponentToEntity(player2, "Drawable", Draw("asset/space.png", 100, 50));
+    components->setComponentToEntity(player2, "HitboxR", Hitbox(100, 50));
+    components->setComponentToEntity(player2, "Position", Position(50, 150));
+    components->setComponentToEntity(player2, "Speed", Speed());
+    components->setComponentToEntity(player2, "Control", Control(components->uuid + 1));
+    components->setComponentToEntity(player2, "Shoot", Shoot());
+    components->setComponentToEntity(player2, "Health", Health(50));
+    components->setComponentToEntity(player2, "Team", Team(1));
 
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, play),
                                     EventContener::initFunct(playHit, components, player, play, join, quit)));
@@ -143,12 +152,13 @@ void initCore(Registry &components)
     components.addComponent("Team");
 
     SystemDraw *Drawing = new SystemDraw(components);
+    SystemConnect *Connect = new SystemConnect(components);
     components.addSystem(Drawing);
+    components.addSystem(Connect);
     components.addSystem(new SystemHitbox(components));
-    components.addSystem(new SystemConnect(components));
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window));
-    components.addSystem(new SystemShoot(components));
+    components.addSystem(new SystemShoot(components, &Connect->client));
 }
 
 int main()

@@ -24,12 +24,12 @@ class SystemConnect : public virtual System {
         ~SystemConnect() = default;
 
         int run();
+        Client client;
     protected:
     private:
         void sender();
         void interpreter();
         void initialisation();
-        Client client;
 };
 
 SystemConnect::SystemConnect(Registry &registries) : System(registries), client(SERVER_IP, TCP_PORT, UDP_PORT)
@@ -47,6 +47,7 @@ void SystemConnect::initialisation()
 
     client.start();
 
+    client.WriteMessageUDP("Connecting");
     //recup message
     // ==== dans thread
     std::string message = client.getmessageUDP();
@@ -69,10 +70,10 @@ int SystemConnect::run()
 {
     // echange de packet
     // le joueur envoie position et score au server
-    sender();
     // === === ===
     // le joueur reçoit position et score du server
-    interpreter();
+    sender();
+    // interpreter();
     // == thread join ==
     // mis a jour
     return 1;
@@ -81,19 +82,24 @@ int SystemConnect::run()
 void SystemConnect::sender()
 {
     SparseArray<std::any> posCompo = _registries->getComponent<std::any>("Position");
+    SparseArray<std::any> controlCompo = _registries->getComponent<std::any>("Control");
+    SparseArray<std::any> shootCompo = _registries->getComponent<std::any>("Shoot");
     Position index;
 
     for (size_t i = 0; i < _registries->entityNumbers(); i++)
         if (posCompo[i].type() != typeid(std::string)) {
             index = std::any_cast<Position>(posCompo[i]);
-            std::cout << "i=" << i << "x=" << index.x << "y=" << index.y << std::endl;
-        } else
-            std::cout << "i=" << i << "string" << std::endl;
+            client.WriteMessageUDP("i=" + std::to_string(i) + " x=" + std::to_string(index.x) + " y=" + std::to_string(index.y));
+        } else {
+            client.WriteMessageUDP("i=" + std::to_string(i) + " string");
+        }
+
+    client.WriteMessageUDP("score=" + std::to_string(_registries->score));
 }
 
 void SystemConnect::interpreter()
 {
-    std::string input = client.getmessageUDP(/*_registries->uuid*/);
+    std::string input = client.getmessageUDP();
 
     std::istringstream stream(input);
     std::string token;
@@ -105,7 +111,7 @@ void SystemConnect::interpreter()
     int tValue = 0;
 
     while (stream >> token) {
-        if (token == "i=0")
+        if (token == "i=")
             stream >> iValue;
         if (token == "posx=")
             stream >> xValue;

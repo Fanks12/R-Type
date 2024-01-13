@@ -100,7 +100,7 @@ class Registry {
 
         void popBackEvent() { event.popBack(); }
 
-        int uuid = 0;
+        int uuid = 1;
         int score = 0;
     protected:
     private:

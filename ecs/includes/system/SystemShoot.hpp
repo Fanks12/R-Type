@@ -11,16 +11,17 @@
 
 class SystemShoot : public virtual System {
     public:
-        SystemShoot(Registry &registries);
+        SystemShoot(Registry &registries, Client *client);
         ~SystemShoot() = default;
 
         int run();
     protected:
     private:
         void setBullet(int type, Position pos);
+        Client *_client;
 };
 
-SystemShoot::SystemShoot(Registry &registries) : System(registries) {}
+SystemShoot::SystemShoot(Registry &registries, Client *client) : System(registries), _client(client) {}
 
 void SystemShoot::setBullet(int type, Position pos)
 {
@@ -47,6 +48,8 @@ int SystemShoot::run()
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++) {
         if (!(shootCompo[i].type() == typeid(std::string)) && !(posCompo[i].type() == typeid(std::string))) {
+            if (_client)
+                _client->WriteMessageUDP("i=" + std::to_string(i) + " shoot=" + std::to_string(std::any_cast<Shoot>(shootCompo[i]).shoot));
             setBullet(std::any_cast<Shoot>(shootCompo[i]).shoot, std::any_cast<Position>(posCompo[i]));
             _registries->setComponentToEntity(i, "Shoot", Shoot());
         }
