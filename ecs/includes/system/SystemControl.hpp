@@ -44,8 +44,8 @@ bool SystemControl::inWindow(int id, Speed speed)
     return true;
 }
 
-int SystemControl::run() {
-
+int SystemControl::run()
+{
     Shoot is_shooting = 0;
 
     Speed speed;

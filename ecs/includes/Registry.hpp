@@ -95,7 +95,7 @@ class Registry {
          * @return The _running value
          */
         bool isRunning() const { return run; }
-        int uuid = 1;
+        int uuid = 0;
 
         void addEvent(EventContener newEvent) { event.addEvent(newEvent); }
 

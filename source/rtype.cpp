@@ -108,7 +108,7 @@ int menu(Registry *components)
     components->setComponentToEntity(player, "HitboxR", Hitbox(100, 50));
     components->setComponentToEntity(player, "Position", Position(50, 50));
     components->setComponentToEntity(player, "Speed", Speed());
-    components->setComponentToEntity(player, "Control", Control(1));
+    components->setComponentToEntity(player, "Control", Control(components->uuid));
     components->setComponentToEntity(player, "Shoot", Shoot(1));
     components->setComponentToEntity(player, "Team", Team(1));
 
