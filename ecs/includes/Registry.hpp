@@ -95,11 +95,13 @@ class Registry {
          * @return The _running value
          */
         bool isRunning() const { return run; }
-        int uuid = 0;
 
         void addEvent(EventContener newEvent) { event.addEvent(newEvent); }
 
         void popBackEvent() { event.popBack(); }
+
+        int uuid = 0;
+        int score = 0;
     protected:
     private:
         std::unordered_map<std::string, SparseArray<std::any>> componentArrays;
@@ -107,7 +109,6 @@ class Registry {
         Event event;
         size_t entityNumber = 0;
         int run = 1;
-        int score = 0;
 };
 
 Registry::Registry() {}
