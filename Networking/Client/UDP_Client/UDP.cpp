@@ -60,14 +60,21 @@ void UDP::receiveMessages() {
 
 void UDP::start() {
     std::cout << "UDP Client started on port " << port << std::endl;
+    writeMessages("connection");
     std::thread receive_thread(&UDP::receiveMessages, this);
-    std::string message;
-    while (isRunning && std::getline(std::cin, message)) {
-        writeMessages(message);
-    }
-    stop();
-    receive_thread.join();
+    receive_thread.detach();
 }
+
+// void UDP::start() {
+//     std::cout << "UDP Client started on port " << port << std::endl;
+//     std::thread receive_thread(&UDP::receiveMessages, this);
+//     std::string message;
+//     while (isRunning && std::getline(std::cin, message)) {
+//         writeMessages(message);
+//     }
+//     stop();
+//     receive_thread.join();
+// }
 
 void UDP::stop()
 {

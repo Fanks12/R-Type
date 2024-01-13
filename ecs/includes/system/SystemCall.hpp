@@ -10,6 +10,7 @@
     #include "Action.hpp"
     #include "SystemDraw.hpp"
     #include "SystemMove.hpp"
+    #include "SystemConnect.hpp"
     #include "SystemControl.hpp"
     #include "SystemShoot.hpp"
     #include "SystemHitbox.hpp"

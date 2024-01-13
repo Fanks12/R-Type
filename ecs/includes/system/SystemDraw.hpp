@@ -89,8 +89,9 @@ void SystemDraw::updatePosition()
     int i = 0;
 
     for (auto &entity : _cache) {
-        if (posCompo[i].type() != typeid(std::string)
-           && entity.type() != typeid(std::string)) {
+        if (posCompo[i].type() == typeid(std::string))
+            _registries->removeEntity(i);
+        else if (entity.type() != typeid(std::string)) {
             pos = std::any_cast<Position>(posCompo[i]);
             Object object = std::any_cast<Object>(entity);
             object.sprite.setPosition(sf::Vector2f(pos.x, pos.y));

@@ -108,8 +108,9 @@ int menu(Registry *components)
     components->setComponentToEntity(player, "HitboxR", Hitbox(100, 50));
     components->setComponentToEntity(player, "Position", Position(50, 50));
     components->setComponentToEntity(player, "Speed", Speed());
-    components->setComponentToEntity(player, "Control", Control(1));
+    components->setComponentToEntity(player, "Control", Control(components->uuid));
     components->setComponentToEntity(player, "Shoot", Shoot(1));
+    components->setComponentToEntity(player, "Health", Health(50));
     components->setComponentToEntity(player, "Team", Team(1));
 
 
@@ -144,6 +145,7 @@ void initCore(Registry &components)
     SystemDraw *Drawing = new SystemDraw(components);
     components.addSystem(Drawing);
     components.addSystem(new SystemHitbox(components));
+    components.addSystem(new SystemConnect(components));
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window));
     components.addSystem(new SystemShoot(components));

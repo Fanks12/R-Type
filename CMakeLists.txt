@@ -23,6 +23,9 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_SOURCE_DIR})
 
 add_executable(r-type_client
 source/rtype.cpp
+Networking/Client/TCP_Client/TCP.cpp
+Networking/Client/UDP_Client/UDP.cpp
+Networking/Client/Client.cpp
 )
 target_include_directories(r-type_client PRIVATE
 ecs/includes
@@ -30,6 +33,7 @@ ecs/includes/system
 ecs/includes/components
 ecs/includes/event
 includes
+Networking/Includes
 )
 
 add_executable(r-type_server
@@ -44,5 +48,5 @@ target_include_directories(r-type_server PRIVATE
 Networking/Includes
 )
 
-target_link_libraries(r-type_client PRIVATE sfml-graphics sfml-window sfml-system)
+target_link_libraries(r-type_client PRIVATE Threads::Threads sfml-graphics sfml-window sfml-system)
 target_link_libraries(r-type_server PRIVATE Threads::Threads)
