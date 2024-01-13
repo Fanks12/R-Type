@@ -55,7 +55,6 @@ void Client::start()
         // tcpThread.join();
         // std::cout << "Client TCP stoped" << std::endl;
         udpThread.join();
-        std::cout << "Client UDP stoped" << std::endl;
         } catch (std::exception &e) {
             std::cerr << "Exception: " << e.what() << std::endl;
     }

@@ -145,6 +145,7 @@ void initCore(Registry &components)
     SystemDraw *Drawing = new SystemDraw(components);
     components.addSystem(Drawing);
     components.addSystem(new SystemHitbox(components));
+    components.addSystem(new SystemConnect(components));
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window));
     components.addSystem(new SystemShoot(components));
