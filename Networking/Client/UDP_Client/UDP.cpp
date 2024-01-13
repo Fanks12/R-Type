@@ -48,6 +48,7 @@ void UDP::receiveMessages() {
                 char key = 0x69;
                 std::string received_data(receive_buffer.data(), bytes_received);
                 std::string decryptedMessage = xorEncryptDecrypt(received_data, key);
+                message_ = decryptedMessage;
                 std::cout << "Received from the Server UDP = " << decryptedMessage << std::endl;
             }
         }
