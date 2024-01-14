@@ -9,6 +9,14 @@
 
 int menu(Registry *components);
 
+int randomInt(int seed, int min, int max)
+{
+    std::mt19937 generator(seed);
+    std::uniform_int_distribution<int> distribution(min, max);
+
+    return distribution(generator);
+}
+
 int spawnEnnemy(Registry *components, int type)
 {
     if (type == 1) {
@@ -19,10 +27,14 @@ int spawnEnnemy(Registry *components, int type)
         components->setComponentToEntity(mob, "Health", Health(110));
         components->setComponentToEntity(mob, "Speed", Speed(-1));
         components->setComponentToEntity(mob, "Team", Team(2));
-        // Clock *timeMob = new Clock();
-        // components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 2),
-        //                         EventContener::initFunct(Action::idShoot, components, mob, 2)));
-        // ça shoot partout
+        components->addEvent(EventContener(EventContener::initFunct(Action::posLowerX, components, mob, WINDOW_WIDTH - 250),
+                                EventContener::initFunct(Action::idSpeed, components, mob, 0)));
+        Clock *shootMob = new Clock();
+        components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, shootMob, 1),
+                                EventContener::initFunct(Action::idShoot, components, mob, 2)));
+        Clock *timeMob = new Clock();
+        components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 2),
+                                EventContener::initFunct(spawnEnnemy, components, 2)));
     }
     if (type == 2) {
         int mob = components->createEntity();
@@ -33,7 +45,7 @@ int spawnEnnemy(Registry *components, int type)
         components->setComponentToEntity(mob, "Speed", Speed(-1));
         components->setComponentToEntity(mob, "Team", Team(2));
         Clock *timeMob = new Clock();
-        components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 2),
+        components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 3),
                                 EventContener::initFunct(Action::idShoot, components, mob, 2)));
     }
     return 1;
@@ -51,7 +63,7 @@ void rtype(Registry *components, int player)
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, player),
                                     EventContener::initFunct(Action::restart, components, EventContener::initFunct(menu, components))));
     // // Event : compteur de point arrive a 30 = Ennemi special
-    components->addEvent(EventContener(EventContener::initFunct(Action::score, components, (30 * NBPLAYER)),
+    components->addEvent(EventContener(EventContener::initFunct(Action::score, components, (5 * NBPLAYER)),
                                     EventContener::initFunct(spawnEnnemy, components, 1)));
     // Event : toutes les 1-4 sec reduit par le temp de jeu envoie un ennemie de plus en plus fort
     Clock *spawn = new Clock();
@@ -108,7 +120,7 @@ int menu(Registry *components)
     components->setComponentToEntity(player, "HitboxR", Hitbox(100, 50));
     components->setComponentToEntity(player, "Position", Position(50, 50));
     components->setComponentToEntity(player, "Speed", Speed());
-    components->setComponentToEntity(player, "Control", Control(1));
+    components->setComponentToEntity(player, "Control", Control(-1));
     components->setComponentToEntity(player, "Shoot", Shoot());
     components->setComponentToEntity(player, "Health", Health(50));
     components->setComponentToEntity(player, "Team", Team(1));
@@ -155,6 +167,7 @@ void initCore(Registry &components)
     SystemConnect *Connect = new SystemConnect(components);
     components.addSystem(Drawing);
     components.addSystem(Connect);
+    components.addSystem(new SystemClearLag(components));
     components.addSystem(new SystemHitbox(components));
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window, Connect->client));

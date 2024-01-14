@@ -39,7 +39,7 @@ bool SystemControl::inWindow(int id, Speed speed)
     if (_registries->getComponent<std::any>("Position")[id].type() != typeid(std::string))
         pos = std::any_cast<Position>(_registries->getComponent<std::any>("Position")[id]);
 
-    if (pos.x + speed.x > 700 || pos.x + speed.x < 0 || pos.y + speed.y > 600
+    if (pos.x + speed.x > 700 || pos.x + speed.x < 0 || pos.y + speed.y > 500
        || pos.y + speed.y < 0)
         return false;
     return true;
@@ -90,8 +90,8 @@ int SystemControl::run()
                 _registries->getComponent<std::any>("Speed")[i] = speed;
             if (!(shootCompo[i].type() == typeid(std::string))) {
                 _registries->getComponent<std::any>("Shoot")[i] = is_shooting;
-                if (_client != NULL)
-                        _client->WriteMessageUDP("i=" + std::to_string(i) + " shoot=" + std::to_string(is_shooting.shoot));
+                if (_client != NULL && is_shooting.shoot == 1)
+                        _client->WriteMessageUDP("i=" + std::to_string(i) + " s=1");
             }
         }
     }

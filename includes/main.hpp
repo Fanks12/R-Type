@@ -10,5 +10,6 @@
     #include "SystemCall.hpp"
     #include <iostream>
     #include <unistd.h>
+    #include <random>
     #define NBPLAYER  1
 #endif /* !MAIN_HPP_ */

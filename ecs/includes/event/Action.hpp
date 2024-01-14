@@ -20,9 +20,11 @@ class Action {
         // action
         static bool everyXSecond(Clock *clock, int x);
         static bool idDead(Registry *registries, int id);
+        static bool posLowerX(Registry *registries, int id, int x);
         static bool score(Registry *registries, int score);
 
         // reaction
+        static int idSpeed(Registry *registries, int id, int value);
         static int idShoot(Registry *registries, int id, int type);
         static int IdLoseXHp(Registry *registries, int id, int x);
         static int restart(Registry *registries, std::function<int()> start);
@@ -57,9 +59,25 @@ bool Action::idDead(Registry *registries, int id)
     return false;
 }
 
+bool Action::posLowerX(Registry *registries, int id, int x)
+{
+    SparseArray<std::any> posCompo = registries->getComponent<std::any>("Position");
+
+    if (posCompo[id].type() != typeid(std::string)
+        && std::any_cast<Position>(posCompo[id]).x < x)
+        return true;
+    return false;
+}
+
+int Action::idSpeed(Registry *registries, int id, int value)
+{
+    registries->setComponentToEntity(id, "Speed", Speed(value));
+    return 1;
+}
+
 int Action::idShoot(Registry *registries, int id, int type)
 {
-    registries->setComponentToEntity(id, "Shoot", Shoot(2));
+    registries->setComponentToEntity(id, "Shoot", Shoot(type));
     return 1;
 }
 

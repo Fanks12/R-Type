@@ -30,6 +30,7 @@ class SystemConnect : public virtual System {
         void sender();
         void interpreter();
         void initialisation();
+        int safeStoi(std::string message);
 };
 
 SystemConnect::SystemConnect(Registry &registries) : System(registries), client(new Client(SERVER_IP, TCP_PORT, UDP_PORT))
@@ -49,7 +50,7 @@ void SystemConnect::initialisation()
 
 
     std::string uuidStr = message.substr(message.find('=') + 1);
-    _registries->uuid = std::stoi(uuidStr);
+    _registries->uuid = safeStoi(uuidStr);
 
     std::thread receive_thread(&SystemConnect::interpreter, this);
     receive_thread.detach();
@@ -76,15 +77,33 @@ void SystemConnect::sender()
     SparseArray<std::any> controlCompo = _registries->getComponent<std::any>("Control");
     SparseArray<std::any> shootCompo = _registries->getComponent<std::any>("Shoot");
     Position index;
+    Shoot indux;
 
-    for (size_t i = 0; i < _registries->entityNumbers(); i++)
+    for (size_t i = 0; i < _registries->entityNumbers(); i++) {
         if (posCompo[i].type() != typeid(std::string) && controlCompo[i].type() != typeid(std::string)
         && std::any_cast<Control>(controlCompo[i]).control == _registries->uuid) {
             index = std::any_cast<Position>(posCompo[i]);
             client->WriteMessageUDP("i=" + std::to_string(i) + " x=" + std::to_string(index.x) + " y=" + std::to_string(index.y));
         }
+        if (shootCompo[i].type() != typeid(std::string) && controlCompo[i].type() != typeid(std::string)
+        && std::any_cast<Control>(controlCompo[i]).control == _registries->uuid) {
+            indux = std::any_cast<Shoot>(shootCompo[i]);
+            if (indux.shoot)
+                client->WriteMessageUDP("i=" + std::to_string(i) + " s=1");
+        }
+    }
 
-    client->WriteMessageUDP("score=" + std::to_string(_registries->score));
+    // client->WriteMessageUDP("score=" + std::to_string(_registries->score));
+}
+
+int SystemConnect::safeStoi(std::string message)
+{
+    try {
+        int number = std::stoi(message);
+        return number;
+    } catch (const std::invalid_argument& e) {
+        return -1;
+    }
 }
 
 void SystemConnect::interpreter()
@@ -100,24 +119,31 @@ void SystemConnect::interpreter()
         int y = -1;
         int shoot = -1;
 
+        std::cout << input << std::endl;
+
         for (int i = 0; i < 10; i++) {
             sub = input.substr(0, input.find(" "));
             input = input.substr(input.find(" ") + 1);
             if (sub.compare("You") == 0 || sub.compare("string") == 0)
                 break;
-            if (sub.substr(0, input.find("=") + 1).compare("i=") == 0)
-                id = std::stoi(sub.substr(input.find("=") + 1));
+            if (sub.substr(0, input.find("=") + 1).compare("i=") == 0) {
+                std::cout << sub << std::endl;
+                id = safeStoi(sub.substr(input.find("=") + 1));
+            }
             if (sub.substr(0, input.find("=") + 1).compare("x=") == 0)
-                x = std::stoi(sub.substr(input.find("=") + 1));
+                x = safeStoi(sub.substr(input.find("=") + 1));
             if (sub.substr(0, input.find("=") + 1).compare("y=") == 0)
-                y = std::stoi(sub.substr(input.find("=") + 1));
-            if (sub.substr(0, input.find("=") + 1).compare("shoot=") == 0)
-                shoot = std::stoi(sub.substr(input.find("=") + 1));
+                y = safeStoi(sub.substr(input.find("=") + 1));
+            if (sub.substr(0, input.find("=") + 1).compare("s=") == 0) {
+                shoot = safeStoi(sub.substr(input.find("=") + 1));
+            }
             if (sub.substr(0, input.find("=") + 1).compare("score=") == 0) {
-                _registries->score = std::stoi(sub.substr(input.find("=") + 1));
+                _registries->score = safeStoi(sub.substr(input.find("=") + 1));
             }
         }
-        if (id < _registries->entityNumbers() && id != -1 && x != -1 && y != -1 && shoot == -1)
+        std::cout << id << shoot << std::endl;
+
+        if (id < _registries->entityNumbers() && id != -1 && x != -1 && y != -1)
             _registries->setComponentToEntity(id, "Position", Position(x, y));
         if (id < _registries->entityNumbers() && id != -1 && shoot != -1)
             _registries->setComponentToEntity(id, "Shoot", Shoot(shoot));
