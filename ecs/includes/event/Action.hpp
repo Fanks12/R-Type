@@ -7,6 +7,7 @@
 
 #ifndef ACTION_HPP_
     #define ACTION_HPP_
+    #include "SFML/Audio.hpp"
     #include "Registry.hpp"
     #include "Component.hpp"
 
@@ -24,6 +25,7 @@ class Action {
         static bool score(Registry *registries, int score);
 
         // reaction
+        static int playSound(std::string path);
         static int idSpeed(Registry *registries, int id, int value);
         static int idShoot(Registry *registries, int id, int type);
         static int IdLoseXHp(Registry *registries, int id, int x);
@@ -72,6 +74,17 @@ bool Action::posLowerX(Registry *registries, int id, int x)
 int Action::idSpeed(Registry *registries, int id, int value)
 {
     registries->setComponentToEntity(id, "Speed", Speed(value));
+    return 1;
+}
+
+int Action::playSound(std::string path)
+{
+    sf::SoundBuffer buffer;
+    sf::Sound sound;
+
+    buffer.loadFromFile("sound.wav");
+    sound.setBuffer(buffer);
+    sound.play();
     return 1;
 }
 
