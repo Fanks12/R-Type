@@ -20,9 +20,12 @@ int randomInt(int seed, int min, int max)
 int spawnEnnemy(Registry *components, int type)
 {
     if (type == 1) {
+        components->score++;
         int mob = components->createEntity();
         components->setComponentToEntity(mob, "Drawable", Draw("asset/space.png", 250, 100));
         components->setComponentToEntity(mob, "HitboxR", Hitbox(250, 100));
+        components->setComponentToEntity(mob, "HitboxG", Hitbox(250, 100));
+        components->setComponentToEntity(mob, "Damage", Damage(100));
         components->setComponentToEntity(mob, "Position", Position(WINDOW_WIDTH, WINDOW_HEIGHT / 2 - 100));
         components->setComponentToEntity(mob, "Health", Health(110));
         components->setComponentToEntity(mob, "Speed", Speed(-1));
@@ -40,12 +43,16 @@ int spawnEnnemy(Registry *components, int type)
         int mob = components->createEntity();
         components->setComponentToEntity(mob, "Drawable", Draw("asset/space.png", 100, 100));
         components->setComponentToEntity(mob, "HitboxR", Hitbox(100, 100));
-        components->setComponentToEntity(mob, "Position", Position(WINDOW_WIDTH, 105/*random entre 105 et WINDOW_HEIGHT - 105*/));
+        components->setComponentToEntity(mob, "HitboxG", Hitbox(100, 100));
+        components->setComponentToEntity(mob, "Damage", Damage(10));
+        components->setComponentToEntity(mob, "Position", Position(WINDOW_WIDTH, randomInt(components->score, 105, WINDOW_HEIGHT - 105)/*random entre 105 et WINDOW_HEIGHT - 105*/));
         components->setComponentToEntity(mob, "Health", Health(1));
         components->setComponentToEntity(mob, "Speed", Speed(-1));
         components->setComponentToEntity(mob, "Team", Team(2));
+        components->addEvent(EventContener(EventContener::initFunct(Action::posLowerX, components, mob, WINDOW_WIDTH - randomInt(components->score, 100, WINDOW_HEIGHT - 300)),
+                                EventContener::initFunct(Action::idSpeed, components, mob, 0)));
         Clock *timeMob = new Clock();
-        components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 3),
+        components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 1),
                                 EventContener::initFunct(Action::idShoot, components, mob, 2)));
     }
     return 1;
@@ -63,11 +70,11 @@ void rtype(Registry *components, int player)
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, player),
                                     EventContener::initFunct(Action::restart, components, EventContener::initFunct(menu, components))));
     // // Event : compteur de point arrive a 30 = Ennemi special
-    components->addEvent(EventContener(EventContener::initFunct(Action::score, components, (5 * NBPLAYER)),
+    components->addEvent(EventContener(EventContener::initFunct(Action::score, components, (10 * NBPLAYER)),
                                     EventContener::initFunct(spawnEnnemy, components, 1)));
     // Event : toutes les 1-4 sec reduit par le temp de jeu envoie un ennemie de plus en plus fort
     Clock *spawn = new Clock();
-    components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, spawn, 4),
+    components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, spawn, 3),
                                     EventContener::initFunct(spawnEnnemy, components, 2)));
 
     // quand compteur complete les joueurs entre en phase finale

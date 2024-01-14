@@ -18,15 +18,15 @@ class Object {
     public:
         Object(std::string path, int x, int y, int w, int h, int nbframes = 1) : rect(x, y, w, h), frames(nbframes)
         {
-            texture.loadFromFile(path);
-            sprite.setTexture(texture);
+            if (path.compare("asset/space.png"))
+                textId = 0;
+            // sprite.setTexture(texture);
             sprite.setTextureRect(rect);
-
         };
         ~Object() = default;
 
+        int textId;
         sf::Sprite sprite;
-        sf::Texture texture;
         sf::IntRect rect;
         int frames;
 };
@@ -48,10 +48,13 @@ class SystemDraw : public virtual System {
 
         sf::Event _event;
         std::vector<std::any> _cache;
+        sf::Texture texture;
 };
 
 SystemDraw::SystemDraw(Registry &registries) : System(registries),
-_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window") {}
+_window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window") {
+    texture.loadFromFile("asset/space.png");
+}
 
 void SystemDraw::addInCache(int it, Draw value)
 {
@@ -94,6 +97,7 @@ void SystemDraw::updatePosition()
         else if (entity.type() != typeid(std::string)) {
             pos = std::any_cast<Position>(posCompo[i]);
             Object object = std::any_cast<Object>(entity);
+            object.sprite.setTexture(texture);
             object.sprite.setPosition(sf::Vector2f(pos.x, pos.y));
             entity = object;
         }
@@ -119,10 +123,8 @@ int SystemDraw::run()
 
     // Draw the sprite
     for (auto &entity : _cache)
-        if (entity.type() != typeid(std::string)) {
-            Object index = std::any_cast<Object>(entity);
-            _window.draw(index.sprite);
-        }
+        if (entity.type() != typeid(std::string))
+            _window.draw(std::any_cast<Object>(entity).sprite);
 
     // Update the window
     _window.display();
