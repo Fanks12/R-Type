@@ -53,6 +53,10 @@ class SystemDraw : public virtual System {
         sf::Texture Space;
         sf::Texture Shoot_player;
         sf::Texture Shoot_ennemy;
+        sf::Texture YouWin;
+        sf::Texture YouLose;
+        sf::Texture Play;
+        sf::Texture Quit;
 };
 
 SystemDraw::~SystemDraw() {
@@ -61,16 +65,25 @@ SystemDraw::~SystemDraw() {
     Ennemy.~Texture();
     Shoot_player.~Texture();
     Shoot_ennemy.~Texture();
+    YouLose.~Texture();
+    YouWin.~Texture();
+    Play.~Texture();
+    Quit.~Texture();
     _window.close();
 }
 
 SystemDraw::SystemDraw(Registry &registries) : System(registries),
 _window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window") {
     SpaceShip.loadFromFile("asset/Player.png");
-    Space.loadFromFile("asset/space.png");
+    Space.loadFromFile("asset/space.jpg");
     Ennemy.loadFromFile("asset/mob.png");
     Shoot_player.loadFromFile("asset/shoot_player.png");
     Shoot_ennemy.loadFromFile("asset/shoot_ennemy.png");
+    YouLose.loadFromFile("asset/You_lose.png");
+    YouWin.loadFromFile("asset/You_win.png");
+    Play.loadFromFile("asset/play.png");
+    Quit.loadFromFile("asset/quit_button.png");
+
     // music.openFromFile("music.ogg");
     // music.play();
 }
@@ -125,6 +138,14 @@ void SystemDraw::updatePosition()
                 object.sprite.setScale(sf::Vector2f(0.2, 0.2));
 
             }
+            if (object.textId == 4) {
+                object.sprite.setTexture(Play);
+                object.sprite.setScale(sf::Vector2f(1, 1));
+            }
+            if (object.textId == 6) {
+                object.sprite.setTexture(Quit);
+                object.sprite.setScale(sf::Vector2f(1, 1));
+            }
             if (object.textId == 10) {
                 object.sprite.setTexture(Space);
             }
@@ -135,6 +156,14 @@ void SystemDraw::updatePosition()
             if (object.textId == 12) {
                 object.sprite.setTexture(Shoot_ennemy);
                 object.sprite.setScale(sf::Vector2f(0.8, 0.8));
+            }
+            if (object.textId == 15) {
+                object.sprite.setTexture(YouWin);
+                object.sprite.setScale(sf::Vector2f(1.5, 1.5));
+            }
+            if (object.textId == 16) {
+                object.sprite.setTexture(YouLose);
+                object.sprite.setScale(sf::Vector2f(1.5, 1.5));
             }
             object.sprite.setPosition(sf::Vector2f(pos.x, pos.y));
             entity = object;

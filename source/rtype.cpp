@@ -9,6 +9,20 @@
 
 int menu(Registry *components);
 
+int YouWin(Registry *components) {
+    int YouWin = components->createEntity();
+    components->setComponentToEntity(YouWin, "Drawable", Draw(15, 818, 815));
+    components->setComponentToEntity(YouWin, "Position", Position());
+    return 1;
+}
+
+int YouLose(Registry *components) {
+    int YouLose = components->createEntity();
+    components->setComponentToEntity(YouLose, "Drawable", Draw(16, 818, 815));
+    components->setComponentToEntity(YouLose, "Position", Position());
+    return 1;
+}
+
 int randomInt(int seed, int min, int max)
 {
     std::mt19937 generator(seed);
@@ -38,6 +52,8 @@ int spawnEnnemy(Registry *components, int type)
         Clock *timeMob = new Clock();
         components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, timeMob, 2),
                                 EventContener::initFunct(spawnEnnemy, components, 2)));
+        components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, mob),
+                                EventContener::initFunct(YouWin, components)));
     }
     if (type == 2) {
         int mob = components->createEntity();
@@ -58,17 +74,11 @@ int spawnEnnemy(Registry *components, int type)
     return 1;
 }
 
-int eff(int id)
-{
-    std::cout << id << " a touche" << std::endl;
-    return 1;
-}
-
 void rtype(Registry *components, int player)
 {
     // Event : si joueur meurt on relance
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, player),
-                                    EventContener::initFunct(Action::restart, components, EventContener::initFunct(menu, components))));
+                                    EventContener::initFunct(YouLose, components)));
     // // Event : compteur de point arrive a 30 = Ennemi special
     components->addEvent(EventContener(EventContener::initFunct(Action::score, components, (10 * NBPLAYER)),
                                     EventContener::initFunct(spawnEnnemy, components, 1)));
@@ -76,7 +86,6 @@ void rtype(Registry *components, int player)
     Clock *spawn = new Clock();
     components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, spawn, 3),
                                     EventContener::initFunct(spawnEnnemy, components, 2)));
-
     // quand compteur complete les joueurs entre en phase finale
     // 5 etoiles GTA ya le boss qui spawn et c'est la derka partout
 }
@@ -97,27 +106,35 @@ int playHit(Registry *components, int player, int play, int join, int quit)
     return 1;
 }
 
+// int joinHit(Registry *components)
+// {
+//     components->addSystem(new SystemConnect(*components));
+
+//     return 1;
+// }
+
 int menu(Registry *components)
 {
     // menu
-    // int background = components->createEntity();
-    // components->setComponentToEntity(background, "Drawable", Draw("asset/space.png", 800, 600));
-    // components->setComponentToEntity(background, "Position", Position());
+    int background = components->createEntity();
+    components->setComponentToEntity(background, "Drawable", Draw(10, 1280, 720));
+    components->setComponentToEntity(background, "Position", Position());
 
     int play = components->createEntity();
-    components->setComponentToEntity(play, "Drawable", Draw(10, 100, 100));
-    components->setComponentToEntity(play, "HitboxR", Hitbox(100, 100));
+    components->setComponentToEntity(play, "Drawable", Draw(4, 152, 84));
+    components->setComponentToEntity(play, "HitboxR", Hitbox(152, 84));
     components->setComponentToEntity(play, "Position", Position(600, 100));
     components->setComponentToEntity(play, "Health", Health(1));
 
     int join = components->createEntity();
-    components->setComponentToEntity(join, "Drawable", Draw(10, 100, 100));
+    components->setComponentToEntity(join, "Drawable", Draw(5, 100, 100));
     components->setComponentToEntity(join, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(join, "Position", Position(600, 220));
+    components->setComponentToEntity(join, "Health", Health(1));
 
     int quit = components->createEntity();
-    components->setComponentToEntity(quit, "Drawable", Draw(10, 100, 100));
-    components->setComponentToEntity(quit, "HitboxR", Hitbox(100, 100));
+    components->setComponentToEntity(quit, "Drawable", Draw(6, 170, 90));
+    components->setComponentToEntity(quit, "HitboxR", Hitbox(170, 90));
     components->setComponentToEntity(quit, "Position", Position(600, 340));
     components->setComponentToEntity(quit, "Health", Health(1));
     // init des event qui regissent chaque bouton
@@ -142,15 +159,16 @@ int menu(Registry *components)
     components->setComponentToEntity(player2, "Health", Health(50));
     components->setComponentToEntity(player2, "Team", Team(1));
 
+    //#################### init des event qui regissent chaque bouton ####################//
+    // Event : si le joueur touche le bouton play
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, play),
                                     EventContener::initFunct(playHit, components, player, play, join, quit)));
-
-    // event sur online button
-    // -> on te donne un uuid
-    // -> choisir un lobby
-    // -> activé le systeme d'echange de données
-
+    // Event : si le joueur touche le bouton join
+    // components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, join),
+    //                                 EventContener::initFunct(joinHit, components)));
+    // Event : si le joueur touche le bouton quit
     components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, quit), quitHit));
+    //####################################################################################//
 
     components->runSystem();
     // si multi init les joueur qui s'ajoutent
