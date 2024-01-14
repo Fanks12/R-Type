@@ -61,17 +61,13 @@ cmake
 **To launch the server:**
 
 ```bash
-./server --help
-Options:
-  --help                 Show help message
-  --tcp_port arg (=8082) Specify the TCP port number
-  --udp_port arg (=8080) Specify the UDP port number
+./r-type_server
 ```
 
 **To launch the client:**
 
 ```bash
-./client
+././r-type_client
 ```
 ## Commit Norme
 
