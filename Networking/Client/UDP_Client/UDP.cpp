@@ -7,7 +7,7 @@
 
 #include "UDP.hpp"
 
-UDP::UDP(const std::string& server_ip, int client_port) : port(client_port), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), 0)), isRunning(true), endpoint_server(asio::ip::address::from_string(server_ip), port)
+UDP::UDP(const std::string& server_ip, int client_port) : port(client_port), _receive(0), ioContext(), socket(ioContext, asio::ip::udp::endpoint(asio::ip::udp::v4(), 0)), isRunning(true), endpoint_server(asio::ip::address::from_string(server_ip), port)
 {
 }
 
@@ -44,17 +44,23 @@ void UDP::receiveMessages() {
         while (isRunning) {
             asio::ip::udp::endpoint sender_endpoint;
             size_t bytes_received = socket.receive_from(asio::buffer(receive_buffer), sender_endpoint);
+            _receive = bytes_received;
             if (bytes_received > 0) {
                 char key = 0x69;
                 std::string received_data(receive_buffer.data(), bytes_received);
                 std::string decryptedMessage = xorEncryptDecrypt(received_data, key);
                 message_ = decryptedMessage;
-                std::cout << "Received from the Server UDP = " << decryptedMessage << std::endl;
+                //std::cout << "Received from the Server UDP = " << decryptedMessage << std::endl;
             }
         }
     } catch (std::exception& e) {
         std::cerr << "Exception in receiveMessages: " << e.what() << std::endl;
     }
+}
+
+int UDP::getreceive()
+{
+    return _receive;
 }
 
 

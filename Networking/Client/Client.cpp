@@ -38,6 +38,10 @@ std::string Client::getmessageUDP()
     return udpClient_->getmessage();
 }
 
+int Client::getreceiveUDP()
+{
+    return udpClient_->getreceive();
+}
 
 void Client::start()
 {

@@ -23,6 +23,7 @@ class Client {
         void WriteMessageUDP(const std::string &msg);
         std::string getmessageTCP();
         std::string getmessageUDP();
+        int getreceiveUDP();
 
     protected:
     private:

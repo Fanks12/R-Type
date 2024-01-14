@@ -108,7 +108,7 @@ int menu(Registry *components)
     components->setComponentToEntity(player, "HitboxR", Hitbox(100, 50));
     components->setComponentToEntity(player, "Position", Position(50, 50));
     components->setComponentToEntity(player, "Speed", Speed());
-    components->setComponentToEntity(player, "Control", Control(components->uuid));
+    components->setComponentToEntity(player, "Control", Control(1));
     components->setComponentToEntity(player, "Shoot", Shoot());
     components->setComponentToEntity(player, "Health", Health(50));
     components->setComponentToEntity(player, "Team", Team(1));
@@ -118,7 +118,7 @@ int menu(Registry *components)
     components->setComponentToEntity(player2, "HitboxR", Hitbox(100, 50));
     components->setComponentToEntity(player2, "Position", Position(50, 150));
     components->setComponentToEntity(player2, "Speed", Speed());
-    components->setComponentToEntity(player2, "Control", Control(components->uuid + 1));
+    components->setComponentToEntity(player2, "Control", Control(2));
     components->setComponentToEntity(player2, "Shoot", Shoot());
     components->setComponentToEntity(player2, "Health", Health(50));
     components->setComponentToEntity(player2, "Team", Team(1));
@@ -158,7 +158,7 @@ void initCore(Registry &components)
     components.addSystem(new SystemHitbox(components));
     components.addSystem(new SystemMove(components));
     components.addSystem(new SystemControl(components, Drawing->_window));
-    components.addSystem(new SystemShoot(components, &Connect->client));
+    components.addSystem(new SystemShoot(components, Connect->client));
 }
 
 int main()

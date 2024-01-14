@@ -24,7 +24,7 @@ class SystemConnect : public virtual System {
         ~SystemConnect() = default;
 
         int run();
-        Client client;
+        Client *client;
     protected:
     private:
         void sender();
@@ -32,35 +32,29 @@ class SystemConnect : public virtual System {
         void initialisation();
 };
 
-SystemConnect::SystemConnect(Registry &registries) : System(registries), client(SERVER_IP, TCP_PORT, UDP_PORT)
+SystemConnect::SystemConnect(Registry &registries) : System(registries), client(new Client(SERVER_IP, TCP_PORT, UDP_PORT))
 {
     initialisation();
 }
 
 void SystemConnect::initialisation()
 {
-    // envoie une premier message pour avoir la connection
-    // recup l'uuid
+    client->start();
+    client->WriteMessageUDP("Connecting");
 
-    int prevUuid = _registries->uuid;
-    SparseArray<std::any> controlCompo = _registries->getComponent<std::any>("Control");
+    std::string message;
 
-    client.start();
-
-    client.WriteMessageUDP("Connecting");
-    //recup message
-    // ==== dans thread
-    std::string message = client.getmessageUDP();
-    // std::getline(std::cin, message);
-    // ====
+    std::thread connection([this, &message]() {
+        while (client->getreceiveUDP() <= 0);
+        message = client->getmessageUDP();
+    });
+    connection.join();
 
     std::string uuidStr = message.substr(message.find('=') + 1);
-    int uuid = std::stoi(uuidStr);
+    _registries->uuid = std::stoi(uuidStr);
 
-    for (size_t i = 0; i < _registries->entityNumbers(); i++)
-        if (controlCompo[i].type() != typeid(std::string)
-        && std::any_cast<Control>(controlCompo[i]).control == prevUuid)
-            _registries->setComponentToEntity(i, "Control", Control(_registries->uuid));
+    std::thread receive_thread(&SystemConnect::interpreter, this);
+    receive_thread.detach();
 
     // des envoie des données changé
     // recup des nouvelles données
@@ -73,7 +67,6 @@ int SystemConnect::run()
     // === === ===
     // le joueur reçoit position et score du server
     sender();
-    // interpreter();
     // == thread join ==
     // mis a jour
     return 1;
@@ -87,49 +80,55 @@ void SystemConnect::sender()
     Position index;
 
     for (size_t i = 0; i < _registries->entityNumbers(); i++)
-        if (posCompo[i].type() != typeid(std::string)) {
+        if (posCompo[i].type() != typeid(std::string) && controlCompo[i].type() != typeid(std::string)
+        && std::any_cast<Control>(controlCompo[i]).control == _registries->uuid) {
             index = std::any_cast<Position>(posCompo[i]);
-            client.WriteMessageUDP("i=" + std::to_string(i) + " x=" + std::to_string(index.x) + " y=" + std::to_string(index.y));
-        } else {
-            client.WriteMessageUDP("i=" + std::to_string(i) + " string");
+            client->WriteMessageUDP("i=" + std::to_string(i) + " x=" + std::to_string(index.x) + " y=" + std::to_string(index.y));
         }
 
-    client.WriteMessageUDP("score=" + std::to_string(_registries->score));
+    client->WriteMessageUDP("score=" + std::to_string(_registries->score));
 }
 
 void SystemConnect::interpreter()
 {
-    std::string input = client.getmessageUDP();
+    while (_registries->isRunning()) {
+        if (client->getreceiveUDP() <= 0)
+            continue;
+        std::string input = client->getmessageUDP();
+        std::string sub;
 
-    std::istringstream stream(input);
-    std::string token;
+        int id = -1;
+        int x = -1;
+        int y = -1;
+        int shoot = -1;
 
-    int iValue = 0;
-    int xValue = 0;
-    int yValue = 0;
-    int sValue = 0;
-    int tValue = 0;
+        std::cout << input << std::endl;
 
-    while (stream >> token) {
-        if (token == "i=")
-            stream >> iValue;
-        if (token == "posx=")
-            stream >> xValue;
-        if (token == "posy=")
-            stream >> yValue;
-        if (token == "shoot=")
-            stream >> tValue;
-        if (token == "score=") {
-            stream >> sValue;
-            _registries->score = sValue;
+        for (int i = 0; i < 10; i++) {
+            sub = input.substr(0, input.find(" "));
+            std::cout << sub << std::endl;
+            input = input.substr(input.find(" ") + 1);
+            std::cout << input << std::endl;
+            if (sub.compare("You") == 0 || sub.compare("string") == 0)
+                break;
+            if (sub.substr(0, input.find("=") + 1).compare("i=") == 0)
+                id = std::stoi(sub.substr(input.find("=") + 1));
+            if (sub.substr(0, input.find("=") + 1).compare("x=") == 0)
+                x = std::stoi(sub.substr(input.find("=") + 1));
+            if (sub.substr(0, input.find("=") + 1).compare("y=") == 0)
+                y = std::stoi(sub.substr(input.find("=") + 1));
+            if (sub.substr(0, input.find("=") + 1).compare("shoot=") == 0)
+                shoot = std::stoi(sub.substr(input.find("=") + 1));
+            if (sub.substr(0, input.find("=") + 1).compare("score=") == 0) {
+                _registries->score = std::stoi(sub.substr(input.find("=") + 1));
+                std::cout << "caca" << std::endl;
+            }
         }
-        if (token == "string")
-            return;
+        if (id < _registries->entityNumbers() && id != -1 && x != -1 && y != -1 && shoot == -1)
+            _registries->setComponentToEntity(id, "Position", Position(x, y));
+        else if (id < _registries->entityNumbers() && id != -1 && shoot != -1)
+            _registries->setComponentToEntity(id, "Shoot", Shoot(shoot));
     }
-    if (iValue < _registries->entityNumbers() && tValue == 0 && sValue == 0)
-        _registries->setComponentToEntity(iValue, "Position", Position(xValue, yValue));
-    else if (iValue < _registries->entityNumbers() && sValue == 0)
-        _registries->setComponentToEntity(iValue, "Shoot", Shoot(tValue));
 }
 
 #endif /* !SYSTEMCONNNECT_HPP_ */

@@ -27,10 +27,12 @@ class UDP {
         void writeMessages(const std::string& message);
         std::string getmessage();
         void receiveMessages();
+        int getreceive();
 
     protected:
     private:
         int port;
+        int _receive;
         std::string message_;
         asio::io_context ioContext;
         asio::ip::udp::socket socket;
