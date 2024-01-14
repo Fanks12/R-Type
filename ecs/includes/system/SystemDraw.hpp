@@ -46,7 +46,7 @@ class SystemDraw : public virtual System {
         void addInCache(int it, std::string value);
 
         sf::Event _event;
-        // sf::Music music;
+        sf::Music music;
         std::vector<std::any> _cache;
         sf::Texture Ennemy;
         sf::Texture SpaceShip;
@@ -83,9 +83,8 @@ _window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window") {
     YouWin.loadFromFile("asset/You_win.png");
     Play.loadFromFile("asset/play.png");
     Quit.loadFromFile("asset/quit_button.png");
-
-    // music.openFromFile("music.ogg");
-    // music.play();
+    music.openFromFile("asset/music.ogg");
+    music.play();
 }
 
 void SystemDraw::addInCache(int it, Draw value)
@@ -181,7 +180,7 @@ void SystemDraw::updateEntities()
 int SystemDraw::run()
 {
     if (!_window.isOpen()) {
-        // music.stop();
+        music.stop();
         return 0;
     }
 
