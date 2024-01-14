@@ -17,9 +17,9 @@ called R-Type, using a game engine of your own design.
 
 4.[Commit Norme](#commit-norme)
 
-5.[Network](#network)
+5.[Network](Networking/README.md)
 
-6.[ECS](#ecs)
+6.[ECS](ecs/includes/README.md)
 
 7.[Documentation](#documentation)
 
@@ -94,24 +94,11 @@ feat: add connection functional
 fix(database): resolve issue with data retrieval
 ```
 Using a commit convention like Conventional Commits makes it easier to automate the process of generating release notes, managing versions, and quickly understanding the changes made to a project
-## Network
-
-The network serves as the vital core of this project, acting as its operational brain. Its essential function involves receiving all data transmitted by clients, subjecting them to a sophisticated processing mechanism, and ultimately redistributing the generated results to all stakeholders. This strategic component ensures effective management of information exchanges, thereby guaranteeing cohesion and overall project performance.
-
-![Schema](https://media.discordapp.net/attachments/1178690622962552973/1184529314214072450/image.png?ex=658c4de3&is=6579d8e3&hm=7af3c79575854d5c02b0a2cfc57b099a62683f460fcebbe9a7c2c8c0bdf0ee19&=&format=webp&quality=lossless&width=810&height=338)
-
-## ECS
-
-An ECS is an architectural design pattern, mostly used in video game development. This pattern follows
-the principle of composition over inheritance. Instead of defining an inheritance tree as usual in Object Ori-
-ented Programming, types are split into small yet highly reusable components.
-
-![ECS_SCHEMA](https://media.discordapp.net/attachments/1168528267754614964/1187012022051803156/ECS_CHEMA.png?ex=65955617&is=6582e117&hm=a775f25179079b8cab0157a702ad7337d999cab5f4125e92f0378f8bc6e6e128&=&format=webp&quality=lossless&width=810&height=599)
 
 
 ## Documentation
 
-The code documentation is available [here]().
+The code documentation is available [here](doc/ECS-documentation.md).
 
 ## Contributing to R-Type
 

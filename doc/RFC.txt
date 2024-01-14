@@ -1,12 +1,13 @@
-Title: R-Type Protocols
+Epitech Paris
+
+                                                R-Type Protocols
 
 Authors:
 
 Bilal NHARI
-Nelly NGUYEN
 Fares BOUGHELILBA
+Nelly NGUYEN
 Adrian LALARDIE
-Nathan WARIN
 
 Date: January 2024
 
@@ -36,9 +37,6 @@ Status of this memo:
     acknowledging them as "work in progress."
 
 
-    The list of current Internet-Drafts can be accessed at http://www.ietf.org/ietf/1idabstracts.txt, and the list of Internet-Draft Shadow Directories can be accessed at http://
-    www.ietf.org/shadow.html. This Internet-Draft is set to expire in June 2017.
-
     Copyright Notice
 
     Copyright (c) 2016 IETF Trust and the individuals identified as the document authors. All rights reserved.
@@ -49,9 +47,11 @@ Table of Contents
     2. Conventions used in this document
     3. R-Type architecture
     4. Protocol
-        1. Packets
-        2. Player Events
-        3. Packet Type
+        1. Contents of payload
+        2. Connection to server
+        3. Connection to room
+        4. Start the game
+        5. In game communication
 
 
 1   Introduction
@@ -76,11 +76,125 @@ Table of Contents
 
 4. Protocol
 
-    1. Packets
+    The entire communication link between the server and the client hinges on the utilization
+    of a UDP protocol for sharing payloads. The game opts for the UDP Protocol over the TCP
+    Protocol, considering its better alignment with our specific requirements. While TCP is
+    renowned for its reliability, it tends to transfer data at a slower pace. In contrast, UDP,
+    although less reliable, operates more swiftly.
 
-    When a player is activly engaged in the game, communication between the client and server
-    occurs through the R-TYPE UDP Protocol. This protocol facilitates the transimission of updates
-    related to game entities via UDP.
+        4.1. Contents Of Payload
+
+            In order to communicate between the client and the server,
+            these MUST be the contents of a payload:
+
+            Std::string Data;
+
+            The data string is encrypted when sent and decrypted when received using a unique
+            key that the server and client have in common.
+            From now on, every time this document mentions "data", it will refer to the PACKET_TYPE
 
 
-R-Type Protocols Documentation
+        4.2. Connection To Server
+
+            When launching the game, the client MAY enter his login
+            information. The client MAY provide an IP and a
+            Port so as to connect to the server.
+            If the client doesn't provide these informations, he MUST
+            automatically be given these login informations:
+
+                UUID = 127.0.0.1:8080
+                IP = 127.0.0.1
+                Port = 8080
+
+            This prompts the client to dispatch a payload to the server,
+            comprising:
+
+                Data : "New Connection"*
+
+            This causes the client to automatically join a room. For more
+            information, please refer to 4.3. Connection To Room.Th
+
+            With "UUID" being the UUID of each player in the room
+            and "readyState" being the status of each player in the room
+            (ready or not ready).
+
+            On failure, no message is sent between the client and the
+            server.
+
+
+        4.3. Connection To Room
+
+            Upon establishing a connection between the client and the server, the client will be
+            promptly allocated to a room. If no available rooms are found or all existing rooms
+            reach full capacity, a new room will be generated. Consequently, the client seamlessly
+            joins the first available non-full room identified by the server, or a new room is imperative
+            if none exists.
+            To exit a room, the client is required to transmit to the server the following data: DISCONNECTION.
+
+
+        4.4. Start The Game
+
+            Upon a client's successful entry into a room, the prerequisite for
+            commencing the game is that every participant within that room must
+            indicate readiness. To fulfill this requirement, each client is obliged
+            to transmit the following data to the server:
+                "READY"
+            Once the readiness of all players is confirmed, the server is mandated to
+            broadcast to all clients within the room:
+                "START"
+            Subsequently, when all players in a room have met their demise, the server
+            is compelled to dispatch the following data to the client:
+                "END_GAME"
+
+
+        4.5. In game Communication
+
+           Throughout gameplay, the client is restricted to a limited set of inputs,
+           encompassing actions such as movement, shooting, and exiting. To transmit
+           this information to the server, the client is required to dispatch the following:
+                Data = MOVE
+                Data = Direction
+            The client must specify a direction for movement (UP, DOWN, LEFT, RIGHT).
+            If the client intends to initiate shooting, the obligatory transmission to the server is:
+                Data = SHOOT
+            Similarly, when the client decides to exit the game, the mandatory communication to the server is:
+                Data = DISCONNECTION
+
+
+5. References
+
+    [RFC0768] Postel, J., "User Datagram Protocol", STD 6, RFC 768,
+    August 1980.
+
+    [RFC2119] Bradner, S., "Key words for use in RFCs to Indicate
+    Requirement Levels", BCP 14, RFC 2119, March 1997.
+
+    [RFC2578] McCloghrie, K., Ed., Perkins, D., Ed., and J.
+    Schoenwaelder, Ed., "Structure of Management Information Version 2
+    (SMIv2)", STD 58, RFC 2578, April 1999.
+
+    [RFC2579] McCloghrie, K., Ed., Perkins, D., Ed., and J.
+    Schoenwaelder, Ed., "Textual Conventions for SMIv2", STD 58, RFC 2579,
+    April 1999.
+
+    [RFC2580] McCloghrie, K., Perkins, D., and J. Schoenwaelder,
+    "Conformance Statements for SMIv2", STD 58, RFC 2580, April 1999.
+
+
+Authors' Adresses
+
+Bilal Nhari
+EPITECH Paris
+bilal.nhari@epitech.eu
+
+Fares Boughelilba
+EPITECH Paris
+fares.boughelilba@epitech.eu
+
+Nelly Nguyen
+EPITECH Paris
+nelly.nguyen@epitech.eu
+
+Adrian Lalardie
+EPITECH Paris
+adrian.lalardie@epitech.eu
