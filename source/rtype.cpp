@@ -37,8 +37,8 @@ int spawnEnnemy(Registry *components, int type)
         components->score++;
         int mob = components->createEntity();
         components->setComponentToEntity(mob, "Drawable", Draw(3, 500, 500));
-        components->setComponentToEntity(mob, "HitboxR", Hitbox((500 * 0.2), (500 * 0.2)));
-        components->setComponentToEntity(mob, "HitboxG", Hitbox((500 * 0.2), (500 * 0.2)));
+        components->setComponentToEntity(mob, "HitboxR", Hitbox((500 * 0.4), (500 * 0.4)));
+        components->setComponentToEntity(mob, "HitboxG", Hitbox((500 * 0.4), (500 * 0.4)));
         components->setComponentToEntity(mob, "Damage", Damage(100));
         components->setComponentToEntity(mob, "Position", Position(WINDOW_WIDTH, WINDOW_HEIGHT / 2 - 100));
         components->setComponentToEntity(mob, "Health", Health(110));
@@ -76,9 +76,6 @@ int spawnEnnemy(Registry *components, int type)
 
 void rtype(Registry *components, int player)
 {
-    // Event : si joueur meurt on relance
-    components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, player),
-                                    EventContener::initFunct(YouLose, components)));
     // // Event : compteur de point arrive a 30 = Ennemi special
     components->addEvent(EventContener(EventContener::initFunct(Action::score, components, (10 * NBPLAYER)),
                                     EventContener::initFunct(spawnEnnemy, components, 1)));
@@ -86,6 +83,10 @@ void rtype(Registry *components, int player)
     Clock *spawn = new Clock();
     components->addEvent(EventContener(EventContener::initFunct(Action::everyXSecond, spawn, 3),
                                     EventContener::initFunct(spawnEnnemy, components, 2)));
+
+    // Event : si joueur meurt on relance
+    components->addEvent(EventContener(EventContener::initFunct(Action::idDead, components, player),
+                                    EventContener::initFunct(YouLose, components)));
     // quand compteur complete les joueurs entre en phase finale
     // 5 etoiles GTA ya le boss qui spawn et c'est la derka partout
 }

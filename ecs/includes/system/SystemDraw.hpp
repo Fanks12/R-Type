@@ -57,6 +57,7 @@ class SystemDraw : public virtual System {
         sf::Texture YouLose;
         sf::Texture Play;
         sf::Texture Quit;
+        sf::Texture Boss;
 };
 
 SystemDraw::~SystemDraw() {
@@ -69,6 +70,9 @@ SystemDraw::~SystemDraw() {
     YouWin.~Texture();
     Play.~Texture();
     Quit.~Texture();
+    music.stop();
+    _cache.clear();
+    Boss.~Texture();
     _window.close();
 }
 
@@ -84,6 +88,7 @@ _window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window") {
     Play.loadFromFile("asset/play.png");
     Quit.loadFromFile("asset/quit_button.png");
     music.openFromFile("asset/music.ogg");
+    Boss.loadFromFile("asset/boss.png");
     music.play();
 }
 
@@ -135,7 +140,10 @@ void SystemDraw::updatePosition()
             if (object.textId == 2) {
                 object.sprite.setTexture(Ennemy);
                 object.sprite.setScale(sf::Vector2f(0.2, 0.2));
-
+            }
+            if (object.textId == 3) {
+                object.sprite.setTexture(Boss);
+                object.sprite.setScale(sf::Vector2f(0.4, 0.4));
             }
             if (object.textId == 4) {
                 object.sprite.setTexture(Play);
@@ -162,7 +170,7 @@ void SystemDraw::updatePosition()
             }
             if (object.textId == 16) {
                 object.sprite.setTexture(YouLose);
-                object.sprite.setScale(sf::Vector2f(1.5, 1.5));
+                object.sprite.setScale(sf::Vector2f(1, 1));
             }
             object.sprite.setPosition(sf::Vector2f(pos.x, pos.y));
             entity = object;
