@@ -44,12 +44,12 @@ void UDP::receiveMessages() {
         while (isRunning) {
             asio::ip::udp::endpoint sender_endpoint;
             size_t bytes_received = socket.receive_from(asio::buffer(receive_buffer), sender_endpoint);
-            _receive = bytes_received;
             if (bytes_received > 0) {
                 char key = 0x69;
                 std::string received_data(receive_buffer.data(), bytes_received);
                 std::string decryptedMessage = xorEncryptDecrypt(received_data, key);
                 message_ = decryptedMessage;
+                _receive = bytes_received;
                 //std::cout << "Received from the Server UDP = " << decryptedMessage << std::endl;
             }
         }
