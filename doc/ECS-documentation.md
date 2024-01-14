@@ -6,8 +6,8 @@
   <a href="#what-is-ecs?">What is ECS</a> &#xa0; | &#xa0;
   <a href="#characteristics">Characteristics</a> &#xa0; | &#xa0;
   <a href="#variants">Variants</a> &#xa0; | &#xa0;
-  <a href="#what-is-a-client-?">What is a Client?</a> &#xa0; | &#xa0;
   <a href="#what-is-a-server?">What is a Server?</a> &#xa0; | &#xa0;
+  <a href="#what-is-a-client-?">What is a Client?</a> &#xa0; | &#xa0;
   <a href="#sources">Sources</a>
 </p>
 
@@ -37,13 +37,53 @@ Examples of ECS variants include:
 
 - **Apparatus for Unreal Engine**: Introduces type hierarchy support for components, allowing systems to query base component types and match all descendants. This adds flexibility to ECS by supporting common logic on different components.
 
+### What is a Server? ###
+
+A server, in computing, is hardware or software providing functionality for clients. Servers can offer various services, such as data sharing or computation. Servers operate on the client-server model, responding to client requests. This architecture allows a single server to serve multiple clients, running on the same or different devices.
+
 ### What is a Client? ###
 
 A client is a computer or program that sends requests to access services provided by a server. Clients can include web browsers, email clients, or multiplayer game instances. In a client-server model, clients connect to servers, and the term applies to both devices running client software and users using client software.
 
-### What is a Server? ###
+## How To Use the UCS
 
-A server, in computing, is hardware or software providing functionality for clients. Servers can offer various services, such as data sharing or computation. Servers operate on the client-server model, responding to client requests. This architecture allows a single server to serve multiple clients, running on the same or different devices.
+### Create an Entity
+
+```cpp
+    // Create a new entity and store its identifier in the variable 'player'
+    int player = components->createEntity();
+
+    // Add a "Drawable" component to the entity, representing the graphical appearance with a specified image and dimensions
+    components->setComponentToEntity(player, "Drawable", Draw("asset/space.png", 100, 50));
+
+    // Add a "HitboxR" component to the entity, representing a rectangular collision box with specified dimensions
+    components->setComponentToEntity(player, "HitboxR", Hitbox(100, 50));
+
+    // Add a "Position" component to the entity, specifying its initial position in the game space
+    components->setComponentToEntity(player, "Position", Position(50, 50));
+
+    // Add a "Speed" component to the entity, representing the movement speed
+    components->setComponentToEntity(player, "Speed", Speed());
+
+    // Add a "Control" component to the entity, specifying the controls associated with this entity (here, a player identifier -1)
+    components->setComponentToEntity(player, "Control", Control(-1));
+
+    // Add a "Shoot" component to the entity, representing the shooting capability of the entity
+    components->setComponentToEntity(player, "Shoot", Shoot());
+
+    // Add a "Health" component to the entity, specifying the health of the entity (here, initialized to 50)
+    components->setComponentToEntity(player, "Health", Health(50));
+
+    // Add a "Team" component to the entity, specifying the team to which the entity belongs (here, team 1)
+    components->setComponentToEntity(player, "Team", Team(1));
+
+    // The function does not seem to use the 'path' parameter, and it does not return anything (void).
+
+    // Return the identifier of the newly created entity (may be useful depending on code usage)
+    return player;
+
+```
+
 
 ## Sources ##
 
