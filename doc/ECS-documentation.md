@@ -47,6 +47,45 @@ A client is a computer or program that sends requests to access services provide
 
 ## How To Use the UCS
 
+### Create an Component
+
+```cpp
+
+```
+
+### Create a System
+
+```cpp
+// The 'SystemBasicSystem' class, derived from the virtual 'System' class, serves as a basic system template within the ECS architecture.
+
+class SystemBasicSystem : public virtual System {
+public:
+    // Constructor for the 'SystemBasicSystem' class, taking a reference to a 'Registry' object as a parameter for initialization.
+    SystemBasicSystem(Registry &registries);
+
+    // Default destructor for the 'SystemBasicSystem' class.
+    ~SystemBasicSystem() = default;
+
+    // The 'run' function represents the core execution logic of the basic system and returns an integer value.
+    int run();
+
+protected:
+private:
+};
+```
+
+### Add the Component to the World
+
+```cpp
+
+```
+
+### Add the System to the World
+
+```cpp
+
+```
+
 ### Create an Entity
 
 ```cpp
@@ -81,6 +120,24 @@ A client is a computer or program that sends requests to access services provide
 
     // Return the identifier of the newly created entity (may be useful depending on code usage)
     return player;
+
+```
+
+### Add a Component to an Entity
+
+```cpp
+
+```
+
+### Using a the world
+
+```cpp
+
+```
+
+### Kill an entity
+
+```cpp
 
 ```
 
