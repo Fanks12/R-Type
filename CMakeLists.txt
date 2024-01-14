@@ -48,5 +48,5 @@ target_include_directories(r-type_server PRIVATE
 Networking/Includes
 )
 
-target_link_libraries(r-type_client PRIVATE Threads::Threads sfml-graphics sfml-window sfml-system)
+target_link_libraries(r-type_client PRIVATE Threads::Threads sfml-graphics sfml-audio sfml-window sfml-system)
 target_link_libraries(r-type_server PRIVATE Threads::Threads)
