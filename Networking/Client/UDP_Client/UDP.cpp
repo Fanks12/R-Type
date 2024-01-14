@@ -66,7 +66,7 @@ int UDP::getreceive()
 
 void UDP::start() {
     std::cout << "UDP Client started on port " << port << std::endl;
-    writeMessages("connection");
+    writeMessages("connection...");
     std::thread receive_thread(&UDP::receiveMessages, this);
     receive_thread.detach();
 }

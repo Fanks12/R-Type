@@ -157,8 +157,8 @@ void initCore(Registry &components)
     components.addSystem(Connect);
     components.addSystem(new SystemHitbox(components));
     components.addSystem(new SystemMove(components));
-    components.addSystem(new SystemControl(components, Drawing->_window));
-    components.addSystem(new SystemShoot(components, Connect->client));
+    components.addSystem(new SystemControl(components, Drawing->_window, Connect->client));
+    components.addSystem(new SystemShoot(components));
 }
 
 int main()

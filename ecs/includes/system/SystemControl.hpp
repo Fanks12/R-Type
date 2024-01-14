@@ -18,19 +18,20 @@
 
 class SystemControl : public virtual System {
     public:
-        SystemControl(Registry &registries, sf::RenderWindow &window);
+        SystemControl(Registry &registries, sf::RenderWindow &window, Client *client);
         ~SystemControl() = default;
 
         int run();
     protected:
     private:
         bool inWindow(int id, Speed speed);
+        Client *_client;
 
         sf::RenderWindow *_window;
         sf::Event _event;
 };
 
-SystemControl::SystemControl(Registry &registries, sf::RenderWindow &window) : System(registries), _window(&window) {}
+SystemControl::SystemControl(Registry &registries, sf::RenderWindow &window, Client *client) : System(registries), _window(&window), _client(client) {}
 
 bool SystemControl::inWindow(int id, Speed speed)
 {
@@ -46,7 +47,7 @@ bool SystemControl::inWindow(int id, Speed speed)
 
 int SystemControl::run()
 {
-    Shoot is_shooting = 0;
+    Shoot is_shooting;
 
     Speed speed;
 
@@ -87,8 +88,11 @@ int SystemControl::run()
         if (!(controlCompo[i].type() == typeid(std::string)) && std::any_cast<Control>(controlCompo[i]).control == _registries->uuid) {
             if (!(speedCompo[i].type() == typeid(std::string)) && inWindow(i, speed))
                 _registries->getComponent<std::any>("Speed")[i] = speed;
-            if (!(shootCompo[i].type() == typeid(std::string)))
+            if (!(shootCompo[i].type() == typeid(std::string))) {
                 _registries->getComponent<std::any>("Shoot")[i] = is_shooting;
+                if (_client != NULL)
+                        _client->WriteMessageUDP("i=" + std::to_string(i) + " shoot=" + std::to_string(is_shooting.shoot));
+            }
         }
     }
 

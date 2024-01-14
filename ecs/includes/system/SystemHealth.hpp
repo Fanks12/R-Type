@@ -27,8 +27,10 @@ int SystemHealth::run() {
     size_t loop = _registries->entityNumbers();
     for (size_t i = 0; i < loop; i++)
         if (healthCompo[i].type() != typeid(std::string)
-        && std::any_cast<Health>(healthCompo[i]).health <= 0)
+        && std::any_cast<Health>(healthCompo[i]).health <= 0) {
             _registries->removeEntity(i);
+            _registries->score++;
+        }
     return 1;
 }
 

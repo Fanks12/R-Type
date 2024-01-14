@@ -44,11 +44,9 @@ void SystemConnect::initialisation()
 
     std::string message;
 
-    std::thread connection([this, &message]() {
-        while (client->getreceiveUDP() <= 0);
-        message = client->getmessageUDP();
-    });
-    connection.join();
+    while (client->getreceiveUDP() <= 0);
+    message = client->getmessageUDP();
+
 
     std::string uuidStr = message.substr(message.find('=') + 1);
     _registries->uuid = std::stoi(uuidStr);
@@ -102,13 +100,9 @@ void SystemConnect::interpreter()
         int y = -1;
         int shoot = -1;
 
-        std::cout << input << std::endl;
-
         for (int i = 0; i < 10; i++) {
             sub = input.substr(0, input.find(" "));
-            std::cout << sub << std::endl;
             input = input.substr(input.find(" ") + 1);
-            std::cout << input << std::endl;
             if (sub.compare("You") == 0 || sub.compare("string") == 0)
                 break;
             if (sub.substr(0, input.find("=") + 1).compare("i=") == 0)
@@ -121,12 +115,11 @@ void SystemConnect::interpreter()
                 shoot = std::stoi(sub.substr(input.find("=") + 1));
             if (sub.substr(0, input.find("=") + 1).compare("score=") == 0) {
                 _registries->score = std::stoi(sub.substr(input.find("=") + 1));
-                std::cout << "caca" << std::endl;
             }
         }
         if (id < _registries->entityNumbers() && id != -1 && x != -1 && y != -1 && shoot == -1)
             _registries->setComponentToEntity(id, "Position", Position(x, y));
-        else if (id < _registries->entityNumbers() && id != -1 && shoot != -1)
+        if (id < _registries->entityNumbers() && id != -1 && shoot != -1)
             _registries->setComponentToEntity(id, "Shoot", Shoot(shoot));
     }
 }
