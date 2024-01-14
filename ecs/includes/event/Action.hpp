@@ -44,8 +44,10 @@ bool Action::everyXSecond(Clock *clock, int x)
 
 bool Action::score(Registry *registries, int score)
 {
-    if (registries->score == score)
+    if (registries->score >= score) {
+        registries->score = 0;
         return true;
+    }
     return false;
 }
 

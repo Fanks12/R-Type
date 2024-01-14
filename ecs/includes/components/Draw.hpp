@@ -11,10 +11,10 @@
 
 class Draw {
     public:
-        Draw(std::string _path = "", int x = 0, int y = 0, int frame = 1) : path(_path), dim(x, y), frames(frame) {}
+        Draw(int _path = 0, int x = 0, int y = 0, int frame = 1) : Texture_id(_path), dim(x, y), frames(frame) {}
         ~Draw() = default;
 
-        std::string path;
+        int Texture_id;
         std::pair<int, int> dim;
         int frames;
 };

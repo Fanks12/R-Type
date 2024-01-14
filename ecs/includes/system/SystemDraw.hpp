@@ -11,16 +11,15 @@
     #include <SFML/Graphics.hpp>
     #include <vector>
     #include <variant>
+    #include <SFML/Audio.hpp>
     #define WINDOW_WIDTH 800
     #define WINDOW_HEIGHT 600
 
 class Object {
     public:
-        Object(std::string path, int x, int y, int w, int h, int nbframes = 1) : rect(x, y, w, h), frames(nbframes)
+        Object(int path, int x, int y, int w, int h, int nbframes = 1) : rect(x, y, w, h), frames(nbframes)
         {
-            if (path.compare("asset/space.png"))
-                textId = 0;
-            // sprite.setTexture(texture);
+            textId = path;
             sprite.setTextureRect(rect);
         };
         ~Object() = default;
@@ -34,7 +33,7 @@ class Object {
 class SystemDraw : public virtual System {
     public:
         SystemDraw(Registry &registries);
-        ~SystemDraw() = default;
+        ~SystemDraw();
 
         int run();
         sf::RenderWindow _window;
@@ -47,21 +46,41 @@ class SystemDraw : public virtual System {
         void addInCache(int it, std::string value);
 
         sf::Event _event;
+        // sf::Music music;
         std::vector<std::any> _cache;
-        sf::Texture texture;
+        sf::Texture Ennemy;
+        sf::Texture SpaceShip;
+        sf::Texture Space;
+        sf::Texture Shoot_player;
+        sf::Texture Shoot_ennemy;
 };
+
+SystemDraw::~SystemDraw() {
+    Space.~Texture();
+    SpaceShip.~Texture();
+    Ennemy.~Texture();
+    Shoot_player.~Texture();
+    Shoot_ennemy.~Texture();
+    _window.close();
+}
 
 SystemDraw::SystemDraw(Registry &registries) : System(registries),
 _window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "SFML window") {
-    texture.loadFromFile("asset/space.png");
+    SpaceShip.loadFromFile("asset/Player.png");
+    Space.loadFromFile("asset/space.png");
+    Ennemy.loadFromFile("asset/mob.png");
+    Shoot_player.loadFromFile("asset/shoot_player.png");
+    Shoot_ennemy.loadFromFile("asset/shoot_ennemy.png");
+    // music.openFromFile("music.ogg");
+    // music.play();
 }
 
 void SystemDraw::addInCache(int it, Draw value)
 {
     if (it >= _cache.size())
-        _cache.push_back(Object(value.path, 0, 0, value.dim.first, value.dim.second, value.frames));
+        _cache.push_back(Object(value.Texture_id, 0, 0, value.dim.first, value.dim.second, value.frames));
     else if (_cache.at(it).type() == typeid(std::string))
-        _cache.at(it) = Object(value.path, 0, 0, value.dim.first, value.dim.second, value.frames);
+        _cache.at(it) = Object(value.Texture_id, 0, 0, value.dim.first, value.dim.second, value.frames);
 }
 
 void SystemDraw::addInCache(int it, std::string value)
@@ -97,7 +116,26 @@ void SystemDraw::updatePosition()
         else if (entity.type() != typeid(std::string)) {
             pos = std::any_cast<Position>(posCompo[i]);
             Object object = std::any_cast<Object>(entity);
-            object.sprite.setTexture(texture);
+            if (object.textId == 1) {
+                object.sprite.setTexture(SpaceShip);
+                object.sprite.setScale(sf::Vector2f(0.2, 0.2));
+            }
+            if (object.textId == 2) {
+                object.sprite.setTexture(Ennemy);
+                object.sprite.setScale(sf::Vector2f(0.2, 0.2));
+
+            }
+            if (object.textId == 10) {
+                object.sprite.setTexture(Space);
+            }
+            if (object.textId == 11) {
+                object.sprite.setTexture(Shoot_player);
+                object.sprite.setScale(sf::Vector2f(0.8, 0.8));
+            }
+            if (object.textId == 12) {
+                object.sprite.setTexture(Shoot_ennemy);
+                object.sprite.setScale(sf::Vector2f(0.8, 0.8));
+            }
             object.sprite.setPosition(sf::Vector2f(pos.x, pos.y));
             entity = object;
         }
@@ -113,8 +151,10 @@ void SystemDraw::updateEntities()
 
 int SystemDraw::run()
 {
-    if (!_window.isOpen())
+    if (!_window.isOpen()) {
+        // music.stop();
         return 0;
+    }
 
     updateEntities();
 

@@ -44,14 +44,14 @@ void UDP::receiveMessages() {
         while (isRunning) {
             asio::ip::udp::endpoint sender_endpoint;
             size_t bytes_received = socket.receive_from(asio::buffer(receive_buffer), sender_endpoint);
-            _receive = bytes_received;
             if (bytes_received > 0) {
                 char key = 0x69;
                 std::string received_data(receive_buffer.data(), bytes_received);
                 std::string decryptedMessage = xorEncryptDecrypt(received_data, key);
                 message_ = decryptedMessage;
-                //std::cout << "Received from the Server UDP = " << decryptedMessage << std::endl;
+                _receive = bytes_received;
             }
+            _receive = 0;
         }
     } catch (std::exception& e) {
         std::cerr << "Exception in receiveMessages: " << e.what() << std::endl;
@@ -66,7 +66,7 @@ int UDP::getreceive()
 
 void UDP::start() {
     std::cout << "UDP Client started on port " << port << std::endl;
-    writeMessages("connection...");
+    // writeMessages("connection...");
     std::thread receive_thread(&UDP::receiveMessages, this);
     receive_thread.detach();
 }

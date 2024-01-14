@@ -46,7 +46,9 @@ void SystemConnect::initialisation()
     std::string message;
 
     while (client->getreceiveUDP() <= 0);
+    usleep(1000);
     message = client->getmessageUDP();
+    std::cout << message << std::endl;
 
 
     std::string uuidStr = message.substr(message.find('=') + 1);
@@ -93,7 +95,7 @@ void SystemConnect::sender()
         }
     }
 
-    // client->WriteMessageUDP("score=" + std::to_string(_registries->score));
+    client->WriteMessageUDP("score=" + std::to_string(_registries->score));
 }
 
 int SystemConnect::safeStoi(std::string message)
@@ -119,7 +121,7 @@ void SystemConnect::interpreter()
         int y = -1;
         int shoot = -1;
 
-        std::cout << input << std::endl;
+        // std::cout << input << std::endl;
 
         for (int i = 0; i < 10; i++) {
             sub = input.substr(0, input.find(" "));
@@ -127,7 +129,7 @@ void SystemConnect::interpreter()
             if (sub.compare("You") == 0 || sub.compare("string") == 0)
                 break;
             if (sub.substr(0, input.find("=") + 1).compare("i=") == 0) {
-                std::cout << sub << std::endl;
+                // std::cout << sub << std::endl;
                 id = safeStoi(sub.substr(input.find("=") + 1));
             }
             if (sub.substr(0, input.find("=") + 1).compare("x=") == 0)
@@ -141,7 +143,7 @@ void SystemConnect::interpreter()
                 _registries->score = safeStoi(sub.substr(input.find("=") + 1));
             }
         }
-        std::cout << id << shoot << std::endl;
+        // std::cout << id << shoot << std::endl;
 
         if (id < _registries->entityNumbers() && id != -1 && x != -1 && y != -1)
             _registries->setComponentToEntity(id, "Position", Position(x, y));

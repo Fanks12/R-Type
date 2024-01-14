@@ -22,9 +22,9 @@ int spawnEnnemy(Registry *components, int type)
     if (type == 1) {
         components->score++;
         int mob = components->createEntity();
-        components->setComponentToEntity(mob, "Drawable", Draw("asset/space.png", 250, 100));
-        components->setComponentToEntity(mob, "HitboxR", Hitbox(250, 100));
-        components->setComponentToEntity(mob, "HitboxG", Hitbox(250, 100));
+        components->setComponentToEntity(mob, "Drawable", Draw(3, 500, 500));
+        components->setComponentToEntity(mob, "HitboxR", Hitbox((500 * 0.2), (500 * 0.2)));
+        components->setComponentToEntity(mob, "HitboxG", Hitbox((500 * 0.2), (500 * 0.2)));
         components->setComponentToEntity(mob, "Damage", Damage(100));
         components->setComponentToEntity(mob, "Position", Position(WINDOW_WIDTH, WINDOW_HEIGHT / 2 - 100));
         components->setComponentToEntity(mob, "Health", Health(110));
@@ -41,9 +41,9 @@ int spawnEnnemy(Registry *components, int type)
     }
     if (type == 2) {
         int mob = components->createEntity();
-        components->setComponentToEntity(mob, "Drawable", Draw("asset/space.png", 100, 100));
-        components->setComponentToEntity(mob, "HitboxR", Hitbox(100, 100));
-        components->setComponentToEntity(mob, "HitboxG", Hitbox(100, 100));
+        components->setComponentToEntity(mob, "Drawable", Draw(2, 500, 500));
+        components->setComponentToEntity(mob, "HitboxR", Hitbox((500 * 0.2), (500 * 0.2)));
+        components->setComponentToEntity(mob, "HitboxG", Hitbox((500 * 0.2), (500 * 0.2)));
         components->setComponentToEntity(mob, "Damage", Damage(10));
         components->setComponentToEntity(mob, "Position", Position(WINDOW_WIDTH, randomInt(components->score, 105, WINDOW_HEIGHT - 105)/*random entre 105 et WINDOW_HEIGHT - 105*/));
         components->setComponentToEntity(mob, "Health", Health(1));
@@ -105,36 +105,36 @@ int menu(Registry *components)
     // components->setComponentToEntity(background, "Position", Position());
 
     int play = components->createEntity();
-    components->setComponentToEntity(play, "Drawable", Draw("asset/space.png", 100, 100));
+    components->setComponentToEntity(play, "Drawable", Draw(10, 100, 100));
     components->setComponentToEntity(play, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(play, "Position", Position(600, 100));
     components->setComponentToEntity(play, "Health", Health(1));
 
     int join = components->createEntity();
-    components->setComponentToEntity(join, "Drawable", Draw("asset/space.png", 100, 100));
+    components->setComponentToEntity(join, "Drawable", Draw(10, 100, 100));
     components->setComponentToEntity(join, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(join, "Position", Position(600, 220));
 
     int quit = components->createEntity();
-    components->setComponentToEntity(quit, "Drawable", Draw("asset/space.png", 100, 100));
+    components->setComponentToEntity(quit, "Drawable", Draw(10, 100, 100));
     components->setComponentToEntity(quit, "HitboxR", Hitbox(100, 100));
     components->setComponentToEntity(quit, "Position", Position(600, 340));
     components->setComponentToEntity(quit, "Health", Health(1));
     // init des event qui regissent chaque bouton
     // init le joueur de base que l'on controle
     int player = components->createEntity();
-    components->setComponentToEntity(player, "Drawable", Draw("asset/space.png", 100, 50));
-    components->setComponentToEntity(player, "HitboxR", Hitbox(100, 50));
+    components->setComponentToEntity(player, "Drawable", Draw(1, 519, 480));
+    components->setComponentToEntity(player, "HitboxR", Hitbox((519 * 0.2), (480 * 0.2)));
     components->setComponentToEntity(player, "Position", Position(50, 50));
     components->setComponentToEntity(player, "Speed", Speed());
-    components->setComponentToEntity(player, "Control", Control(-1));
+    components->setComponentToEntity(player, "Control", Control(1));
     components->setComponentToEntity(player, "Shoot", Shoot());
     components->setComponentToEntity(player, "Health", Health(50));
     components->setComponentToEntity(player, "Team", Team(1));
 
     int player2 = components->createEntity();
-    components->setComponentToEntity(player2, "Drawable", Draw("asset/space.png", 100, 50));
-    components->setComponentToEntity(player2, "HitboxR", Hitbox(100, 50));
+    components->setComponentToEntity(player2, "Drawable", Draw(1, 519, 480));
+    components->setComponentToEntity(player2, "HitboxR", Hitbox((519 * 0.2), (480 * 0.2)));
     components->setComponentToEntity(player2, "Position", Position(50, 150));
     components->setComponentToEntity(player2, "Speed", Speed());
     components->setComponentToEntity(player2, "Control", Control(2));
